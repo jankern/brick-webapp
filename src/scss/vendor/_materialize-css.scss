@@ -1,0 +1,22 @@
+// scss file for vendor styles
+
+.btn-flat {
+    color: $base-white;
+    font-family: $header-font, $header-font-family;
+    font-size: 0.9em;
+    font-weight: $regular;
+}
+
+a.btn-flat {
+    &:hover {
+        text-decoration: none;
+        color: $base-white;
+    }
+}
+
+.waves-blue {
+    background: #42a5f5;
+    .waves-ripple {
+        background: #0070b0;
+    }
+}

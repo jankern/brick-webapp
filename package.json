@@ -1,0 +1,44 @@
+{
+  "name": "brick-webapp",
+  "version": "1.0.0",
+  "description": "A Webpack 4 scaffold with ES6, babel and SASS for development and production usage. Additional optional libs like jquery and materialize-css are also inlcuded to the project.",
+  "main": "index.js",
+  "devDependencies": {
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.2",
+    "babel-loader": "^8.2.2",
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "copy-webpack-plugin": "^8.1.1",
+    "css-loader": "^5.2.5",
+    "file-loader": "^6.2.0",
+    "html-loader": "^2.1.2",
+    "html-webpack-plugin": "^5.3.1",
+    "mini-css-extract-plugin": "^1.6.0",
+    "node-sass": "^6.0.0",
+    "optimize-css-assets-webpack-plugin": "^6.0.0",
+    "postcss": "^8.3.0",
+    "postcss-loader": "^5.3.0",
+    "postcss-preset-env": "^6.7.0",
+    "sass": "^1.33.0",
+    "sass-loader": "^11.1.1",
+    "style-loader": "^2.0.0",
+    "terser-webpack-plugin": "^5.1.2",
+    "webpack": "^5.37.1",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^3.11.2",
+    "webpack-merge": "^5.7.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx webpack serve",
+    "build:watch": "webpack --watch --progress --mode development --config webpack.config.js",
+    "build": "webpack --progress --mode production --config webpack.config.js"
+  },
+  "author": "Jan Kern",
+  "license": "ISC",
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "material-design-icons": "^3.0.1",
+    "materialize-css": "^1.0.0"
+  }
+}

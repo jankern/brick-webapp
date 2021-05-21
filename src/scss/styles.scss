@@ -1,0 +1,10 @@
+/* main scss file */
+
+/* utils, mxins, basic definitions */
+@import "utils/utils";
+
+/* Components and Layout */
+@import "partials/component";
+
+/* Third-party overwrites */
+@import "vendor/materialize-css";

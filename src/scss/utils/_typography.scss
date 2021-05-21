@@ -1,0 +1,99 @@
+// scss file for basic typo
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-family: $base-font, $base-font-family;
+    font-size: $base-font-size;
+    line-height: $base-line-height;
+    font-weight: $base-font-weight;
+    color: $black-light;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+    font-family: $header-font, $header-font-family;
+    font-size: 2.2em;
+    font-weight: $header-font-weight;
+    margin: 0 0 20px 0;
+    display: block;
+    line-height: 1.3em;
+    color: $base-black;
+}
+
+h2 {
+    font-family: $header-font, $header-font-family;
+    font-size: 2.0em;
+    line-height: 1.3em;
+    font-weight: $header-font-weight;
+    margin: 0 0 20px 0;
+    letter-spacing: 0;
+    color: $base-black;
+}
+
+h3 {
+    font-family: $header-font, $header-font-family;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    font-weight: $header-font-weight;
+    margin: 0 0 20px 0;
+    letter-spacing: 0;
+    color: $base-black;
+}
+
+p {
+    padding: 0px 0px 10px 0px;
+    margin: 0px;
+
+    &.center {
+        text-align: center;
+    }
+}
+
+b,
+strong {
+    font-weight: $bold;
+}
+
+a {
+    text-decoration: none;
+    font-style: normal;
+    font-weight: $regular;
+    color: $black-light;
+
+    &:hover {
+        text-decoration: underline;
+        color: $black-light;
+    }
+}
+
+label {
+    font-size: 0.8em;
+    padding: 0 5px;
+    vertical-align: -1px;
+}
+
+.input-error {
+    border: $input-error solid 1px;
+    background: $input-error-light;
+}
+
+.right-align {
+    text-align: right;
+}
+
+.left-align {
+    text-align: left;
+}
+
+blockquote {
+    font-style: italic;
+    padding-left: 30px;
+	background: url('../assets/img/quote.png') top left no-repeat;
+	padding-top:30px;
+	margin-top:10px;
+}
