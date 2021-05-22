@@ -9,6 +9,7 @@
 /composer.lock
 /vendor/
 /composer.phar
+/package-lock.json
 
 # database
 db/*

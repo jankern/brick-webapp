@@ -7,9 +7,11 @@ import '../scss/styles.scss';
 
 // Class and Function Imports
 import Main from './template.main';
+import Gsap1 from './component.gsap1';
 
 // Class intialisation
 let main = new Main();
+let gsap1 = new Gsap1();
 let loaded = false;
 
 // JQuery $(document).ready function 
@@ -31,4 +33,6 @@ let loaded = false;
 window.onload = (event) => {
     console.log('The page has fully loaded');
 	console.log(main.out());
+    console.log(gsap1.out());
+    gsap1.runFirstAnimation();
 };
