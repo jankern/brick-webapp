@@ -51,13 +51,15 @@ module.exports = (env, argv) => {
   // basic plugins
   let plugins = [
     new HtmlWebpackPlugin({ template: "./src/index.html" }),
-    // new webpack.ProvidePlugin({
+     new webpack.ProvidePlugin({
     //   jQuery: "jquery",
     //   $: "jquery",
     //   jquery: "jquery",
     //   "window.$": "jquery",
     //   "window.jQuery": "jquery"
-    // }),
+    //  'fetch': 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch'
+    }),
+  
     new MiniCssExtractPlugin({
       filename: "css/[name].bundle.css",
       chunkFilename: "css/[name][id].bundle.css"
@@ -77,20 +79,20 @@ module.exports = (env, argv) => {
 
   // development: webpack dev server root
   let devServer = isProd ? {} : {
-    contentBase: './dist'
+    contentBase: '../../server/cole-blaq/html/resources/dist'
   };
 
   // config
   return {
     entry: {
-      main: "./src/js/index.js",
-      // -> target addon location as a shortcut fo development if addon gets not reinstalled
-      // "../../../assets/addons/{name}/js/addon.{name}": "./src/js/addon.drpl_blog_post",
-      // "../../../assets/addons/rdpl_blog_post/js/addon.rdpl_blog_post": "./src/js/addon.rdpl_blog_post",
+        main: ["whatwg-fetch", "./src/js/index.js"],
+        // -> target addon location as a shortcut fo development if addon gets not reinstalled
+        // "../../../assets/addons/{name}/js/addon.{name}": "./src/js/addon.drpl_blog_post",
+        // "../../../assets/addons/rdpl_blog_post/js/addon.rdpl_blog_post": "./src/js/addon.rdpl_blog_post",
 
-      // -> initial addon location. From there the files is being processed while installation routine
-      // '../../../redaxo/src/addons/{name}/assets/js/addon.{name}': './src/js/addon.{name}'
-      // "../../../redaxo/src/addons/rdpl_blog_post/assets/js/addon.rdpl_blog_post": "./src/js/addon.rdpl_blog_post",
+        // -> initial addon location. From there the files is being processed while installation routine
+        // '../../../redaxo/src/addons/{name}/assets/js/addon.{name}': './src/js/addon.{name}'
+        // "../../../redaxo/src/addons/rdpl_blog_post/assets/js/addon.rdpl_blog_post": "./src/js/addon.rdpl_blog_post",
     },
     output: {
       filename: "js/[name].bundle.js",

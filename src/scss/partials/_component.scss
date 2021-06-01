@@ -1,28 +1,51 @@
 // scss file for component based styles
 html,
 body {
-    width:100%;
-    min-height: 100%;
-    background: white;
+    margin: 0;
+    height: 100vh;
+    display:flex;
+    flex-direction: column;
+    box-sizing: border-box;
 }
 
 header{
     height:auto;
     width:100%;
     padding:20px;
-    top:0px;
-    background:$blue-light;
     position:fixed;
-    box-sizing: border-box;
     z-index: 99;
 }
 
 main{
-    height:100%;
-    width:100%;
-    background: $topic-orange;
+    flex-grow: 1;
+}
+
+.view-wrapper{
     position:absolute;
-    top:0px;
+    width: 100vw;
+    height: 100vh;  
+
+    &.preload{
+        background:black;
+        z-index: 13;
+    }
+    &.start{
+        background:orange;
+        z-index: 12;
+    }
+    &.gallery{
+        background:papayawhip;
+        z-index: 11;
+    }
+    &.gallery-item{
+        background:plum;
+        z-index: 10;
+    }
+}
+
+nav.view-wrapper{
+    background:rebeccapurple;
+    z-index: 9;
 }
 
 .animation-container{
@@ -30,8 +53,86 @@ main{
     padding:20px;
     min-height:300px;
     width:600px;
+    position:relative;
     margin: 200px auto 0 auto;
-    background:white;
+    background:$brown-light;
+}
+
+#anim-cont-1{
+    transform: scaleY(1) translateY(0px) rotateY(41deg) skewY(0deg);
+}
+
+.cube-wrapper{
+    perspective: 1000px;
+    perspective-origin: 50% 50%;
+    margin-top: 50px;
+}
+
+.cube{
+    margin: auto;
+    position: relative;
+    height: 400px;
+    width: 400px;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+
+    transform: scaleX(1) scaleY(1) scaleZ(1) rotateX(0deg) rotateY(30deg) rotateZ(0deg) translateX(0px) translateY(1px) translateZ(0px) skewX(0deg) skewY(0deg);
+
+    div{
+        position: absolute;
+        box-sizing: border-box;
+        padding: 10px;
+        line-height: 200px;
+        text-align: center;
+        height: 100%;
+        width: 100%;
+        //opacity: 0.9;
+        border: 1px solid #000;
+        color: #000;
+        font-weight: bold;
+    }
+}
+
+.front {
+    -webkit-transform: translateZ(200px);
+    transform: translateZ(200px);
+    background-color: #00d7ff;
+}
+
+.back {
+    -webkit-transform: translateZ(-200px) rotateY(180deg);
+    transform: translateZ(-200px) rotateY(180deg);
+    background-color: #e86836;
+}
+
+.top {
+    -webkit-transform: rotateX(-270deg) translateY(-200px);
+    transform: rotateX(-270deg) translateY(-200px);
+    transform-origin: top center;
+    background-color: #ff00f9;
+}
+
+.bottom {
+    -webkit-transform: rotateX(270deg) translateY(200px);
+    transform: rotateX(270deg) translateY(200px);
+    transform-origin: bottom center;
+    background-color: #7552bc;
+}
+
+.left {
+    -webkit-transform: rotateY(270deg) translateX(-200px);
+    transform: rotateY(270deg) translateX(-200px);
+    transform-origin: center left;
+    background-color: #00ff73;
+    background-image: url(../static/img/Cluster1.jpg);
+    background-size: 100% 100%;
+}
+
+.right {
+    -webkit-transform: rotateY(-270deg) translateX(200px);
+    transform: rotateY(-270deg) translateX(200px);
+    transform-origin: top right;
+    background-color: #ffc900;
 }
 
 #square{
