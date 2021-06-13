@@ -8,11 +8,13 @@ import '../scss/styles.scss';
 // Class and Function Imports
 import Main from './template.main';
 import Animations from './module.animations';
+import Three from './module.three';
 import HttpService from './module.http-service';
 
 // Class intialisation
 let main = new Main();
 let animations = new Animations();
+let three = new Three();
 let httpService = new HttpService();
 let loaded = false;
 
@@ -115,11 +117,41 @@ let gallery = {
     ]
 }
 
+let bla = () =>{
+    console.log('INSERT to me, next');
+}
+
+let blu = (foo) => {
+    console.log(foo);
+}
+
+let bli = (foo) => {
+    console.log(foo);
+
+    let ret = httpService.get().then(data => {
+                console.log('in upper level');
+                console.log(data);
+            });
+}
+
+// Stand der Dinge
+// devmiddleware eingebunden, test route steht
+// hot module replacement noch nicht, kein Muss -> verstehen über gesamte YT reihe 
+
+document.querySelector('button#ani-timeline').addEventListener('click', () => {
+    bli('foo-uö');
+  });
+
 window.onload = (event) => {
     console.log('The page has fully loaded');
     console.log(main.out());
     console.log(animations.out());
     animations.runFirstAnimation();
+
+    bla();
+
+    three.out();
+    
 
     // setTimeout(()=>{
     //     let ret = httpService.get().then(data => {
@@ -141,3 +173,16 @@ window.onload = (event) => {
 
     // document.getElementById("animate-btn").addEventListener("click", animations.runSecondAnimation); 
 };
+
+
+
+// if (module.hot) {
+//     console.log('HOT is true')
+//     module.hot.accept(
+//         //'./index.js',
+//         // function(){
+//         //     console.log("******** reloading self");
+//         //     window.location.reload();
+//         // }
+//     )
+// }

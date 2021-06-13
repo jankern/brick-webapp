@@ -11,7 +11,7 @@ export
         //const data = { username: 'example' };
 
         //POST request with body equal on data in JSON format
-        return fetch('http://localhost:8080/jo', {
+        return fetch('http://localhost:3000/getit', {
             method: 'GET',
             mode: 'cors',
             headers: {

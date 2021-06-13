@@ -5,17 +5,20 @@
   "main": "index.js",
   "devDependencies": {
     "@babel/core": "^7.14.3",
+    "@babel/node": "^7.14.2",
     "@babel/preset-env": "^7.14.2",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "copy-webpack-plugin": "^8.1.1",
     "css-loader": "^5.2.5",
     "exports-loader": "^3.0.0",
+    "express": "^4.17.1",
     "file-loader": "^6.2.0",
     "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.1",
     "imports-loader": "^3.0.0",
     "mini-css-extract-plugin": "^1.6.0",
+    "morgan": "^1.10.0",
     "node-sass": "^6.0.0",
     "optimize-css-assets-webpack-plugin": "^6.0.0",
     "postcss": "^8.3.0",
@@ -27,7 +30,9 @@
     "terser-webpack-plugin": "^5.1.2",
     "webpack": "^5.37.1",
     "webpack-cli": "^4.7.0",
+    "webpack-dev-middleware": "^3.7.3",
     "webpack-dev-server": "^3.11.2",
+    "webpack-hot-middleware": "^2.25.0",
     "webpack-merge": "^5.7.3",
     "whatwg-fetch": "^3.6.2"
   },
@@ -35,7 +40,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx webpack serve",
     "build:watch": "webpack --watch --progress --mode development --config webpack.config.js",
-    "build": "webpack --progress --mode production --config webpack.config.js"
+    "build": "webpack --progress --mode production --config webpack.config.js",
+    "dev": "node src/server/server.js",
+    "dev-hmr": "node src/server/server.hmr.js"
   },
   "author": "Jan Kern",
   "license": "ISC",
@@ -43,6 +50,8 @@
     "gsap": "^3.6.1",
     "jquery": "^3.6.0",
     "material-design-icons": "^3.0.1",
-    "materialize-css": "^1.0.0"
+    "materialize-css": "^1.0.0",
+    "three": "^0.129.0",
+    "three-gltf-loader": "^1.111.0"
   }
 }

@@ -20,13 +20,18 @@ main{
     flex-grow: 1;
 }
 
+canvas{
+    position:absolute;
+    z-index:999;
+}
+
 .view-wrapper{
     position:absolute;
     width: 100vw;
     height: 100vh;  
 
     &.preload{
-        background:black;
+        background:violet;
         z-index: 13;
     }
     &.start{
