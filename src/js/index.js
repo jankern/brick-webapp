@@ -138,11 +138,15 @@ let bli = (foo) => {
 // devmiddleware eingebunden, test route steht
 // hot module replacement noch nicht, kein Muss -> verstehen über gesamte YT reihe 
 
-document.querySelector('button#ani-timeline').addEventListener('click', () => {
-    bli('foo-uö');
-  });
+// document.querySelector('button#ani-timeline').addEventListener('click', () => {
+//     bli('foo-uö');
+//   });
+
+
+window.addEventListener('resize', three.onWindowResize, false)
 
 window.onload = (event) => {
+
     console.log('The page has fully loaded');
     console.log(main.out());
     console.log(animations.out());
