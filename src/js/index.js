@@ -8,13 +8,13 @@ import '../scss/styles.scss';
 // Class and Function Imports
 import Main from './template.main';
 import Animations from './module.animations';
-import Three from './module.three';
+import Three3d from './module.three3d';
 import HttpService from './module.http-service';
 
 // Class intialisation
 let main = new Main();
 let animations = new Animations();
-let three = new Three();
+let three3d = new Three3d();
 let httpService = new HttpService();
 let loaded = false;
 
@@ -117,22 +117,22 @@ let gallery = {
     ]
 }
 
-let bla = () =>{
-    console.log('INSERT to me, next');
-}
+// let bla = () =>{
+//     console.log('INSERT to me, next');
+// }
 
-let blu = (foo) => {
-    console.log(foo);
-}
+// let blu = (foo) => {
+//     console.log(foo);
+// }
 
-let bli = (foo) => {
-    console.log(foo);
+// let bli = (foo) => {
+//     console.log(foo);
 
-    let ret = httpService.get().then(data => {
-                console.log('in upper level');
-                console.log(data);
-            });
-}
+//     let ret = httpService.get().then(data => {
+//                 console.log('in upper level');
+//                 console.log(data);
+//             });
+// }
 
 // Stand der Dinge
 // devmiddleware eingebunden, test route steht
@@ -143,18 +143,44 @@ let bli = (foo) => {
 //   });
 
 
-window.addEventListener('resize', three.onWindowResize, false)
+window.addEventListener('resize', three3d.onWindowResize, false);
 
 window.onload = (event) => {
 
     console.log('The page has fully loaded');
-    console.log(main.out());
-    console.log(animations.out());
-    animations.runFirstAnimation();
 
-    bla();
+    // Page 1
+    // start animation takes 5 seconds
+    // font and spinning objects
+    // create timeline 
+    // and call callback when timeline is done
 
-    three.out();
+    // Transition 1
+
+
+    three3d.init();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // console.log(main.out());
+    // console.log(animations.out());
+    // animations.runFirstAnimation();
+
+    // bla();
+
+    //three3d.out();
     
 
     // setTimeout(()=>{
@@ -164,7 +190,7 @@ window.onload = (event) => {
     //     });
     // }, 3000);
 
-    console.log(viewAnimationOrder[0].func())
+    //console.log(viewAnimationOrder[0].func())
 
     // Start screen with layer 1
     // start first animation for 3 seconds, after roll down the layer 2
@@ -178,7 +204,7 @@ window.onload = (event) => {
     // document.getElementById("animate-btn").addEventListener("click", animations.runSecondAnimation); 
 };
 
-
+// HMR inclusion
 
 // if (module.hot) {
 //     console.log('HOT is true')

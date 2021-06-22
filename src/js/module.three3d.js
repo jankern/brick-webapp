@@ -18,7 +18,7 @@ const gltfLoader = new GLTFLoader();
 const gui = new dat.GUI();
 
 export
-    default class Three {
+    default class Three3d {
 
     constructor() {
         gsap.registerPlugin(CSSPlugin/*, PixiPlugin, MotionPathPlugin*/);
@@ -254,13 +254,6 @@ export
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.render( scene, camera );
-    }
-
-
-
-    out(){
-        console.log('Starting three.js');
-        this.init();
     }
 
 };
