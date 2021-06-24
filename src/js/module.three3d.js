@@ -12,10 +12,10 @@ import { CSSPlugin } from "gsap/CSSPlugin.js";
 
 let utils = new Utils();
 let camera, scene, renderer, textureLoader, texture;
-let geometry, material, mesh;
+let geometry, material, mesh, model;
 let controls, pointLight, ambientLight, lightHelper, gridHelper;
 let loopAnimation, moveCamera, meshObjects, intersects;
-let onMouseDown, isMouseDown, onMouseMove, isCamMoving, onWindowResizeScene, eventListener;
+let onMouseDown, isMouseDown, onMouseMove, isCamMoving, onWindowResizeScene, eventListener, resetFunc;
 let x, y, z;
 
 const gltfLoader = new GLTFLoader();
@@ -28,11 +28,26 @@ export
         gsap.registerPlugin(CSSPlugin/*, PixiPlugin, MotionPathPlugin*/);
     }
 
-    init(){
+    createInitialScene(){
 
         x = -0.01;
         y = -0.01;    
         z = 0.00;
+
+        camera.position.set(-0.06, 0.04, 0.3);
+        camera.lookAt(-0.06, 0.04, 0.3);
+
+        model.scale.set(1.8,2.0,2);
+        model.rotation.x = 0.0;
+        model.rotation.y = -0.8;
+
+        model.position.z = 0.05;
+        model.position.y = -0.05;
+
+    }
+
+    init(){
+
         isCamMoving = false;
         //isMouseDown = false;
 
@@ -44,27 +59,18 @@ export
 
         scene.add(light);
 
-        camera.position.set(-0.06, 0.04, 0.3);
+        // Separate texture
+        // textureLoader = new THREE.TextureLoader();
+        // texture = textureLoader.load('../img/Cluster1.jpg');
 
-        textureLoader = new THREE.TextureLoader();
-        //texture = textureLoader.load('../img/Cluster1.jpg');
-
-        // loading model
-        let model;
-
+        // Loading model
         gltfLoader.load(
             "./assets/gltf/showroom.glb",
             (glb) => {
 
                 model = glb.scene;
 
-                // todo funktion
-                model.scale.set(1.8,2.0,2);
-                model.rotation.x = 0.0;
-                model.rotation.y = -0.8;
-
-                model.position.z = 0.05;
-                model.position.y = -0.05;
+                this.createInitialScene();
 
                 model.castShadow = true;
                 model.receiveShadow = true;
@@ -75,7 +81,8 @@ export
                 //       // in which case you'd need to set `.map` on each value.
                 //       o.material.map = texture;
                 //     }
-                //   } );
+                //   } 
+                // );
 
                 scene.add(model);
 
@@ -97,8 +104,8 @@ export
                 this.eventListener().mouseDown.add();
                 this.eventListener().resize.add();
 
-                gsap.from(model.scale, {duration: 3, x: 1.6, ease: "expo.out"})
-                gsap.to(model.scale, {duration: 3,x: 1.8, ease: "expo.out"})
+                gsap.from(model.scale, {duration: 3, x: 1.6, ease: "expo.out"});
+                gsap.to(model.scale, {duration: 3,x: 1.8, ease: "expo.out"});
             },
             (xhr) => {
                 console.log((xhr.loaded/xhr.total * 100) + '%');
@@ -125,6 +132,15 @@ export
         // Append Scene / Canvas to the DOM
         let parentLayer = document.querySelector('.view-wrapper.start');
         parentLayer.appendChild( renderer.domElement );
+
+        resetFunc = () => {
+            console.log('resetFunc');
+            isCamMoving = false;
+            this.createInitialScene()
+        }
+
+        let btn = document.querySelector('#btn');
+        btn.addEventListener('click', resetFunc, false)
 
     }
 
@@ -233,9 +249,9 @@ export
             let tl = gsap.timeline({onComplete: window.startGallery});
             tl.to(model.scale, {duration: 2, x: 5, y:6, ease: "expo.out"});
             tl.to(model.position, {duration: 1, y:-0.1, ease: "expo.out"}, '-=2');
-            tl.to('.gallery-transition', { 
-                marginTop: 0, marginLeft: 0, left: offset, top: offset, duration: 0.8, 
-                opacity: 1, width: size, height: size,  ease: "expo.in"}, '-=2');
+            // tl.to('.gallery-transition', { 
+            //     marginTop: 0, marginLeft: 0, left: offset, top: offset, duration: 0.8, 
+            //     opacity: 1, width: size, height: size,  ease: "expo.in"}, '-=2');
         }
 
     }
@@ -268,7 +284,6 @@ export
             },
             resize: {
                 add: () => {
-                    console.log('ADD RESIZE');
                     window.addEventListener('resize', onWindowResizeScene, false);
                 },
                 remove: () => {
