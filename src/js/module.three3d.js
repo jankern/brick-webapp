@@ -139,7 +139,7 @@ export
             this.createInitialScene()
         }
 
-        let btn = document.querySelector('#btn');
+        let btn = document.querySelector('#start');
         btn.addEventListener('click', resetFunc, false)
 
     }
