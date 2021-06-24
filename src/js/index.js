@@ -18,24 +18,6 @@ let three3d = new Three3d();
 let httpService = new HttpService();
 let loaded = false;
 
-const viewAnimationOrder = {
-    0: {
-        func: () => {
-            return animations.firstCall();
-        }
-    },
-    1: {
-        func: "secondCall"
-    },
-    2: {
-        func: "thirdCall"
-    }
-};
-
-let zIndexOrder = (elClass)=>{
-
-}
-
 // cluster -> brick -> variations
 
 let gallery = {
@@ -117,22 +99,6 @@ let gallery = {
     ]
 }
 
-// let bla = () =>{
-//     console.log('INSERT to me, next');
-// }
-
-// let blu = (foo) => {
-//     console.log(foo);
-// }
-
-// let bli = (foo) => {
-//     console.log(foo);
-
-//     let ret = httpService.get().then(data => {
-//                 console.log('in upper level');
-//                 console.log(data);
-//             });
-// }
 
 // Stand der Dinge
 // devmiddleware eingebunden, test route steht
@@ -143,7 +109,9 @@ let gallery = {
 //   });
 
 
-
+window.startGallery = () => {
+    console.log('wieder am Start');
+}
 
 window.onload = (event) => {
 
@@ -170,13 +138,9 @@ window.onload = (event) => {
     }
 
     animationPromise(animations.preloadAnimation).then((result) => {
-        window.addEventListener('resize', three3d.onWindowResize, false);
+        // window.addEventListener('resize', three3d.onWindowResize, false);
         return animationPromise(animations.preloadTransitionAnimation);
     });
-
-    window.startGallery = () => {
-        console.log('wieder am Start');
-    }
 
     // .then((result) => {
     //     return animationPromise(4000, animations.animationPromise1);
