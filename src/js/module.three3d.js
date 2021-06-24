@@ -39,6 +39,13 @@ export
         camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );    
         scene = new THREE.Scene();
 
+        let light = new THREE.DirectionalLight(0xffffff);
+        light.position.set(0.6,1,1);
+
+        scene.add(light);
+
+        camera.position.set(-0.06, 0.04, 0.3);
+
         textureLoader = new THREE.TextureLoader();
         //texture = textureLoader.load('../img/Cluster1.jpg');
 
@@ -72,6 +79,7 @@ export
 
                 scene.add(model);
 
+                // wrapping event methods for global access
                 onMouseMove = (ev) => {
                     this.onMouseMove(ev, model);
                 }
@@ -84,13 +92,10 @@ export
                     this.onWindowResizeScene(ev);
                 }
 
-                // TODO funktion
+                // Adding event listener to canvas, window and 3d object
                 this.eventListener().mouseMove.add();
                 this.eventListener().mouseDown.add();
                 this.eventListener().resize.add();
-
-                //document.addEventListener('mousedown', onMouseDown, false);
-                //document.addEventListener('mousemove', onMouseMove, false);
 
                 gsap.from(model.scale, {duration: 3, x: 1.6, ease: "expo.out"})
                 gsap.to(model.scale, {duration: 3,x: 1.8, ease: "expo.out"})
@@ -103,11 +108,6 @@ export
             }
         );
 
-        let light = new THREE.DirectionalLight(0xffffff);
-        light.position.set(0.6,1,1);
-
-        scene.add(light);
-
         /* ------------- HELPER ---------------- */
     
         // moved out -> check git branch for initial animation
@@ -119,29 +119,12 @@ export
         renderer.setClearColor (0x000000, 0);
         renderer.setSize( window.innerWidth, window.innerHeight ); 
 
-        camera.position.set(-0.06, 0.04, 0.3);
-
-        // loopAnimation = () => {
-
-        //     requestAnimationFrame(loopAnimation);
-            
-        //     if(isCamMoving && y > -0.12){
-        //         this.moveCamera(camera, x, y, z);
-        //         x += 0.01;
-        //         y -= 0.02;
-        //         z -= 0.02;
-        //     }
-
-        //     renderer.render( scene, camera );  
-        // };
-
-        //loopAnimation();
-
+        // Call animation loop to keep screen refreshed
         this.loopAnimation();
 
+        // Append Scene / Canvas to the DOM
         let parentLayer = document.querySelector('.view-wrapper.start');
         parentLayer.appendChild( renderer.domElement );
-        //document.body.appendChild( renderer.domElement );
 
     }
 
