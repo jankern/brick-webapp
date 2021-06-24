@@ -15,7 +15,8 @@ let camera, scene, renderer, textureLoader, texture;
 let geometry, material, mesh, model;
 let controls, pointLight, ambientLight, lightHelper, gridHelper;
 let loopAnimation, moveCamera, meshObjects, intersects;
-let onMouseDown, isMouseDown, onMouseMove, isCamMoving, onWindowResizeScene, eventListener, resetFunc;
+let onMouseDown, isMouseDown, onMouseMove, isCamMoving, 
+    onWindowResizeScene, eventListener, resetFunc, stopFunc, isLooping;
 let x, y, z;
 
 const gltfLoader = new GLTFLoader();
@@ -48,6 +49,7 @@ export
 
     init(){
 
+        isLooping = true;
         isCamMoving = false;
         //isMouseDown = false;
 
@@ -133,14 +135,24 @@ export
         let parentLayer = document.querySelector('.view-wrapper.start');
         parentLayer.appendChild( renderer.domElement );
 
-        resetFunc = () => {
-            console.log('resetFunc');
-            isCamMoving = false;
-            this.createInitialScene()
+        stopFunc = () => {
+            isLooping = false;
         }
 
-        let btn = document.querySelector('#start');
-        btn.addEventListener('click', resetFunc, false)
+        resetFunc = () => {
+            isCamMoving = false;
+            this.createInitialScene();
+            if(!isLooping){
+                isLooping = true;
+                this.loopAnimation();
+            }
+
+        }
+
+        let btnStart = document.querySelector('#start');
+        btnStart.addEventListener('click', resetFunc, false)
+        let btnStop = document.querySelector('#stop');
+        btnStop.addEventListener('click', stopFunc, false)
 
     }
 
@@ -151,7 +163,7 @@ export
 
     loopAnimation(){
 
-        requestAnimationFrame(() => {this.loopAnimation()});
+        this.loopStatus();
         
         if(isCamMoving && y > -0.12){
             this.moveCamera(camera, x, y, z);
@@ -161,6 +173,14 @@ export
         }
 
         renderer.render( scene, camera );  
+    }
+
+    loopStatus(){
+        if(isLooping){
+            requestAnimationFrame(() => {this.loopAnimation()});
+        }else{
+            cancelAnimationFrame(isLooping);
+        }
     }
     
     detectIntersectedModel(event, model) {
