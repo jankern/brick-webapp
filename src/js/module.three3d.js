@@ -5,17 +5,19 @@ import * as THREE from "three";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
+import Utils from "./module.utils";
 
 import { gsap } from "gsap";
 import { CSSPlugin } from "gsap/CSSPlugin.js";
 
+let utils = new Utils();
 let camera, scene, renderer, textureLoader, texture;
 let geometry, material, mesh;
 let controls, pointLight, ambientLight, lightHelper, gridHelper;
 let animate, moveCamera, onMouseDown, isMouseDown, onMouseMove, meshObjects, intersects;
 
 const gltfLoader = new GLTFLoader();
-const gui = new dat.GUI();
+//const gui = new dat.GUI();
 
 export
     default class Three3d {
@@ -36,13 +38,13 @@ export
         scene = new THREE.Scene();
 
         textureLoader = new THREE.TextureLoader();
-        texture = textureLoader.load('../img/Cluster1.jpg');
+        //texture = textureLoader.load('../img/Cluster1.jpg');
 
         // loading model
         let model;
 
         gltfLoader.load(
-            "../assets/gltf/showroom.glb",
+            "./assets/gltf/showroom.glb",
             (glb) => {
 
                 model = glb.scene;
@@ -68,7 +70,7 @@ export
 
                 onMouseMove = (event) => {
                     if (isMouseDown) {
-                        return;
+                        //return;
                     }
             
                     event.preventDefault();
@@ -112,8 +114,18 @@ export
                     model.click = () => {
                         console.log('Tuwas, biddee');
                         isCamMoving = true;
-                        gsap.to(model.scale, 2, {x: 5, y:6, ease: "expo.out"});
-                        gsap.to(model.position, 1, {y:-0.1, ease: "expo.out"})
+
+                        let maxSize = utils.getViewPortMaxAxis();
+                        let size = maxSize*2.5 + 'px';
+                        let offset = -maxSize + 'px';
+                        // document.body.style.overflow = 'hidden';
+
+                        let tl = gsap.timeline({onComplete: window.startGallery});
+                        tl.to(model.scale, {duration: 2, x: 5, y:6, ease: "expo.out"});
+                        tl.to(model.position, {duration: 1, y:-0.1, ease: "expo.out"}, '-=2');
+                        tl.to('.gallery-transition', { 
+                            marginTop: 0, marginLeft: 0, left: offset, top: offset, duration: 0.8, 
+                            opacity: 1, width: size, height: size,  ease: "expo.in"}, '-=2');
                     }
         
                     console.log(isIntersected);
@@ -160,7 +172,7 @@ export
         //lightHelper = new THREE.PointLightHelper(pointLight);
         //gridHelper = new THREE.GridHelper(gridHelper);
         //scene.add(lightHelper, gridHelper);
-        //scene.add(gridHelper);
+        //scene.add(gridHelper);        // /path/sub
 
         /* ------------------------------------- */
     
@@ -178,6 +190,7 @@ export
             requestAnimationFrame(animate);
             
             if(isCamMoving && y > -0.12){
+                
                 this.moveCamera(camera, x, y, z);
                 // x -= 0.01;
                 // y -= 0.01;
@@ -195,7 +208,7 @@ export
 
         animate();
 
-        let parentLayer = document.querySelector('.view-wrapper.preload');
+        let parentLayer = document.querySelector('.view-wrapper.start');
         parentLayer.appendChild( renderer.domElement );
         //document.body.appendChild( renderer.domElement );
 

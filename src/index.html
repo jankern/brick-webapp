@@ -5,33 +5,52 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" type="image/x-icon" href="./static/favicon.ico">
   <base ref="/">
-  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,400,500,700|Roboto+Slab:300,400,700&display=swap"
-    rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet"> 
   <title>cole-blaq</title>
 </head>
 
 <body>
 
   <header>
-    <!--button type="button" id="ani-timeline" >Animations timeline</button-->
     <div class="header-item">
-      <div class="logo">
-        <!-- <img src="static/img/Cluster1jpg"> -->
-      </div>
+      <div class="logo"></div>
     </div>
     <div class="header-item">
-      <button type="button" class="burger-nav-btn"><span class="material-icons">menu</span></button>
+      <button type="button" class="burger-nav-btn">
+        <div class="material-icons close">close</div>
+        <div class="material-icons menu">menu</div>
+      </button>
     </div>
   </header>
   <main>
 
     <div class="view-wrapper preload">
-      <div class="perspective-bottom inactive"></div>
-      <span style="position:absolute">
-      </span>
+      <div class="preload-container" >
+        <div class="preload-item preload-item-1" id="preload-item-1"></div>
+        <div class="preload-item preload-item-2" id="preload-item-2"></div>
+        <div class="preload-item preload-item-3" id="preload-item-3"></div>
+        <div class="preload-item preload-item-4" id="preload-item-4"></div>
+        <div class="preload-item preload-item-4" id="preload-item-5"></div>
+        <div class="preload-item preload-item-3" id="preload-item-6"></div>
+        <div class="preload-item preload-item-2" id="preload-item-7"></div>
+        <div class="preload-item preload-item-1" id="preload-item-8"></div>
+      </div>
     </div>
     <div class="view-wrapper start">
-    
+      <div class="gallery-transition"></div>
+      <div class="claim-wrapper">
+        <div class="claim-item claim-item-1"><h2>enter</h2></div>
+        <div class="claim-item claim-item-2"><h2>the</h2></div>
+        <div class="claim-item claim-item-3"><h2>BRICK</h2></div>
+        <div class="claim-item sub-claim">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+          </p>
+        </div>
+      </div>
+      <div class="perspective-bottom inactive"></div>
     </div>
     <div class="view-wrapper gallery">
       GALLERY
@@ -40,27 +59,32 @@
       GALLERY ITEM
     </div>
     <nav class="view-wrapper burger-nav">
-      NAV
+      <ul class="nav-wrapper">
+        <li class="lev-1 nav-animation">
+          <a href="">/First nav item</a>
+        </li>
+        <li class="lev-1 nav-animation">
+          <a href="">/Second nav item</a>
+          <ul>
+            <li class="lev-2">
+              <a href="">Sub nav item 1</a>
+            </li>
+            <li class="lev-2">
+              <a href="">Sub nav item 2 with longer text</a>
+            </li>
+          </ul>
+        </li>
+        <li class="lev-1 nav-animation">
+          <a href="">/Third nav item</a>
+        </li>
+        <li class="lev-1 nav-animation">
+          <a href="">/Fourth nav item</a>
+        </li>
+      </ul>
     </nav>
 
-    <!--button type="button" id="animate-btn" style="position:absolute; z-index: 100;">Animate</button>
-    <div class="animation-container" id="anim-cont-1">
-
-      <div class="cube-wrapper">
-        <div class="cube">
-          <div class="front">
-            <img src="./static/img/Cluster1.jpg">
-          </div>
-          <div class="back"></div>
-          <div class="top"></div>
-          <div class="bottom"></div>
-          <div class="left"></div>
-          <div class="right"></div>
-        </div>
-      </div>
-
-    </div-->
   </main>
+
   <footer></footer>
 
 </body>

@@ -7,47 +7,35 @@ $medium: 500;
 $bold: 700;
 
 // Base Font
-$base-font-family: serif;
-$base-font:"Roboto Slab";
+$base-font-family: sans-serif;
+$base-font:'Roboto Condensed';
 $base-font-weight: $light;
 $base-font-size: 18px;
 $base-line-height: 30px;
 
 // Base Font
 $header-font-family: sans-serif;
-$header-font:"Noto Sans KR";
+$header-font:'Roboto Condensed';
 $header-font-weight: $bold;
 $header-font-size: 18px;
 $header-line-height: 26px;
 
 // Colors
 $base-black:#000000;
-$black-light:#333333;
-$black-super-light:#666666;
+$black-medium:#373737;
+$black-light:#474747; 
+$black-super-light:#646464;
 
 $base-brown:#291d1d;
 $base-brown_rgba_30:rgba(41, 29, 29, 0.3);
-$brown-medium:#4a3a3a;
-$brown-medium-light:#525251;
-$brown-medium-super-light:#646464;
-$brown-medium_rgb_50:rgba(74, 58, 58, 0.5);
-$brown-light:#b5adad;
-$brown-super-light:#f0f0f0; //#e5e0e0; //#c3bfbf;
+$base-orange: #ff550d;
+$gallery-pink: #d26aa2;
+$gallery-yellow: #c0c13a;
+$gallery-blue: #95b4bf;
 
-$base-blue: #42a5f5;
-$blue-medium: #afcfe7;
-$blue-medium_rgba_50: rgba(175, 207, 231, 0.5);
-$blue-dark: #255074;
-$blue-light: #bed8ec;
-$blue-light_rgba_20: rgba(190, 216, 236, 0.2);
-$blue-super-light: #dceffd;
-
-$topic-green: #a7ffeb;
-$topic-yellow: #e6ee9c;
-$topic-purple: #e1bee7;
-$topic-orange: #eebb6f;
 
 $base-white:#ffffff;
+$base-white-medium: #d3d3d3;
 $input-error: #f55c51;
 $input-error-light: rgb(228, 153, 153);
 

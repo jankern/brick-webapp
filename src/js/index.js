@@ -6,7 +6,7 @@
 import '../scss/styles.scss';
 
 // Class and Function Imports
-import Main from './template.main';
+import Main from './module.main';
 import Animations from './module.animations';
 import Three3d from './module.three3d';
 import HttpService from './module.http-service';
@@ -143,11 +143,46 @@ let gallery = {
 //   });
 
 
-window.addEventListener('resize', three3d.onWindowResize, false);
+
 
 window.onload = (event) => {
 
     console.log('The page has fully loaded');
+    let menuToggle = true;
+
+    // assign event listener
+    let navMenu = document.querySelector('button.burger-nav-btn');
+    navMenu.addEventListener('click', (event) => {
+        event.preventDefault();
+        animations.buttonEventNavMenu(event, menuToggle);
+        menuToggle = !menuToggle;
+        console.log(menuToggle);
+    });
+
+
+    let animationPromise = (callback) => {
+        let p  = new Promise(
+            (resolve, reject) => {
+                return callback(resolve, reject);
+            }
+        );
+        return p;
+    }
+
+    animationPromise(animations.preloadAnimation).then((result) => {
+        window.addEventListener('resize', three3d.onWindowResize, false);
+        return animationPromise(animations.preloadTransitionAnimation);
+    });
+
+    window.startGallery = () => {
+        console.log('wieder am Start');
+    }
+
+    // .then((result) => {
+    //     return animationPromise(4000, animations.animationPromise1);
+    // }).then((result) => {
+    //     return animationPromise(2000, animations.animationPromise1);
+    // })
 
     // Page 1
     // start animation takes 5 seconds
@@ -158,30 +193,7 @@ window.onload = (event) => {
     // Transition 1
 
 
-    three3d.init();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // console.log(main.out());
-    // console.log(animations.out());
-    // animations.runFirstAnimation();
-
-    // bla();
-
-    //three3d.out();
-    
+    //three3d.init();
 
     // setTimeout(()=>{
     //     let ret = httpService.get().then(data => {
@@ -190,18 +202,7 @@ window.onload = (event) => {
     //     });
     // }, 3000);
 
-    //console.log(viewAnimationOrder[0].func())
-
-    // Start screen with layer 1
-    // start first animation for 3 seconds, after roll down the layer 2
-    // layer 2 shows entire screen, canvas with object
-
-    // click the object, objects tweens, when tween is done go to layer 3
-
-
-
-
-    // document.getElementById("animate-btn").addEventListener("click", animations.runSecondAnimation); 
+ 
 };
 
 // HMR inclusion
