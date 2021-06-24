@@ -11,12 +11,12 @@ import { gsap } from "gsap";
 import { CSSPlugin } from "gsap/CSSPlugin.js";
 
 let utils = new Utils();
-let camera, scene, renderer, textureLoader, texture;
+let camera, scene, renderer, textureLoader, texture, intersects;
 let geometry, material, mesh, model;
 let controls, pointLight, ambientLight, lightHelper, gridHelper;
-let loopAnimation, moveCamera, meshObjects, intersects;
+let loopAnimation, moveCamera, meshObjects;
 let onMouseDown, isMouseDown, onMouseMove, isCamMoving, 
-    onWindowResizeScene, eventListener, resetFunc, stopFunc, isLooping;
+    onWindowResizeScene, isLooping;
 let x, y, z;
 
 const gltfLoader = new GLTFLoader();
@@ -102,9 +102,9 @@ export
                 }
 
                 // Adding event listener to canvas, window and 3d object
-                this.eventListener().mouseMove.add();
-                this.eventListener().mouseDown.add();
-                this.eventListener().resize.add();
+                this.manageEventListener().mouseMove.add();
+                this.manageEventListener().mouseDown.add();
+                this.manageEventListener().resize.add();
 
                 gsap.from(model.scale, {duration: 3, x: 1.6, ease: "expo.out"});
                 gsap.to(model.scale, {duration: 3,x: 1.8, ease: "expo.out"});
@@ -135,31 +135,32 @@ export
         let parentLayer = document.querySelector('.view-wrapper.start');
         parentLayer.appendChild( renderer.domElement );
 
-        stopFunc = () => {
-            isLooping = false;
-        }
-
-        resetFunc = () => {
-            isCamMoving = false;
-            this.createInitialScene();
-            if(!isLooping){
-                isLooping = true;
-                this.loopAnimation();
-            }
-
-        }
-
-        let btnStart = document.querySelector('#start');
-        btnStart.addEventListener('click', resetFunc, false)
-        let btnStop = document.querySelector('#stop');
-        btnStop.addEventListener('click', stopFunc, false)
-
     }
 
-    // loop abschalten
-    // mouse move abschalten
-    // mouse down abschalten
-    // window resize abschalten
+    suspendScene(){
+        isLooping = false;
+
+        console.log(this.manageEventListener())
+
+        // Remove event listener
+        this.manageEventListener().mouseDown.remove();
+        this.manageEventListener().mouseMove.remove();
+        this.manageEventListener().resize.remove();
+    }
+
+    resumeScene(obj){
+        isCamMoving = false;
+        isLooping = true;
+
+        // Add event listener
+        this.manageEventListener().mouseDown.add();
+        this.manageEventListener().mouseMove.add();
+        this.manageEventListener().resize.add();
+
+        // Resume scene defaults and animation 
+        this.createInitialScene();
+        this.loopAnimation();
+    }
 
     loopAnimation(){
 
@@ -212,7 +213,6 @@ export
         tmpz = 0.3 + z;
 
         camera.position.set(tmpx, tmpy, tmpz);
-        console.log('camera moved');
         // can be used to set rotation
         camera.lookAt(0, 0, 0);
     }
@@ -252,13 +252,8 @@ export
         let intersectedList;
         intersectedList = this.detectIntersectedModel(event, model);
 
-        console.log('in DOWN');
-        console.log(intersectedList);
-
         if(intersectedList){
 
-            
-            console.log('Tuwas, biddee, Klappe die Zweite');
             isCamMoving = true;
 
             let maxSize = utils.getViewPortMaxAxis();
@@ -277,21 +272,22 @@ export
     }
 
     onWindowResizeScene(event){
-        console.log('resized')
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.render( scene, camera );
     }
 
-    eventListener(){
+    manageEventListener(){
         return {
             mouseMove: {
                 add: () => {
                     document.addEventListener('mousemove', onMouseMove, false);
+                    // document.addEventListener('mousemove', (ev) => {this.onMouseMove(ev, model)}, false);
                 },
                 remove: () => {
                     document.removeEventListener('mousemove', onMouseMove, false);
+                    // document.removeEventListener('mousemove', (ev) => {this.onMouseMove(ev, model)}, false);
                 }
             },
             mouseDown: {

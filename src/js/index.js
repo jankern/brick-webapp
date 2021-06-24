@@ -142,6 +142,11 @@ window.onload = (event) => {
         return animationPromise(animations.preloadTransitionAnimation);
     });
 
+    let btnStart = document.querySelector('#starts');
+    btnStart.addEventListener('click', () => {three3d.resumeScene()}, false)
+    let btnStop = document.querySelector('#stops');
+    btnStop.addEventListener('click', () => {three3d.suspendScene()}, false)
+
     // .then((result) => {
     //     return animationPromise(4000, animations.animationPromise1);
     // }).then((result) => {
