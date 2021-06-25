@@ -44,6 +44,7 @@ header{
         float: right;
         margin:60px 60px 0 0;
         overflow: hidden;
+        cursor: pointer;
 
         .material-icons{
             font-size:3em;
@@ -53,7 +54,7 @@ header{
             position: relative;
             top: -50px;
         }
-        opacity:0;
+        //opacity:0;
     }
 }
 
@@ -74,21 +75,21 @@ canvas{
 
     &.preload{
         background: $base-orange;
-        z-index: 13;
+        z-index: 8;
         overflow: hidden;
     }
     &.start{
         background:$black-medium;
-        z-index: 12;
+        z-index: 7;
         overflow: hidden;
     }
     &.gallery{
         background:violet;
-        z-index: 11;
+        z-index: 6;
     }
     &.gallery-item{
         background:wheat;
-        z-index: 10;
+        z-index: 5;
     }
 }
 

@@ -116,16 +116,18 @@ window.startGallery = () => {
 window.onload = (event) => {
 
     console.log('The page has fully loaded');
-    let menuToggle = true;
+    // let menuToggle = true;
 
     // assign event listener
-    let navMenu = document.querySelector('button.burger-nav-btn');
-    navMenu.addEventListener('click', (event) => {
-        event.preventDefault();
-        animations.buttonEventNavMenu(event, menuToggle);
-        menuToggle = !menuToggle;
-        console.log(menuToggle);
-    });
+    // let navMenu = document.querySelector('button.burger-nav-btn');
+    // navMenu.addEventListener('click', (event) => {
+    //     event.preventDefault();
+    //     animations.buttonEventNavMenu(event, menuToggle);
+    //     menuToggle = !menuToggle;
+    //     console.log(menuToggle);
+    // });
+
+    main.init();
 
 
     let animationPromise = (callback) => {
@@ -137,21 +139,20 @@ window.onload = (event) => {
         return p;
     }
 
-    animationPromise(animations.preloadAnimation).then((result) => {
-        // window.addEventListener('resize', three3d.onWindowResize, false);
-        return animationPromise(animations.preloadTransitionAnimation);
-    });
-
-    let btnStart = document.querySelector('#starts');
-    btnStart.addEventListener('click', () => {three3d.resumeScene()}, false)
-    let btnStop = document.querySelector('#stops');
-    btnStop.addEventListener('click', () => {three3d.suspendScene()}, false)
+    // animationPromise(animations.preloadAnimation).then((result) => {
+    //     return animationPromise(animations.preloadTransitionAnimation);
+    // });
 
     // .then((result) => {
     //     return animationPromise(4000, animations.animationPromise1);
     // }).then((result) => {
     //     return animationPromise(2000, animations.animationPromise1);
     // })
+
+    let btnStart = document.querySelector('#starts');
+    btnStart.addEventListener('click', () => {three3d.resumeScene()}, false)
+    let btnStop = document.querySelector('#stops');
+    btnStop.addEventListener('click', () => {three3d.suspendScene()}, false)
 
     // Page 1
     // start animation takes 5 seconds

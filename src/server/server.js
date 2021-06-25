@@ -6,6 +6,7 @@ const webpackDevMiddleware = require('webpack-dev-middleware');
 const app = express();
 const config = require('../../webpack.config.js');
 const compiler = webpack(config);
+const rewrite = require('express-urlrewrite');
 
 app.use(
   webpackDevMiddleware(compiler, {
@@ -20,9 +21,11 @@ app.use(
 );
 
 let relRootPath = "../../server/cole-blaq/html/resources/dist";
+//let relRootPath = "src/";
 const staticMiddleware = express.static(relRootPath);   
 app.use(require('morgan')('dev'));
-app.use('/', staticMiddleware);
+//app.use('/', staticMiddleware);
+app.use(rewrite(/^\/(\w+)/, '/'), staticMiddleware);
 
 // app.use(webpackHotMiddleware(compiler,{
 //   'log': console.log,
