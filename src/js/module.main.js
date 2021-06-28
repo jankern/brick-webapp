@@ -22,10 +22,7 @@ export
     }
 
     init(){
-       
-        // Event listener
-
-        // Routing manager
+        
         // /
         // /home -> Startpage ohne animation / reload threejs
         // /path -> service/divlayer (json)
@@ -35,19 +32,15 @@ export
         console.log('in init');
         menuToggle = true;
 
-        /*
-
-        let link = document.querySelector('#link');
-        this.manageEventListener().onClick.add(link, (event) => {
-            event.preventDefault();
-            var theURL = window.location.pathname;
-            console.log('lets update the url field'+theURL);
-            window.history.pushState("object or string", "Title", "/new-url");
-        });
-
-        */
-
+        // Event listener
         this.registerEventListener();
+
+        // Routing manager
+        let aId = window.location.pathname === "/" ? "1" : "";
+        this.performUrlRouting(window.location.pathname, aId);
+
+        // Testcase für Seitenstart im Untermenü
+        // this.performUrlRouting(window.location.pathname+'somewhere-to-b/and-to-the-b2-with-spice', '');
 
     }
 
@@ -72,9 +65,10 @@ export
             }
         }
 
+        let iteratorMax = elCount + 10;
+        let iterator = iteratorMax - 1;
+
         if(pageLayer.length > 0){
-            let iteratorMax = elCount + 10;
-            let iterator = iteratorMax - 1;
             for( let i in pageLayer){
                 if(pageLayer.hasOwnProperty(i)){
                     if(pageLayer[i].id === elementId){
@@ -86,17 +80,53 @@ export
                 }
             } 
         }
+
+        let navMenu = document.querySelector('nav.view-wrapper');
+        navMenu.style.zIndex = iteratorMax + 10;
         
     }
 
     // Async method to route and load content
-    performUrlRouting(path, title=""){
+    performUrlRouting(path, artId, title=""){
 
-        // Fill browser history state
-        history.pushState({view: this.extractPath(path), path: path}, title, path);
+        let params = artId !== "" ? {"article_id": artId} : {"get_aid_by_nav": encodeURI(path)};
 
-        // extract last path node
-        this.displayPageLayer(this.extractPath(path));
+        httpService.requestChaining().call(httpService.get, params).then(
+            (succ) => {
+
+                // recall case - menu had been called before the get the article id, article can be called now
+                if(succ.status_message && succ.status_message === "found_article_id"){
+                    params = null;
+                    params = {"article_id": succ.data};
+                }
+
+                 // regular case - article id is avilable and can be called directly
+                httpService.requestChaining().call(httpService.get, params, true); // true = recall
+                
+            },
+            (err) => {
+                console.log(err);
+                // TODO react on reject 400/404/500 etc
+            }
+        ).then(
+            (succ) => {
+                console.log(succ);
+                // TODO - 
+                // 1. add reponse to state object
+                // 2. add response to html
+                // 3. create html div container and append to page
+
+                // Fill browser history state
+                // history.pushState({view: this.extractPath(path), path: path, artId: artId}, title, path);
+
+                // extract last path node
+                // this.displayPageLayer(this.extractPath(path));
+            },
+            (err) => {
+                console.log(err);
+                // TODO react on reject 400/404/500 etc
+            }
+        );
 
     }
 
@@ -113,12 +143,16 @@ export
         event.preventDefault();
 
         let href;
+        let artId;
         let target = event.target || event.srcElement;
         
         if (target.tagName === 'A') {
 
             href = target.getAttribute('href');
-            this.performUrlRouting(href);
+            artId = !target.getAttribute('data-article-id') ? null : target.getAttribute('data-article-id');
+            console.log('extract data attr');
+            console.log(artId)
+            this.performUrlRouting(href, artId);
 
         }
 

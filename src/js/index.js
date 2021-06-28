@@ -149,10 +149,10 @@ window.onload = (event) => {
     //     return animationPromise(2000, animations.animationPromise1);
     // })
 
-    let btnStart = document.querySelector('#starts');
-    btnStart.addEventListener('click', () => {three3d.resumeScene()}, false)
-    let btnStop = document.querySelector('#stops');
-    btnStop.addEventListener('click', () => {three3d.suspendScene()}, false)
+    // let btnStart = document.querySelector('#starts');
+    // btnStart.addEventListener('click', () => {three3d.resumeScene()}, false)
+    // let btnStop = document.querySelector('#stops');
+    // btnStop.addEventListener('click', () => {three3d.suspendScene()}, false)
 
     // Page 1
     // start animation takes 5 seconds
