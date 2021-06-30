@@ -1,16 +1,18 @@
-/*
- *  Class Three.js
+/**
+ * Class Three3d / Threejs
+ * 
  */
+
 import * as THREE from "three";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
-import Utils from "./module.utils";
+import Util from "./module.util";
 
 import { gsap } from "gsap";
 import { CSSPlugin } from "gsap/CSSPlugin.js";
 
-let utils = new Utils();
+let util = new Util();
 let camera, scene, renderer, textureLoader, texture, intersects;
 let geometry, material, mesh, model;
 let controls, pointLight, ambientLight, lightHelper, gridHelper;
@@ -256,7 +258,7 @@ export
 
             isCamMoving = true;
 
-            let maxSize = utils.getViewPortMaxAxis();
+            let maxSize = util.getViewPortMaxAxis();
             let size = maxSize*2.5 + 'px';
             let offset = -maxSize + 'px';
             // document.body.style.overflow = 'hidden';

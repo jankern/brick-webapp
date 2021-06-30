@@ -1,25 +1,27 @@
-/*
- *  Class Gsap 1
+/**
+ * Class Animations / GSAP 
+ * 
  */
-import Utils from "./module.utils";
+
+import Util from "./module.util";
 import { gsap } from "gsap";
 import { CSSPlugin } from "gsap/CSSPlugin.js";
-import Three3d from './module.three3d';
+import Three3d from './module.three-3d';
 // import { PixiPlugin } from "gsap/PixiPlugin.js";
 // import { MotionPathPlugin } from "gsap/MotionPathPlugin.js";
 
 let three3d = new Three3d();
-let utils = new Utils();
-let menuIconPosition;
+let util = new Util();
+let menuIconPosition, closeMenu;
 
 export
-    default class Animations {
+    default class Animation {
 
     constructor() {
         gsap.registerPlugin(CSSPlugin/*, PixiPlugin, MotionPathPlugin*/);
     }
 
-    preloadAnimation(resolve, reject){
+    preloadSpinning(){
 
         let tlRepeat = gsap.timeline();
         tlRepeat.to('.preload-item-1', { ease: "power1.out", duration: 1.5, repeat: -1 }, '-=2');
@@ -34,13 +36,19 @@ export
         tlRepeat.to('.preload-item-4', { ease: "power1.out", duration: 1.5, repeat: -1 }, '-=1.7');
         tlRepeat.to('.preload-item-4', {rotation: 360, borderRadius: '50%',  ease: "power1.out", duration: 1.5, repeat: -1 }, '-=1.7');
 
+    }
+
+    preloadStartAnimation(resolve, reject){
+
+        //this.preloadSpinning();
+
         let tl = gsap.timeline({onComplete: () => {console.log('DONE 1'); return resolve();}});
         tl.to('.preload-container', {opacity:1, ease: "expo.in", duration: 2});
         tl.to('.preload-container', {opacity:0, ease: "expo.out", duration: 0.5}, '+=4');
  
     }
 
-    preloadTransitionAnimation(resolve, reject){
+    preloadStartTransitionAnimation(resolve, reject){
 
         let tl = gsap.timeline({onComplete: () => {
             console.log('DONE 2'); 
@@ -50,7 +58,7 @@ export
         }});
         tl.to('.view-wrapper.preload', {height:0, ease: "power2.in", duration: 1});
 
-        tl.from('.claim-item', {y: -50, opacity:0, stagger: .1, ease: "expo.out", duration: 1}, '+=0');
+        tl.from('.claim-item', {y: -50, opacity:0, stagger: .1, ease: "power3.out", duration: 1}, '+=0');
         tl.to('.claim-item', { ease: "expo.out", duration: 1});
 
         tl.to('.logo', {opacity:1, ease: "expo.out", duration: 2}, '-=2');
@@ -60,9 +68,70 @@ export
         three3d.init(); 
     }
 
+    preloadDisplayAnimation(){
+        //this.preloadSpinning();
+        gsap.to('.preload-container', {opacity:1, ease: "expo.in", duration: 0.5});
+    }
+
+    preloadHideAnimation(previousArticleId, currentArticleId){
+        let preloadWrapper = document.querySelector('.view-wrapper.preload');
+        let progressParent = document.querySelector('#article-'+previousArticleId);
+        let currentArticle = document.querySelector('#article-'+currentArticleId);
+        progressParent.style.overflow = "hidden";
+
+        let tl = gsap.timeline({onComplete: (event) => {
+            // hide preloader
+            preloadWrapper.style.display = 'none';
+            // Set current article on top of the zIndex stack
+            currentArticle.style.zIndex = parseInt(currentArticle.style.zIndex)+2;
+            // parent reset to initial height, overflow after animation
+            progressParent.style.height = "100vh";
+            progressParent.style.overflow = "visible";
+        }});
+        tl.to('.preload-container', {opacity:0, ease: "expo.in", duration: 0.5});
+        tl.to('#article-'+previousArticleId, {duration: 0.5, height: 0, ease: "expo.out"});
+    }
+
+    swipeOutNavMenu(toggle){
+
+        let tl = gsap.timeline({onComplete: (event) => {
+            let navElList = document.querySelectorAll('.nav-animation');
+            for (let i in navElList) {
+                if(navElList.hasOwnProperty(i)){
+                    navElList[i].style.display = "none";
+                    navElList[i].style.transition = "opacity 0.5s linear 0s";
+                    navElList[i].style.opacity = 0;
+                }
+            }
+            this.toggleNavMenu(toggle)
+        }})
+
+        tl.to('nav.view-wrapper', {duration: 0.5, height: 0, ease: "expo.out"});
+        
+    }
+
+    toggleNavMenu(toggle){
+
+        if(toggle){
+
+            gsap.to('.burger-nav-btn div', {top: 0, ease: "expo.in"});
+            gsap.to('.burger-nav-btn .menu', {opacity: 0, duration:.8});
+            gsap.to('.burger-nav-btn .close', {opacity: 1, duration:.8,});
+
+        }else{
+
+            console.log(menuIconPosition)
+
+            gsap.to('.burger-nav-btn div', {top: menuIconPosition, ease: "expo.out"});
+            gsap.to('.burger-nav-btn .close', {opacity: 0, duration:.8});
+            gsap.to('.burger-nav-btn .menu', {opacity: 1, duration:.8,});
+
+        }
+    }
+
     buttonEventNavMenu(event, toggle){
 
-        let maxSize = utils.getViewPortMaxAxis();
+        let maxSize = util.getViewPortMaxAxis();
         let size = maxSize*2.5 + 'px';
         let offset = -maxSize + 'px';
         document.body.style.overflow = 'hidden';
@@ -71,9 +140,8 @@ export
 
         if(toggle){
 
-            let closeMenu = document.querySelector('.burger-nav-btn .material-icons');
+            closeMenu = document.querySelector('.burger-nav-btn .material-icons');
             menuIconPosition = window.getComputedStyle(closeMenu).top;
-            console.log(menuIconPosition)
 
             let tlOn = gsap.timeline({onComplete: () => {
                 document.querySelector('nav.view-wrapper').style.height = '100vh';
@@ -96,9 +164,7 @@ export
             }});
 
             tlOn.to('nav.view-wrapper', {top: offset, right: offset, width: size, height: size, ease: "power2.in", duration: .8}, '-=0');
-            gsap.to('.burger-nav-btn div', {top: 0, ease: "expo.in"});
-            gsap.to('.burger-nav-btn .menu', {opacity: 0, duration:.8});
-            gsap.to('.burger-nav-btn .close', {opacity: 1, duration:.8,});
+            this.toggleNavMenu(toggle);
 
         }else{
 
@@ -122,11 +188,7 @@ export
 
             // TODO check css rules of gsap, maybe class content can be sued here rather then fixed values
             tlOff.to('nav.view-wrapper', {top: '60px', right: '60px', width: '60px', height: '60px', ease: "power2.out", duration: .8});
-            
-            gsap.to('.burger-nav-btn div', {top: menuIconPosition, ease: "expo.in"});
-            gsap.to('.burger-nav-btn .close', {opacity: 0, duration:.8});
-            gsap.to('.burger-nav-btn .menu', {opacity: 1, duration:.8,});
-
+            this.toggleNavMenu(toggle);
         }
         
         

@@ -6,17 +6,19 @@
 import '../scss/styles.scss';
 
 // Class and Function Imports
-import Main from './module.main';
-import Animations from './module.animations';
-import Three3d from './module.three3d';
-import HttpService from './module.http-service';
+import ArticleList from './module.article-list';
+// import Main from './module.main';
+// import Animation from './module.animation';
+// import Three3d from './module.three-3d';
+// import HttpService from './module.http-service';
 
 // Class intialisation
-let main = new Main();
-let animations = new Animations();
-let three3d = new Three3d();
-let httpService = new HttpService();
-let loaded = false;
+let articleList = new ArticleList();
+// let main = new Main();
+// let animation = new Animation();
+// let three3d = new Three3d();
+// let httpService = new HttpService();
+// let loaded = false;
 
 // cluster -> brick -> variations
 
@@ -122,12 +124,13 @@ window.onload = (event) => {
     // let navMenu = document.querySelector('button.burger-nav-btn');
     // navMenu.addEventListener('click', (event) => {
     //     event.preventDefault();
-    //     animations.buttonEventNavMenu(event, menuToggle);
+    //     animation.buttonEventNavMenu(event, menuToggle);
     //     menuToggle = !menuToggle;
     //     console.log(menuToggle);
     // });
 
-    main.init();
+    // main.init();
+    articleList.init();
 
 
     let animationPromise = (callback) => {
@@ -139,14 +142,14 @@ window.onload = (event) => {
         return p;
     }
 
-    // animationPromise(animations.preloadAnimation).then((result) => {
-    //     return animationPromise(animations.preloadTransitionAnimation);
+    // animationPromise(animation.preloadAnimation).then((result) => {
+    //     return animationPromise(animation.preloadTransitionAnimation);
     // });
 
     // .then((result) => {
-    //     return animationPromise(4000, animations.animationPromise1);
+    //     return animationPromise(4000, animation.animationPromise1);
     // }).then((result) => {
-    //     return animationPromise(2000, animations.animationPromise1);
+    //     return animationPromise(2000, animation.animationPromise1);
     // })
 
     // let btnStart = document.querySelector('#starts');

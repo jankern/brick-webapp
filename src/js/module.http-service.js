@@ -1,6 +1,10 @@
+/**
+ * Class HTTP service
+ * 
+ */
 
-import Utils from './module.utils';
-let utils = new Utils();
+import Util from './module.util';
+let util = new Util();
 
 export
     default class HttpService {
@@ -29,10 +33,10 @@ export
         //const data = { username: 'example' };
 
         let preparedParams = '';
-        let objLength = utils.getObjectLength(targetObj);
+        let objLength = util.getObjectLength(targetObj);
 
         if((targetObj.article_id !== undefined && targetObj.article_id !== "") && !targetObj.get_aid_by_nav && !recall){
-            console.log('abbrechen');
+            console.log('Navigation nicht holen weil Artikel angegebn wurde');
             return resolve('skip_nav_retrieval');
         }
 
@@ -59,13 +63,10 @@ export
             .then((response) => response.json())
             //Then with the data from the response in JSON...
             .then((data) => {
-                // console.log('IN FETCH');
-                // console.log(data);
                 return resolve(data);
             })
             //Then with the error generated...
             .catch((error) => {
-                //console.error('Error:', error);
                 return reject(error);
             });
 

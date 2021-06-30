@@ -71,11 +71,12 @@ canvas{
 .view-wrapper{
     position:absolute;
     width: 100vw;
-    height: 100vh;  
+    height: 100vh;
+    background:white;  
 
     &.preload{
         background: $base-orange;
-        z-index: 8;
+        z-index: 50;
         overflow: hidden;
     }
     &.start{

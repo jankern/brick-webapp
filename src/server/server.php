@@ -22,7 +22,7 @@
         }
         else{
 			sleep(1);
-            response(200,"found_article",$articleId);
+            response(200,"found_article","<p>This is a text for article" .$articleId. "</p>");
         }
         
     }elseif(!empty($_GET['get_aid_by_nav'])){
