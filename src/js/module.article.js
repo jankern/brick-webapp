@@ -36,6 +36,7 @@
             this.articleElement.id = 'article-'+this.articleId;
             this.articleElement.className = "view-wrapper page";
             this.articleElement.style.zIndex = this.zIndex + count;
+            this.articleElement.style.backgroundColor = util.getRandomColor();
             this.zIndex = this.zIndex + count;
             
             mainElement = document.querySelector('main');
@@ -46,7 +47,7 @@
         }
 
         updateElement(content){
-            this.articleElement.innerHTML = content;
+            this.articleElement.innerHTML = '<div class="content">'+content+'</div>';
         }
 
         updateState(){
@@ -72,7 +73,7 @@
 
         doTransition(){
             progressElement.style.display = 'block';
-            mainElement.prepend(progressElement);
+            mainElement.appendChild(progressElement);
             animation.preloadDisplayAnimation();
         }
 

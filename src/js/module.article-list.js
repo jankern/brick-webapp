@@ -49,7 +49,7 @@ export
 
         let childrenObj = util.getElementChildren('main');
 
-        let iteratorMax = childrenObj.count + 10;
+        let iteratorMax = childrenObj.count - 1 + 10;
         let iterator = iteratorMax - 1;
 
         if(articles.length > 0){

@@ -69,10 +69,13 @@ export
     }
 
     preloadDisplayAnimation(){
+
         gsap.to('.preload-container', {opacity:1, ease: "expo.in", duration: 0.5});
+
     }
 
     preloadHideAnimation(previousArticleId, currentArticle){
+
         let preloadWrapper = document.querySelector('.view-wrapper.preload');
         let progressParent = document.querySelector('#article-'+previousArticleId);
         progressParent.style.overflow = "hidden";
@@ -88,6 +91,7 @@ export
         }});
         tl.to('.preload-container', {opacity:0, ease: "expo.in", duration: 0.5});
         tl.to('#article-'+previousArticleId, {duration: 0.5, height: 0, ease: "expo.out"});
+
     }
 
     swipeOutNavMenu(toggle){
@@ -102,27 +106,24 @@ export
                 }
             }
             this.toggleNavMenu(toggle)
-        }})
+        }});
 
         tl.to('nav.view-wrapper', {duration: 0.5, height: 0, ease: "expo.out"});
-        
+
     }
 
     toggleNavMenu(toggle){
 
         if(toggle){
-
             gsap.to('.burger-nav-btn div', {top: 0, ease: "expo.in"});
             gsap.to('.burger-nav-btn .menu', {opacity: 0, duration:.8});
             gsap.to('.burger-nav-btn .close', {opacity: 1, duration:.8,});
-
         }else{
-
             gsap.to('.burger-nav-btn div', {top: menuIconPosition, ease: "expo.out"});
             gsap.to('.burger-nav-btn .close', {opacity: 0, duration:.8});
             gsap.to('.burger-nav-btn .menu', {opacity: 1, duration:.8,});
-
         }
+
     }
 
     buttonEventNavMenu(event, toggle){

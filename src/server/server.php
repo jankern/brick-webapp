@@ -55,7 +55,7 @@
             "/"=>"1",
             "/somewhere-to-a"=>"2",
             "/somewhere-to-b"=>"3",
-            "/somewhere-to-b/and-to-the-b2-with-spice"=>"4",
+            "/somewhere-to-b/and-to-the-b1"=>"4",
             "/somewhere-to-b/and-to-the-b2-with-spice"=>"5",
             "/somewhere-to-c"=>"6",
             "/somewhere-to-d"=>"7"

@@ -74,36 +74,33 @@ canvas{
     height: 100vh;
     background:white;  
 
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
     &.preload{
         background: $base-orange;
         z-index: 50;
         overflow: hidden;
     }
-    &.start{
-        background:$black-medium;
-        z-index: 7;
-        overflow: hidden;
-    }
-    &.gallery{
-        background:violet;
-        z-index: 6;
-    }
-    &.gallery-item{
-        background:wheat;
-        z-index: 5;
-    }
+}
+
+.content{
+    padding:10px;
 }
 
 nav.view-wrapper{
 
     background:lightgrey;
-    z-index: 50;
+    z-index: 51;
     border-radius:50%;
     height:60px;
     width:60px;
     right:60px;
     top: 60px;
     overflow: hidden;
+    align-items:flex-start;
 
     a:hover{
         text-decoration: none;
