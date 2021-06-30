@@ -69,21 +69,19 @@ export
     }
 
     preloadDisplayAnimation(){
-        //this.preloadSpinning();
         gsap.to('.preload-container', {opacity:1, ease: "expo.in", duration: 0.5});
     }
 
-    preloadHideAnimation(previousArticleId, currentArticleId){
+    preloadHideAnimation(previousArticleId, currentArticle){
         let preloadWrapper = document.querySelector('.view-wrapper.preload');
         let progressParent = document.querySelector('#article-'+previousArticleId);
-        let currentArticle = document.querySelector('#article-'+currentArticleId);
         progressParent.style.overflow = "hidden";
 
         let tl = gsap.timeline({onComplete: (event) => {
             // hide preloader
             preloadWrapper.style.display = 'none';
             // Set current article on top of the zIndex stack
-            currentArticle.style.zIndex = parseInt(currentArticle.style.zIndex)+2;
+            currentArticle.setZIndex(currentArticle.getZIndex()+2);
             // parent reset to initial height, overflow after animation
             progressParent.style.height = "100vh";
             progressParent.style.overflow = "visible";
@@ -119,8 +117,6 @@ export
             gsap.to('.burger-nav-btn .close', {opacity: 1, duration:.8,});
 
         }else{
-
-            console.log(menuIconPosition)
 
             gsap.to('.burger-nav-btn div', {top: menuIconPosition, ease: "expo.out"});
             gsap.to('.burger-nav-btn .close', {opacity: 0, duration:.8});

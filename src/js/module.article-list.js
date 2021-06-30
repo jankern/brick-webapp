@@ -52,17 +52,17 @@ export
         let iteratorMax = childrenObj.count + 10;
         let iterator = iteratorMax - 1;
 
-        if(childrenObj.children.length > 0){
-            for( let i in childrenObj.children){
-                if(childrenObj.children.hasOwnProperty(i)){
-                    if(childrenObj.children[i].id === 'article-'+articleId){
-                        childrenObj.children[i].style.zIndex = iteratorMax;
+        if(articles.length > 0){
+            for(let i in articles){
+                if(articles.hasOwnProperty(i)){
+                    if(articles[i].articleId === articleId){
+                        articles[i].setZIndex(iteratorMax);
                     }else{
-                        childrenObj.children[i].style.zIndex = iterator;
+                        articles[i].setZIndex(iterator);
                         iterator -= 1;
                     }
                 }
-            } 
+            }
         }
 
         let navMenu = document.querySelector('nav.view-wrapper');
@@ -78,7 +78,7 @@ export
 
         let hasArticle = false;
 
-        // If article already exists, don't call it again
+        // If article already exists, don't recall
         for (let i in articles) {
             if (articles.hasOwnProperty(i)) {
                 if (articles[i].getArticleId() === articleId) {
@@ -88,16 +88,16 @@ export
             }
         }
 
-        // If article does not exist, insert an empty article, call data and insert them into the view
+        // If article does not exist, insert an empty article, call data from server and insert them into the view
         if (!hasArticle) {
 
-            // If a previous request ist still going on, block the current one.
+            // If a previous request ist still ongoing, block the current one.
             if(isRequestOngoing){
                 console.warn('Too much requests at a time. Blocked.');
                 return;
             }
 
-            // Create article
+            // Create article object
             let article = new Article(articleId, path);
             article.createElememt();
             article.doTransition();
@@ -128,9 +128,8 @@ export
             ).then(
                 (succ) => {
                     article.updateElement(succ.data);
-                    console.log(articles);
                     isRequestOngoing = false;
-                    article.finishTransition(this.getPreviousState(), articleId);
+                    article.finishTransition(this.getPreviousState());
                     this.setPreviousState(path, articleId);
                 },
                 (err) => {

@@ -36,7 +36,6 @@ export
         let objLength = util.getObjectLength(targetObj);
 
         if((targetObj.article_id !== undefined && targetObj.article_id !== "") && !targetObj.get_aid_by_nav && !recall){
-            console.log('Navigation nicht holen weil Artikel angegebn wurde');
             return resolve('skip_nav_retrieval');
         }
 

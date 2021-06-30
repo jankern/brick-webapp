@@ -9,7 +9,7 @@
  import Animation from './module.animation';
  let animation = new Animation();
 
- let zIndex, articleElement, progressElement, mainElement;
+ let articleElement, progressElement, mainElement;
 
  export 
     default class Article {
@@ -19,8 +19,9 @@
             this.articleId = articleId;
             this.path = path;
             this.title = title;
+            this.articleElement = {};
 
-            zIndex = 10;
+            this.zIndex = 10;
         }
 
         createElememt(){
@@ -31,20 +32,21 @@
                 count = childrenObj.count-2;
             }
 
-            articleElement = document.createElement('div');
-            articleElement.id = 'article-'+this.articleId;
-            articleElement.className = "view-wrapper page";
-            articleElement.style.zIndex = zIndex + count;
+            this.articleElement = document.createElement('div');
+            this.articleElement.id = 'article-'+this.articleId;
+            this.articleElement.className = "view-wrapper page";
+            this.articleElement.style.zIndex = this.zIndex + count;
+            this.zIndex = this.zIndex + count;
             
             mainElement = document.querySelector('main');
-            mainElement.appendChild(articleElement);
+            mainElement.appendChild(this.articleElement);
             this.updateState();
 
             progressElement = document.querySelector('.view-wrapper.preload');
         }
 
         updateElement(content){
-            articleElement.innerHTML = content;
+            this.articleElement.innerHTML = content;
         }
 
         updateState(){
@@ -59,10 +61,13 @@
             return this.articleId;
         }
 
-        setZIndex(parZIndex){
-            zIndex = parZIndex;
-            console.log(this.articleId);
-            console.log(zIndex)
+        getZIndex(){
+            return this.zIndex;
+        }
+
+        setZIndex(zIndex){
+            this.zIndex = zIndex;
+            this.articleElement.style.zIndex = this.zIndex;
         }
 
         doTransition(){
@@ -71,12 +76,11 @@
             animation.preloadDisplayAnimation();
         }
 
-        finishTransition(previousArticle, currentArticleId){
+        finishTransition(previousArticle){
             if(previousArticle){
                 let previousArticleElement = document.querySelector('#article-'+previousArticle.articleId);
                 previousArticleElement.prepend(progressElement);
-                animation.preloadHideAnimation(previousArticle.articleId, currentArticleId);
-                this.setZIndex(zIndex+1);
+                animation.preloadHideAnimation(previousArticle.articleId, this);
             }
 
             // TODO temporary solution
