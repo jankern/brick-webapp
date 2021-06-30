@@ -17,13 +17,39 @@
 
         $articleId = $_GET['article_id'];
         
-        if(false){
+        if($articleId == ''){
             response(200,"found_no_article",NULL);
         }
         else{
 			sleep(1);
-            $headline = getNavByArticleId($articleId);
-            response(200,"found_article","<h1>".$headline."</h1><p>This is a text for article " .$articleId. "</p>");
+            if($articleId == '1'){
+
+                $str = '<div class="gallery-transition"></div>
+                <div class="claim-wrapper">
+                    <div class="claim-item claim-item-1">
+                        <h2>enter</h2>
+                    </div>
+                    <div class="claim-item claim-item-2">
+                        <h2>the</h2>
+                    </div>
+                    <div class="claim-item claim-item-3">
+                        <h2>BRICK</h2>
+                    </div>
+                    <div class="claim-item sub-claim">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua</p>
+                    </div>
+                </div>
+                <div class="perspective-bottom inactive"></div>';
+
+                response(200, "found_article", $str);
+
+            }else{
+
+                $headline = getNavByArticleId($articleId);
+                response(200,"found_article","<h1>".$headline."</h1><p>This is a text for article " .$articleId. "</p>");
+            
+            } 
         }
         
     }elseif(!empty($_GET['get_aid_by_nav'])){

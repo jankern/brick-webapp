@@ -54,6 +54,7 @@ export
             console.log('DONE 2'); 
             let nav = document.querySelector('nav.view-wrapper');
             nav.style.opacity = 1;
+            three3d.init(); 
             return resolve();
         }});
         tl.to('.view-wrapper.preload', {height:0, ease: "power2.in", duration: 1});
@@ -65,7 +66,7 @@ export
         tl.to('button.burger-nav-btn', {opacity:1, ease: "expo.out", duration: 2}, '-=1.5');
         tl.to('.perspective-bottom', {width:'53%', height:'53%', bottom:'-5%', right:'8%', ease: "expo.out", duration: 1}, '-=3');
         
-        three3d.init(); 
+        //three3d.init(); 
     }
 
     preloadDisplayAnimation(){
@@ -189,6 +190,21 @@ export
         }
         
         
+    }
+
+    transitionChaining(){
+
+        return {
+            run: (callback, obj) => {
+                let p  = new Promise(
+                    (resolve, reject) => {
+                        return callback(resolve, reject, obj);
+                    }
+                );
+                return p;
+            }
+        }
+
     }
 
 }

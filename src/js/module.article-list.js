@@ -45,6 +45,32 @@ export
 
     }
 
+    performStartPageLoading(path, article){
+
+        // Fetch content from server
+        let params = { "article_id": article.getArticleId() };
+
+        httpService.requestChaining().call(httpService.get, params, true).then(
+            (succ) => {
+                article.updateElement(succ.data);
+                isRequestOngoing = false;
+                this.setPreviousState(path, article.getArticleId());
+                // return animation transition
+                return animation.transitionChaining().run(animation.preloadStartTransitionAnimation, {});
+            }, 
+            (err) => {
+                isRequestOngoing = false;
+                this.setPreviousState(path, articleId);
+                return;
+            }
+        ).then(
+            (result) => {
+                console.log(result);
+            }
+        );
+        
+    }
+
     organizeArticleStack(articleId) {
 
         let childrenObj = util.getElementChildren('main');
@@ -104,6 +130,12 @@ export
             // Pushing all instances to an array
             articles.push(article);
             isRequestOngoing = true;
+
+            // If start page is called for the first time, stop here and go to a specific start page loading procedure
+            if(path === "/"){
+                this.performStartPageLoading(path, article);
+                return;
+            }
 
             // Fetch content from server
             let params = articleId !== "" ? { "article_id": articleId } : { "get_aid_by_nav": encodeURI(path) };

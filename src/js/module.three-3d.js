@@ -134,7 +134,7 @@ export
         this.loopAnimation();
 
         // Append Scene / Canvas to the DOM
-        let parentLayer = document.querySelector('.view-wrapper.start');
+        let parentLayer = document.querySelector('#article-1');
         parentLayer.appendChild( renderer.domElement );
 
     }

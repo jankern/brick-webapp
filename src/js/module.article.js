@@ -73,6 +73,7 @@
 
         doTransition(){
             progressElement.style.display = 'block';
+            progressElement.style.height = '100vh';
             mainElement.appendChild(progressElement);
             animation.preloadDisplayAnimation();
         }

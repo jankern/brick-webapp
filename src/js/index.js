@@ -118,6 +118,9 @@ window.startGallery = () => {
 window.onload = (event) => {
 
     console.log('The page has fully loaded');
+    articleList.init();
+
+    
     // let menuToggle = true;
 
     // assign event listener
@@ -130,17 +133,17 @@ window.onload = (event) => {
     // });
 
     // main.init();
-    articleList.init();
+    
 
 
-    let animationPromise = (callback) => {
-        let p  = new Promise(
-            (resolve, reject) => {
-                return callback(resolve, reject);
-            }
-        );
-        return p;
-    }
+    // let animationPromise = (callback) => {
+    //     let p  = new Promise(
+    //         (resolve, reject) => {
+    //             return callback(resolve, reject);
+    //         }
+    //     );
+    //     return p;
+    // }
 
     // animationPromise(animation.preloadAnimation).then((result) => {
     //     return animationPromise(animation.preloadTransitionAnimation);
