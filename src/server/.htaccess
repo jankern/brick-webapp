@@ -1,9 +1,12 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteCond %{REQUEST_FILENAME} !-d
 # RewriteRule ^(.*)$ server.php/$1 [L]
-RewriteRule ^coleblaq/(.*)$ /coleblaq/? [L]
+# RewriteRule ^coleblaq/(.*)$ /coleblaq/? [L]
+# RewriteRule ^coleblaq/server.php(.*)$ /coleblaq/server.php$1 [L]
+# RewriteRule ^coleblaq/(.*)(?!server.php)$ /coleblaq/? [L]
+# RewriteRule ^coleblaq/(.*[^(/])$ /coleblaq/? [L]
 
 # http://localhost/projectname/api/pen
 # RewriteRule ^api/([a-zA-Z_-]*)$ api.php?name=$1 [NC,L]
