@@ -52,9 +52,18 @@
         }
 
         updateState(){
+            let randId = util.generateRandomNumber(7);
             history.pushState(
-                {view: util.extractPath(this.path), path: this.path, articleId: this.articleId}, 
-                this.title, 
+                {path: this.path, articleId: this.articleId, state:randId}, 
+                this.title,
+                this.path
+            );
+        }
+
+        replaceState(){
+            history.replaceState(
+                {path: this.path, articleId: this.articleId}, 
+                this.title,
                 this.path
             );
         }

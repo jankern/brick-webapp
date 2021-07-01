@@ -101,10 +101,14 @@ export
     }
 
     getState(){
-        console.log(history.state);
+        return history.state;
     }
 
-    performUrlRouting(path, articleId, title = "") {
+    goToState(path){
+        history.go(path);
+    }
+
+    performUrlRouting(path, articleId, popState = false) {
 
         let hasArticle = false;
 
@@ -113,6 +117,11 @@ export
             if (articles.hasOwnProperty(i)) {
                 if (articles[i].getArticleId() === articleId) {
                     hasArticle = true;
+                    // Update pushState only if pressing a link to an already
+                    // existing article AND NOT coming from popState event (history <- ->)!
+                    if(!popState){
+                        articles[i].updateState();
+                    }
                     break;
                 }
             }
@@ -239,7 +248,6 @@ export
 
         // popstate handler for browser history
         window.addEventListener("popstate", (event) => {
-            let location = document.location;
             state = event.state;
 
             // When previous state exists re-call article id and path
@@ -247,9 +255,9 @@ export
                 let articleId = !state.articleId ? '1' : state.articleId;
                 console.log('go to:');
                 console.log(state);
-                this.performUrlRouting(state.path, articleId);
+                this.performUrlRouting(state.path, articleId, true);
             } else {
-                this.performUrlRouting('/', '1');
+                this.performUrlRouting('./', '1', true);
             }
 
             // In case menu is open, close it 
