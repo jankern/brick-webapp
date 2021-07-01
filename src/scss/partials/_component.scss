@@ -64,7 +64,7 @@ main{
 
 canvas{
     position:absolute;
-    z-index:99;
+    z-index:49;
     background:transparent;
 }
 
@@ -80,7 +80,7 @@ canvas{
     align-items: center;
 
     &.preload{
-        background: $base-orange;
+        background: /*$black-medium;*/ $base-orange;
         z-index: 50;
         overflow: hidden;
     }
@@ -176,13 +176,14 @@ nav.view-wrapper{
 
 .perspective-bottom{
     // transform: rotate(30deg) scale(0.7) skew(-55deg) translate(0px,0px);
-    transform: rotate(25deg) scale(0.7) skew(-50deg) translate(0px,0px);
-    width:100%; //53%;
-    height:100%; //53%;
+    // transform: rotate(25deg) scale(0.7) skew(-50deg) translate(0px,0px);
+    transform: rotate(0deg) scale(0.7) skew(0deg) translate(0px,0px);
+    width:60%; //53%;
+    height:35%; //53%;
     border: solid 0px white;
     position: absolute;
     bottom: -150%; //-5%;
-    right: -170%; //8%;
+    right: -175%; //8%;
     border-radius:50%;
 
     &.inactive{
@@ -210,7 +211,7 @@ nav.view-wrapper{
 }
 
 .claim-wrapper{
-    z-index: 50;
+    z-index: 48;
     position: absolute;
     bottom: 28%;
     bottom: 48%;

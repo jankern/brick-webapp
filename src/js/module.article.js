@@ -14,11 +14,11 @@
  export 
     default class Article {
 
-        constructor(articleId, path, title=""){
+        constructor(articleId, path, prop={}){
 
             this.articleId = articleId;
             this.path = path;
-            this.title = title;
+            this.prop = prop;
             this.articleElement = {};
 
             this.zIndex = 10;
@@ -36,7 +36,8 @@
             this.articleElement.id = 'article-'+this.articleId;
             this.articleElement.className = "view-wrapper page";
             this.articleElement.style.zIndex = this.zIndex + count;
-            this.articleElement.style.backgroundColor = util.getRandomColor();
+            let bgColor = this.prop.backgroundColor ? this.prop.backgroundColor : util.getRandomColor();
+            this.articleElement.style.backgroundColor = bgColor;
             this.zIndex = this.zIndex + count;
             
             mainElement = document.querySelector('main');

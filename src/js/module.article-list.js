@@ -123,8 +123,14 @@ export
                 return;
             }
 
+            // Initialise article properties
+            let properties = {};
+            if(path === "/"){
+                properties.backgroundColor = "#373737";
+            }
+
             // Create article object
-            let article = new Article(articleId, path);
+            let article = new Article(articleId, path, properties);
             article.createElememt();
             article.doTransition();
             // Pushing all instances to an array
