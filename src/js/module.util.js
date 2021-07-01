@@ -74,4 +74,25 @@ export
 
     }
 
+    getBaseUrl(){
+
+        let base = document.querySelector('base');
+        let baseAttribute = base.getAttribute('ref');
+        if (baseAttribute.slice(-1) !== "/"){
+            baseAttribute = baseAttribute+"/";
+        }
+        return baseAttribute;
+
+    }
+
+    replaceBaseUrl(baseUrl, path){
+
+        let startPos = path.search(baseUrl);
+        if(startPos != -1){
+            return path.substr(baseUrl.length-1, path.length);
+        }
+        return path;
+
+    }
+
 }

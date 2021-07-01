@@ -14,7 +14,7 @@ let animation = new Animation();
 
 import Article from './module.article';
 
-let menuToggle, articles, state, isRequestOngoing, previousState;
+let menuToggle, articles, state, isRequestOngoing, previousState, baseUrl;
 
 export
     default class ArticleList {
@@ -33,15 +33,19 @@ export
         // article object list
         articles = Array();
 
+        //
+        baseUrl = util.getBaseUrl();
+        console.log(baseUrl);
+
         // start proload sinning
         animation.preloadSpinning();
 
         // Routing manager
-        let articleId = window.location.pathname === "/" ? "1" : "";
+        let articleId = window.location.pathname === baseUrl ? "1" : "";
         this.performUrlRouting(window.location.pathname, articleId);
 
         // Testcase für Seitenstart im Untermenü
-        //this.performUrlRouting(window.location.pathname+'somewhere-to-b/and-to-the-b2-with-spice', '');
+        // this.performUrlRouting(window.location.pathname+'somewhere-to-b/and-to-the-b2-with-spice', '');
 
     }
 
@@ -125,7 +129,7 @@ export
 
             // Initialise article properties
             let properties = {};
-            if(path === "/"){
+            if(path === baseUrl){
                 properties.backgroundColor = "#373737";
             }
 
@@ -138,13 +142,13 @@ export
             isRequestOngoing = true;
 
             // If start page is called for the first time, stop here and go to a specific start page loading procedure
-            if(path === "/"){
+            if(path === baseUrl){
                 this.performStartPageLoading(path, article);
                 return;
             }
 
             // Fetch content from server
-            let params = articleId !== "" ? { "article_id": articleId } : { "get_aid_by_nav": encodeURI(path) };
+            let params = articleId !== "" ? { "article_id": articleId } : { "get_aid_by_nav": util.replaceBaseUrl(baseUrl, path) };
 
             httpService.requestChaining().call(httpService.get, params).then(
                 (succ) => {

@@ -10,7 +10,7 @@ export
     default class HttpService {
 
     constructor() {
-
+        
     }
 
     requestChaining(){
@@ -51,7 +51,8 @@ export
             }
         }
 
-        return fetch('http://localhost:8000/server.php?'+preparedParams, {
+        // return fetch('http://localhost:8000/server.php?'+preparedParams, {
+        return fetch('./server.php?'+preparedParams, {
             method: 'GET',
             mode: 'cors',
             headers: {
