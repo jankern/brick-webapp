@@ -77,7 +77,7 @@ export
     getBaseUrl(){
 
         let base = document.querySelector('base');
-        let baseAttribute = base.getAttribute('ref');
+        let baseAttribute = base.getAttribute('href');
         if (baseAttribute.slice(-1) !== "/"){
             baseAttribute = baseAttribute+"/";
         }
@@ -92,6 +92,19 @@ export
             return path.substr(baseUrl.length-1, path.length);
         }
         return path;
+
+    }
+
+    generateRandomNumber(length){
+
+        let num = '';
+        if(!length){
+            length = 1;
+        }
+        for(let i = 0; i < length; i++){
+            num += Math.floor(Math.random() * (0 + 9));
+        }
+        return parseInt(num);
 
     }
 
