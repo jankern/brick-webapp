@@ -72,6 +72,10 @@
             return this.articleId;
         }
 
+        getArticlePath(){
+            return this.path;
+        }
+
         getZIndex(){
             return this.zIndex;
         }

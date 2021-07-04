@@ -12,6 +12,9 @@ let httpService = new HttpService();
 import Animation from './module.animation';
 let animation = new Animation();
 
+import Three3d from './module.three-3d';
+let three3d = new Three3d();
+
 import Article from './module.article';
 
 let menuToggle, articles, state, isRequestOngoing, previousState, baseUrl;
@@ -30,19 +33,19 @@ export
         // Event listener
         this.registerEventListener();
 
-        // article object list
+        // Article object list
         articles = Array();
 
-        //
+        // Define base url
         baseUrl = util.getBaseUrl();
-        console.log(baseUrl);
 
-        // start proload sinning
+        // Start proload sinning
         animation.preloadSpinning();
 
         // Routing manager
         let articleId = window.location.pathname === baseUrl ? "1" : "";
-        this.performUrlRouting(window.location.pathname, articleId);
+        let path = window.location.pathname;
+        this.performUrlRouting(path, articleId);
 
         // Testcase für Seitenstart im Untermenü
         // this.performUrlRouting(window.location.pathname+'somewhere-to-b/and-to-the-b2-with-spice', '');
@@ -64,15 +67,29 @@ export
             }, 
             (err) => {
                 isRequestOngoing = false;
-                this.setPreviousState(path, articleId);
+                this.setPreviousState(path, article.getArticleId());
                 return;
             }
         ).then(
             (result) => {
-                console.log(result);
+
             }
         );
         
+    }
+
+    suspendStartPageAnimation(path){
+        if(previousState){
+            if(previousState.path === baseUrl && path !== baseUrl){
+                three3d.suspendScene();
+            }
+        }
+    }
+
+    resumeStartPageAnimation(path){
+        if(path === baseUrl && previousState){
+            three3d.resumeScene();
+        }
     }
 
     organizeArticleStack(articleId) {
@@ -126,6 +143,9 @@ export
                 }
             }
         }
+
+        this.suspendStartPageAnimation(path);
+        this.resumeStartPageAnimation(path);
 
         // If article does not exist, insert an empty article, call data from server and insert them into the view
         if (!hasArticle) {
@@ -220,10 +240,15 @@ export
             // TODO maybe check if <a> comes from menu or gallery. Probably needs different handling
             href = target.getAttribute('href');
             artId = !target.getAttribute('data-article-id') ? null : target.getAttribute('data-article-id');
+            if(href === "./") {
+                href = '/';
+            }
             this.performUrlRouting(href, artId);
             // Swipe out menu
-            animation.swipeOutNavMenu(menuToggle);
-            menuToggle = !menuToggle;
+            if(!menuToggle){
+                animation.swipeOutNavMenu(menuToggle);
+                menuToggle = !menuToggle;
+            }
 
         }
 
@@ -253,8 +278,6 @@ export
             // When previous state exists re-call article id and path
             if (state) {
                 let articleId = !state.articleId ? '1' : state.articleId;
-                console.log('go to:');
-                console.log(state);
                 this.performUrlRouting(state.path, articleId, true);
             } else {
                 this.performUrlRouting('./', '1', true);

@@ -226,6 +226,17 @@ export
 
         event.preventDefault();
 
+        // OBJ moving
+
+        let x = event.touches ? event.touches[0].clientX : event.clientX;
+        let w = window.innerWidth / 2;
+        let l = -0.8 + ((x - w) / (w / 0.1));
+
+        // position / rotation
+        gsap.to(model.rotation, {duration:1, y:l});
+
+        // OBJ scaling
+
         let intersectedList;
         intersectedList = this.detectIntersectedModel(event, model);
         
@@ -236,8 +247,7 @@ export
             bg.classList.add('active');
             bg.classList.remove('inactive');
 
-            // let tl = gsap.timeline();
-            // tl.to(intersectedList[i].object.rotation, .5, {y: Math.PI*.5, ease: Expo.easeOut}, "=-1.5")
+            //gsap.to(intersectedList.object.rotation, {duration: 2, x: Math.PI*.05, ease: 'expo.out'})
             gsap.to(model.scale, {duration: 1, x: 2.5, y:3, ease: "expo.out"})
 
         }else{
