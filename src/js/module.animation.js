@@ -68,6 +68,26 @@ export
         three3d.init(); 
     }
 
+    startPageClaimAnimation(event){
+
+        let claimItem1 = document.querySelector('.claim-item-1 h2');
+        let claimItem2 = document.querySelector('.claim-item-2 h2');
+        let claimItem3 = document.querySelector('.claim-item-3 h2');
+        let x = event.touches ? event.touches[0].clientX : event.clientX;
+        let w = window.innerWidth / 2;
+
+        let l1 = -(x - w) / (w / 2) + 18;
+        let l2 = -(x - w) / (w / 3) + 20;
+        let l3 = -(x - w) / (w / 4) - 1;
+
+        //console.log(l2)
+
+        // position / rotation
+        gsap.to(claimItem1, {duration:0.5, position:"absolute", left: l1 + '%'});
+        gsap.to(claimItem2, {duration:0.5, position:"absolute", right: l2 + '%'});
+        gsap.to(claimItem3, {duration:0.5, position:"absolute", left: l3 + '%'});
+    }
+
     preloadDisplayAnimation(){
 
         gsap.to('.preload-container', {opacity:1, ease: "expo.in", duration: 0.5});

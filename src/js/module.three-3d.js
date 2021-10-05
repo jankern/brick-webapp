@@ -17,6 +17,7 @@ let camera, scene, renderer, textureLoader, texture, intersects;
 let geometry, material, mesh, model;
 let controls, pointLight, ambientLight, lightHelper, gridHelper;
 let loopAnimation, moveCamera, meshObjects;
+let particlesGeometry, particlesCnt, posArray, particlesMaterial, particleMesh;
 let onMouseDown, isMouseDown, onMouseMove, isCamMoving, 
     onWindowResizeScene, isLooping;
 let x, y, z;
@@ -57,6 +58,32 @@ export
 
         camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );    
         scene = new THREE.Scene();
+
+        // -----
+
+        // Particle sky
+
+        // particlesGeometry = new THREE.BufferGeometry();
+        // particlesCnt = 50;
+        // posArray = new Float32Array(particlesCnt * 2);
+
+        // for(let i = 0; i < particlesCnt; i++){
+        //     posArray[i] = (Math.random() -0.5) * (Math.random() * 5);
+        // }
+
+        // console.log('******');
+        // console.log(posArray);
+
+        // particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        
+        // particlesMaterial = new THREE.PointsMaterial({
+        //     size: 0.007
+        // });
+
+        // particleMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        // scene.add(particleMesh);
+
+        // ----
 
         let light = new THREE.DirectionalLight(0xffffff);
         light.position.set(0.6,1,1);
@@ -162,6 +189,15 @@ export
         // Resume scene defaults and animation 
         this.createInitialScene();
         this.loopAnimation();
+
+        let gbt = document.querySelector('.gallery-bottom-transition');
+        gbt.style.opacity = '0';
+        gbt.style.height = '0px';
+
+        let at = document.querySelector('.gallery-transition');
+        gsap.to(at, {duration:.5, marginTop: '-50px', marginLeft: '-100px', left: '50%', top: '50%', 
+                opacity: 0, width: '200px', height: '200px',  ease: "expo.in"});
+
     }
 
     loopAnimation(){
@@ -276,9 +312,10 @@ export
             let tl = gsap.timeline({onComplete: window.startGallery});
             tl.to(model.scale, {duration: 2, x: 5, y:6, ease: "expo.out"});
             tl.to(model.position, {duration: 1, y:-0.1, ease: "expo.out"}, '-=2');
-            // tl.to('.gallery-transition', { 
-            //     marginTop: 0, marginLeft: 0, left: offset, top: offset, duration: 0.8, 
-            //     opacity: 1, width: size, height: size,  ease: "expo.in"}, '-=2');
+            tl.to('.gallery-bottom-transition', {duration:0.5, opacity: 1, height:'18vw', ease: "expo.out"}, '-=2')
+            tl.to('.gallery-transition', { 
+                marginTop: 0, marginLeft: 0, left: offset, top: offset, duration: 0.8, 
+                opacity: 1, width: size, height: size,  ease: "expo.in"}, '-=2');
         }
 
     }

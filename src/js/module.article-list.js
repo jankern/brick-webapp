@@ -62,6 +62,8 @@ export
                 article.updateElement(succ.data);
                 isRequestOngoing = false;
                 this.setPreviousState(path, article.getArticleId());
+                this.manageEventListener().onMouseMove.add(window, animation.startPageClaimAnimation);
+
                 // return animation transition
                 return animation.transitionChaining().run(animation.preloadStartTransitionAnimation, {});
             }, 
@@ -72,7 +74,7 @@ export
             }
         ).then(
             (result) => {
-
+                
             }
         );
         
@@ -301,6 +303,14 @@ export
                 },
                 remove: (target, callback) => {
                     target.removeEventListener('click', callback);
+                }
+            },
+            onMouseMove: {
+                add: (target, callback) => {
+                    target.addEventListener('mousemove', callback, false)
+                },
+                remove: (target, callback) => {
+                    target.removeEventListener('mousemove', callback)
                 }
             }
         }

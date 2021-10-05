@@ -206,9 +206,29 @@ nav.view-wrapper{
     top:50%;
     left:50%;
     margin: -50px 0 0 -100px;
-    z-index:100;
+    z-index:70;
     opacity: 0;
     border-radius:50%;
+
+    div.tmp-warn{
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        display: block;
+        margin: 100px 0 0 -120px;
+        background: transparent;
+    }
+}
+
+.gallery-bottom-transition{
+    position:absolute;
+    width:100vw;
+    background:black;
+    height:0vh;
+    bottom:0px;
+    z-index:48;
+    left:0px;
+    opacity: 0;
 }
 
 .claim-wrapper{
@@ -244,7 +264,8 @@ nav.view-wrapper{
     .claim-item-2 h2{
         position: absolute;
         font-size: 3em;
-        left:215px;
+        // left:215px;
+        right:22%;
         top: 30px;
     }
 

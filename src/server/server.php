@@ -24,7 +24,7 @@
 			sleep(1);
             if($articleId == '1'){
 
-                $str = '<div class="gallery-transition"></div>
+                $str = '<div class="gallery-transition"><div class="tmp-warn"><p>Gallery module will be loaded here ... once implemeneted!</p><p>Click on the logo to go back to start page</p></div></div>
                 <div class="claim-wrapper">
                     <div class="claim-item claim-item-1">
                         <h2>enter</h2>
@@ -40,6 +40,7 @@
                             labore et dolore magna aliqua</p>
                     </div>
                 </div>
+                <div class="gallery-bottom-transition"></div>
                 <div class="perspective-bottom inactive"></div>';
 
                 response(200, "found_article", $str);
