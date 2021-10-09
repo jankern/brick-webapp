@@ -4,9 +4,8 @@
  */
 
  import Util from './module.util';
- 
- import Animation from './module.animation';
- let animation = new Animation();
+ // Singleton import
+ import {animation} from './module.animation';
 
  import Article from './module.article';
 

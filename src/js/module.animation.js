@@ -1,20 +1,19 @@
 /**
  * Class Animations / GSAP 
- * 
+ * Singleton - https://k94n.com/es6-modules-single-instance-pattern
  */
 
 import Util from "./module.util";
 import { gsap } from "gsap";
 import { CSSPlugin } from "gsap/CSSPlugin.js";
-import Three3d from './module.three-3d';
+// singleton import
+import {three3d} from './module.three-3d';
 // import { PixiPlugin } from "gsap/PixiPlugin.js";
 // import { MotionPathPlugin } from "gsap/MotionPathPlugin.js";
 
-let three3d = new Three3d();
 let menuIconPosition, closeMenu;
 
-export
-    default class Animation {
+class Animation {
 
     constructor() {
         gsap.registerPlugin(CSSPlugin/*, PixiPlugin, MotionPathPlugin*/);
@@ -226,3 +225,5 @@ export
     }
 
 }
+
+export let animation = new Animation();

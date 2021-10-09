@@ -8,11 +8,9 @@ import Util from './module.util';
 import HttpService from './module.http-service';
 let httpService = new HttpService();
 
-import Animation from './module.animation';
-let animation = new Animation();
-
-import Three3d from './module.three-3d';
-let three3d = new Three3d();
+// singleton import
+import {animation} from './module.animation';
+import {three3d} from './module.three-3d';
 
 import ArticleDefault from './module.article-default';
 

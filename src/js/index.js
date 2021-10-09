@@ -7,24 +7,13 @@ import '../scss/styles.scss';
 
 // Class and Function Imports
 import ArticleList from './module.article-list';
-// import Main from './module.main';
-// import Animation from './module.animation';
-// import Three3d from './module.three-3d';
-// import HttpService from './module.http-service';
-
 // import TestDefault from "./tst-default";
 // import TestGallery from "./tst-gallery";
 
 // Class intialisation
 let articleList = new ArticleList();
-// let main = new Main();
-// let animation = new Animation();
-// let three3d = new Three3d();
-// let httpService = new HttpService();
-// let loaded = false;
 
 // cluster -> brick -> variations
-
 let gallery = {
     clusters: [
         {
@@ -109,11 +98,6 @@ let gallery = {
 // devmiddleware eingebunden, test route steht
 // hot module replacement noch nicht, kein Muss -> verstehen über gesamte YT reihe 
 
-// document.querySelector('button#ani-timeline').addEventListener('click', () => {
-//     bli('foo-uö');
-//   });
-
-
 window.startGallery = () => {
     console.log('wieder am Start');
 }
@@ -132,65 +116,6 @@ window.onload = (event) => {
     // console.log(tstd.createMethod());
     // console.log(tstd.updateMethod(5));
     // console.log(tstg.deleteMethod(6));
-
-    
-    // let menuToggle = true;
-
-    // assign event listener
-    // let navMenu = document.querySelector('button.burger-nav-btn');
-    // navMenu.addEventListener('click', (event) => {
-    //     event.preventDefault();
-    //     animation.buttonEventNavMenu(event, menuToggle);
-    //     menuToggle = !menuToggle;
-    //     console.log(menuToggle);
-    // });
-
-    // main.init();
-    
-
-
-    // let animationPromise = (callback) => {
-    //     let p  = new Promise(
-    //         (resolve, reject) => {
-    //             return callback(resolve, reject);
-    //         }
-    //     );
-    //     return p;
-    // }
-
-    // animationPromise(animation.preloadAnimation).then((result) => {
-    //     return animationPromise(animation.preloadTransitionAnimation);
-    // });
-
-    // .then((result) => {
-    //     return animationPromise(4000, animation.animationPromise1);
-    // }).then((result) => {
-    //     return animationPromise(2000, animation.animationPromise1);
-    // })
-
-    // let btnStart = document.querySelector('#starts');
-    // btnStart.addEventListener('click', () => {three3d.resumeScene()}, false)
-    // let btnStop = document.querySelector('#stops');
-    // btnStop.addEventListener('click', () => {three3d.suspendScene()}, false)
-
-    // Page 1
-    // start animation takes 5 seconds
-    // font and spinning objects
-    // create timeline 
-    // and call callback when timeline is done
-
-    // Transition 1
-
-
-    //three3d.init();
-
-    // setTimeout(()=>{
-    //     let ret = httpService.get().then(data => {
-    //         console.log('in upper level');
-    //         console.log(data);
-    //     });
-    // }, 3000);
-
  
 };
 

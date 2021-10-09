@@ -1,6 +1,6 @@
 /**
  * Class Three3d / Threejs
- * 
+ * Singleton - https://k94n.com/es6-modules-single-instance-pattern
  */
 
 import * as THREE from "three";
@@ -24,10 +24,11 @@ let x, y, z;
 const gltfLoader = new GLTFLoader();
 //const gui = new dat.GUI();
 
-export
-    default class Three3d {
+class Three3d {
 
     constructor() {
+        console.log('THREEJS CLASS started');
+        this.classId = Date.now();
         gsap.registerPlugin(CSSPlugin/*, PixiPlugin, MotionPathPlugin*/);
     }
 
@@ -166,9 +167,8 @@ export
     }
 
     suspendScene(){
-        isLooping = false;
 
-        console.log(this.manageEventListener())
+        isLooping = false;
 
         // Remove event listener
         this.manageEventListener().mouseDown.remove();
@@ -177,6 +177,7 @@ export
     }
 
     resumeScene(obj){
+
         isCamMoving = false;
         isLooping = true;
 
@@ -358,3 +359,6 @@ export
     }
 
 };
+
+// Singleton export
+export let three3d = new Three3d();
