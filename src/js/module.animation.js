@@ -11,7 +11,6 @@ import Three3d from './module.three-3d';
 // import { MotionPathPlugin } from "gsap/MotionPathPlugin.js";
 
 let three3d = new Three3d();
-let util = new Util();
 let menuIconPosition, closeMenu;
 
 export
@@ -148,7 +147,7 @@ export
 
     buttonEventNavMenu(event, toggle){
 
-        let maxSize = util.getViewPortMaxAxis();
+        let maxSize = Util.getViewPortMaxAxis();
         let size = maxSize*2.5 + 'px';
         let offset = -maxSize + 'px';
         document.body.style.overflow = 'hidden';

@@ -6,11 +6,7 @@
 export
     default class Util {
 
-    constructor() {
-
-    }
-
-    getViewPortMaxAxis(){
+    static getViewPortMaxAxis(){
 
         let width = window.innerWidth;
         let height = window.innerHeight;
@@ -23,7 +19,7 @@ export
 
     }
     
-    getRandomColor() {
+    static getRandomColor() {
         let letters = '0123456789ABCDEF';
         let color = '#';
         for (var i = 0; i < 6; i++) {
@@ -32,7 +28,7 @@ export
         return color;
     }
 
-    getObjectLength(obj){
+    static getObjectLength(obj){
         let itemCount = 0;
         for(let i in obj){
             if (obj.hasOwnProperty(i)) {
@@ -42,14 +38,14 @@ export
         return itemCount;
     }
 
-    extractPath(path) {
+    static extractPath(path) {
         // extracts last ndoe from a given path
         // /sub/path -> path
         let extractedStringPosition = path.search(/[^\/]+(?=\/$|$)/);
         return path.substr(extractedStringPosition, path.length);
     }
 
-    getElementChildren(el){
+    static getElementChildren(el){
 
         let pageWrapper = document.querySelector(el);
         let children = pageWrapper.childNodes;
@@ -74,7 +70,7 @@ export
 
     }
 
-    getBaseUrl(){
+    static getBaseUrl(){
 
         let base = document.querySelector('base');
         let baseAttribute = base.getAttribute('href');
@@ -85,7 +81,7 @@ export
 
     }
 
-    replaceBaseUrl(baseUrl, path){
+    static replaceBaseUrl(baseUrl, path){
 
         let startPos = path.search(baseUrl);
         if(startPos != -1){
@@ -95,7 +91,7 @@ export
 
     }
 
-    generateRandomNumber(length){
+    static generateRandomNumber(length){
 
         let num = '';
         if(!length){

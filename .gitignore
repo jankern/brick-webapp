@@ -23,3 +23,6 @@ html/redaxo/cache
 
 # redaxo media files (except in subfolders)
 html/media/*.*
+
+# test js files
+src/js/tst*

@@ -4,7 +4,6 @@
  */
 
 import Util from './module.util';
-let util = new Util();
 
 export
     default class HttpService {
@@ -33,7 +32,7 @@ export
         //const data = { username: 'example' };
 
         let preparedParams = '';
-        let objLength = util.getObjectLength(targetObj);
+        let objLength = Util.getObjectLength(targetObj);
 
         if((targetObj.article_id !== undefined && targetObj.article_id !== "") && !targetObj.get_aid_by_nav && !recall){
             return resolve('skip_nav_retrieval');

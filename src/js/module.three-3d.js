@@ -12,7 +12,6 @@ import Util from "./module.util";
 import { gsap } from "gsap";
 import { CSSPlugin } from "gsap/CSSPlugin.js";
 
-let util = new Util();
 let camera, scene, renderer, textureLoader, texture, intersects;
 let geometry, material, mesh, model;
 let controls, pointLight, ambientLight, lightHelper, gridHelper;
@@ -304,7 +303,7 @@ export
 
             isCamMoving = true;
 
-            let maxSize = util.getViewPortMaxAxis();
+            let maxSize = Util.getViewPortMaxAxis();
             let size = maxSize*2.5 + 'px';
             let offset = -maxSize + 'px';
             // document.body.style.overflow = 'hidden';

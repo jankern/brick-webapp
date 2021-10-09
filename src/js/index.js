@@ -12,6 +12,9 @@ import ArticleList from './module.article-list';
 // import Three3d from './module.three-3d';
 // import HttpService from './module.http-service';
 
+// import TestDefault from "./tst-default";
+// import TestGallery from "./tst-gallery";
+
 // Class intialisation
 let articleList = new ArticleList();
 // let main = new Main();
@@ -119,6 +122,16 @@ window.onload = (event) => {
 
     console.log('The page has fully loaded');
     articleList.init();
+
+    // console.log('START TEST');
+
+    // let tstd = new TestDefault(1, '/1', {'bla': 'default'}, 'Default');
+    // let tstg = new TestGallery(2, '/2', {'bla': 'gallery'}, 'Gallery');
+
+    // console.log(tstd.anotherDefaultMethod());
+    // console.log(tstd.createMethod());
+    // console.log(tstd.updateMethod(5));
+    // console.log(tstg.deleteMethod(6));
 
     
     // let menuToggle = true;

@@ -4,7 +4,6 @@
  */
 
 import Util from './module.util';
-let util = new Util();
 
 import HttpService from './module.http-service';
 let httpService = new HttpService();
@@ -15,7 +14,7 @@ let animation = new Animation();
 import Three3d from './module.three-3d';
 let three3d = new Three3d();
 
-import Article from './module.article';
+import ArticleDefault from './module.article-default';
 
 let menuToggle, articles, state, isRequestOngoing, previousState, baseUrl;
 
@@ -37,7 +36,7 @@ export
         articles = Array();
 
         // Define base url
-        baseUrl = util.getBaseUrl();
+        baseUrl = Util.getBaseUrl();
 
         // Start proload sinning
         animation.preloadSpinning();
@@ -96,7 +95,7 @@ export
 
     organizeArticleStack(articleId) {
 
-        let childrenObj = util.getElementChildren('main');
+        let childrenObj = Util.getElementChildren('main');
 
         let iteratorMax = childrenObj.count - 1 + 10;
         let iterator = iteratorMax - 1;
@@ -165,7 +164,7 @@ export
             }
 
             // Create article object
-            let article = new Article(articleId, path, properties);
+            let article = new ArticleDefault(articleId, path, properties);
             article.createElememt();
             article.doTransition();
             // Pushing all instances to an array
@@ -179,7 +178,7 @@ export
             }
 
             // Fetch content from server
-            let params = articleId !== "" ? { "article_id": articleId } : { "get_aid_by_nav": util.replaceBaseUrl(baseUrl, path) };
+            let params = articleId !== "" ? { "article_id": articleId } : { "get_aid_by_nav": Util.replaceBaseUrl(baseUrl, path) };
 
             httpService.requestChaining().call(httpService.get, params).then(
                 (succ) => {
