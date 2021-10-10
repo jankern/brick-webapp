@@ -52,6 +52,7 @@
         }
 
         updateElement(content){
+            console.log(content);
             this.articleElement.innerHTML = '<div class="content">'+content+'</div>';
         }
 

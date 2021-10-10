@@ -31,9 +31,6 @@ export
         // Event listener
         this.registerEventListener();
 
-        // Article object list
-        articles = Array();
-
         // Define base url
         baseUrl = Util.getBaseUrl();
 
