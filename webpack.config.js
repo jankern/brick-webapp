@@ -89,7 +89,13 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "css/[name].bundle.css",
       chunkFilename: "css/[name][id].bundle.css"
-    })
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: "src/assets/img", to: "img" },
+        { from: "src/assets/gltf", to: "gltf" },
+      ],
+    }),
   ],
   output: {
     filename: "js/[name].bundle.js",

@@ -96,7 +96,7 @@ class Three3d {
 
         // Loading model
         gltfLoader.load(
-            "./assets/gltf/showroom.glb",
+            "./gltf/showroom.glb",
             (glb) => {
 
                 model = glb.scene;

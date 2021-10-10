@@ -4,7 +4,6 @@
  */
 
 import Util from './module.util';
-
 import HttpService from './module.http-service';
 let httpService = new HttpService();
 
@@ -12,9 +11,11 @@ let httpService = new HttpService();
 import {animation} from './module.animation';
 import {three3d} from './module.three-3d';
 
+import {articles} from './module.articles';
 import ArticleDefault from './module.article-default';
+import ArticleRoom from './module.article-room';
 
-let menuToggle, articles, state, isRequestOngoing, previousState, baseUrl;
+let menuToggle, state, isRequestOngoing, previousState, baseUrl;
 
 export
     default class ArticleList {
@@ -161,8 +162,11 @@ export
                 properties.backgroundColor = "#373737";
             }
 
-            // Create article object
-            let article = new ArticleDefault(articleId, path, properties);
+            // Create article object. Either from type default or room based on path
+            let article = path.indexOf('rooms') <= -1 ? 
+                new ArticleDefault(articleId, path, properties) :
+                new ArticleRoom(articleId, path, properties);
+
             article.createElememt();
             article.doTransition();
             // Pushing all instances to an array
@@ -177,6 +181,10 @@ export
 
             // Fetch content from server
             let params = articleId !== "" ? { "article_id": articleId } : { "get_aid_by_nav": Util.replaceBaseUrl(baseUrl, path) };
+            
+            if(path.indexOf('rooms') > -1){
+                params['article_type'] = "room";
+            }
 
             httpService.requestChaining().call(httpService.get, params).then(
                 (succ) => {

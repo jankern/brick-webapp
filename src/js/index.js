@@ -7,8 +7,7 @@ import '../scss/styles.scss';
 
 // Class and Function Imports
 import ArticleList from './module.article-list';
-// import TestDefault from "./tst-default";
-// import TestGallery from "./tst-gallery";
+import TestList from "./tst-list";
 
 // Class intialisation
 let articleList = new ArticleList();
@@ -107,10 +106,13 @@ window.onload = (event) => {
     console.log('The page has fully loaded');
     articleList.init();
 
-    // console.log('START TEST');
+    //console.log('START TEST');
 
     // let tstd = new TestDefault(1, '/1', {'bla': 'default'}, 'Default');
     // let tstg = new TestGallery(2, '/2', {'bla': 'gallery'}, 'Gallery');
+
+    //let testList = new TestList();
+    //testList.init();
 
     // console.log(tstd.anotherDefaultMethod());
     // console.log(tstd.createMethod());

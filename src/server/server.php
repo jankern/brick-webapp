@@ -7,7 +7,7 @@
 
     // }
 
-    header("Content-Type:application/json");
+    header("Content-Type:application/json; charset=UTF-8");
 
     // echo '<pre>';
     // print_r($_GET);
@@ -47,9 +47,12 @@
 
             }else{
 
-                $headline = getNavByArticleId($articleId);
-                response(200,"found_article","<h1>".$headline."</h1><p>This is a text for article " .$articleId. "</p>");
-            
+                if(isset($_GET['article_type'])){
+                    response(200, "found_data", getRoomByArticleId($articleId));
+                }else{
+                    $headline = getNavByArticleId($articleId);
+                    response(200,"found_article","<h1>".$headline."</h1><p>This is a text for article " .$articleId. "</p>");
+                }
             } 
         }
         
@@ -77,15 +80,60 @@
         echo $json_response;
     }
 
+    function getRoomByArticleId($article_id){
+        $rooms = [
+            [
+                "name" => "Room 1",
+                "article_id" => "4",
+                "text" => "This the room for the first few crazy Lego bricks.",
+                "items" => [
+                    ["category_id"=>"1", "img"=>"./img/brick1.png", "name"=>"This is the first Brick"],
+                    ["category_id"=>"2", "img"=>"./img/brick2.png", "name"=>"This is the second Brick"],
+                    ["category_id"=>"3", "img"=>"./img/brick3.png", "name"=>"This is the third Brick"],
+                    ["category_id"=>"4", "img"=>"./img/brick4.png", "name"=>"This is the fourth Brick"],
+                    ["category_id"=>"5", "img"=>"./img/brick5.png", "name"=>"This is the fifth Brick"],
+                    ["category_id"=>"6", "img"=>"./img/brick6.png", "name"=>"This is the sixth Brick"],
+                    ["category_id"=>"7", "img"=>"./img/brick7.png", "name"=>"This is the seventh Brick"],
+                    ["category_id"=>"8", "img"=>"./img/brick8.png", "name"=>"This is the eighth Brick"]
+                ]
+            ],
+            [
+                "name" => "Room 2",
+                "article_id" => "5",
+                "text" => "This the room for the second few crazy Lego bricks.",
+                "items" => [
+                    ["category_id"=>"9", "img"=>"./img/brick1.png", "name"=>"This is the first Brick"],
+                    ["category_id"=>"8", "img"=>"./img/brick2.png", "name"=>"This is the second Brick"],
+                    ["category_id"=>"10", "img"=>"./img/brick3.png", "name"=>"This is the third Brick"],
+                    ["category_id"=>"11", "img"=>"./img/brick4.png", "name"=>"This is the fourth Brick"],
+                    ["category_id"=>"12", "img"=>"./img/brick5.png", "name"=>"This is the fifth Brick"],
+                    ["category_id"=>"13", "img"=>"./img/brick6.png", "name"=>"This is the sixth Brick"],
+                    ["category_id"=>"14", "img"=>"./img/brick7.png", "name"=>"This is the seventh Brick"],
+                    ["category_id"=>"15", "img"=>"./img/brick8.png", "name"=>"This is the eighth Brick"]
+                ]
+            ]
+        ];
+
+        foreach($rooms as $item){
+            //print_r($item);
+            if($item['article_id'] == $article_id){
+                return $item;
+            }
+        }
+
+        return "Nothing found";
+    }
+
     function getNav(){
         return array(
             "/"=>"1",
             "/somewhere-to-a"=>"2",
-            "/somewhere-to-b"=>"3",
-            "/somewhere-to-b/and-to-the-b1"=>"4",
-            "/somewhere-to-b/and-to-the-b2-with-spice"=>"5",
-            "/somewhere-to-c"=>"6",
-            "/somewhere-to-d"=>"7"
+            "/rooms"=>"3",
+            "/rooms/room1"=>"4",
+            "/rooms/room2"=>"5",
+            "/rooms/room3"=>"6",
+            "/somewhere-to-c"=>"7",
+            "/somewhere-to-d"=>"8"
         );
     }
 
