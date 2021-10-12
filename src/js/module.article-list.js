@@ -14,6 +14,7 @@ import {three3d} from './module.three-3d';
 import {articles} from './module.articles';
 import ArticleDefault from './module.article-default';
 import ArticleRoom from './module.article-room';
+import ArticleRoomItem from './module.article-room-item';
 
 let menuToggle, state, isRequestOngoing, previousState, baseUrl;
 
@@ -40,7 +41,7 @@ export
         // Routing manager
         let articleId = window.location.pathname === baseUrl ? "1" : "";
         let path = window.location.pathname;
-        this.performUrlRouting(path, articleId);
+        this.performUrlRouting(path, articleId, null);
 
         // Testcase für Seitenstart im Untermenü
         // this.performUrlRouting(window.location.pathname+'somewhere-to-b/and-to-the-b2-with-spice', '');
@@ -122,7 +123,7 @@ export
         history.go(path);
     }
 
-    performUrlRouting(path, articleId, popState = false) {
+    performUrlRouting(path, articleId, artType, popState = false) {
 
         let hasArticle = false;
 
@@ -160,9 +161,23 @@ export
             }
 
             // Create article object. Either from type default or room based on path
-            let article = path.indexOf('rooms') <= -1 ? 
-                new ArticleDefault(articleId, path, properties) :
-                new ArticleRoom(articleId, path, properties);
+            console.log('ARTICLETYPE');
+            console.log(artType);
+
+            let article;
+            if(path.indexOf('rooms') <= -1){
+                article = new ArticleDefault(articleId, path, properties)
+            } else {
+                if(!artType){
+                    article = new ArticleRoom(articleId, path, properties);
+                }else{
+                    article = new ArticleRoomItem(articleId, path, properties);
+                }
+            }
+
+            // let article = path.indexOf('rooms') <= -1 ? 
+            //     new ArticleDefault(articleId, path, properties) :
+            //     new ArticleRoom(articleId, path, properties);
 
             article.createElememt();
             article.doTransition();
@@ -236,7 +251,7 @@ export
         event.preventDefault();
 
         let href;
-        let artId;
+        let artId, artType;
         let target = event.target || event.srcElement;
 
         if (target.tagName === 'A') {
@@ -244,10 +259,11 @@ export
             // TODO maybe check if <a> comes from menu or gallery. Probably needs different handling
             href = target.getAttribute('href');
             artId = !target.getAttribute('data-article-id') ? null : target.getAttribute('data-article-id');
+            artType = !target.getAttribute('data-article-type') ? null : target.getAttribute('data-article-type');
             if(href === "./") {
                 href = '/';
             }
-            this.performUrlRouting(href, artId);
+            this.performUrlRouting(href, artId, artType);
             // Swipe out menu
             if(!menuToggle){
                 animation.swipeOutNavMenu(menuToggle);
@@ -282,9 +298,9 @@ export
             // When previous state exists re-call article id and path
             if (state) {
                 let articleId = !state.articleId ? '1' : state.articleId;
-                this.performUrlRouting(state.path, articleId, true);
+                this.performUrlRouting(state.path, articleId, null, true);
             } else {
-                this.performUrlRouting('./', '1', true);
+                this.performUrlRouting('./', '1', null, true);
             }
 
             // In case menu is open, close it 

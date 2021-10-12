@@ -8,7 +8,6 @@
  import {animation} from './module.animation';
 
  import Article from './module.article';
- import ArticleRoomItem from './module.article-room-item';
 
  let articleElement, progressElement, mainElement;
 
@@ -53,7 +52,17 @@
 
         updateElement(content){
             console.log(content);
-            this.articleElement.innerHTML = '<div class="content">'+content+'</div>';
+
+            // alle acht bilder anzeigen mit
+            // links auf den bildern zu den Brickzielen
+            // vor und zurück zum nächsten room
+            // Anzahl und links zu rooms ins grundätzlich im Menu hinterlegt
+
+
+            this.articleElement.innerHTML = '<div class="content">'
+                +'<a href="/rooms/room2" data-article-id="5">NEXT</a>'
+                +'<a href="/rooms/room2/brick1" data-category-id="9" data-article-type="roomItem">To Brick</a>'
+                +content+'</div>';
         }
 
         // updateState(){
