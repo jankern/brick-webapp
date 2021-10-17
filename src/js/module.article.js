@@ -5,6 +5,7 @@
 
  import Util from './module.util';
  let articleElement, progressElement, mainElement;
+ let articleNavRefById;
 
  export 
     default class Article {
@@ -15,7 +16,7 @@
             this.path = path;
             this.prop = prop;
             this.articleElement = {};
-
+            this.sideNav = window.sideNavObj;
             this.zIndex = 10;
         }
 
@@ -36,8 +37,90 @@
             );
         }
 
+        // Extract the article nav reference based on a given article id with recursive method
+        // Param: sideNavObject, Article id of the nav ref to be returned
+        static getArticleRefById(obj, id){
+
+            for (let key in obj){
+                if(obj.hasOwnProperty(key)){
+                  if (typeof obj[key] == "object") {
+                    if(id === key){
+                        return {"article_id": key, "path":obj[key].path};
+                    }
+                    articleNavRefById = Article.getArticleRefById(obj[key], id);
+                  }
+                }
+             }
+            return articleNavRefById;
+        }
+
+        // Return a possible NEXT nav reference by a given article id with fixed depth level loop
+        static getNextRoomRefById(obj, id){
+
+            let nextNavRefById;
+            let nextLimit = 0;
+            for (let key in obj){
+                if(obj.hasOwnProperty(key)){
+                    if(obj[key].path === '/rooms'){
+                        for (let key2 in obj[key].articles){
+                            if(obj[key].articles.hasOwnProperty(key2)){
+                                // If the id matches, get the next article id
+                                if(key2 === id){
+                                    nextLimit++;
+                                }
+                                if(key2 !== id && nextLimit === 1){
+                                    nextNavRefById = {"article_id":key2, "path":obj[key].articles[key2].path};
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+             }
+            return nextNavRefById;
+        }
+
+        // Return a possible PREVIOUS refernce by a given article id with fixed depth level loop
+        static getPreviousRoomRefById(obj, id){
+
+            let previousNavRefById;
+            let item;
+            for (let key in obj){
+                if(obj.hasOwnProperty(key)){
+                    if(obj[key].path === '/rooms'){
+                        for (let key2 in obj[key].articles){
+                            if(obj[key].articles.hasOwnProperty(key2)){
+                                // If the id matches and there is no previous nav reference, exit
+                                // else item is the previous nav reference
+                                if(key2 === id){
+                                    if(!item){
+                                        break;
+                                    }else{
+                                        previousNavRefById = item;
+                                        break;
+                                    }
+                                }
+                                // temporary store the item
+                                item = {"article_id":key2, "path":obj[key].articles[key2].path};
+                            }
+                        }
+                    }
+                }
+             }
+            return previousNavRefById;
+        }
+
         getArticleId(){
             return this.articleId;
+        }
+
+        setArticlePropertiesAfterRedirect(id){
+            console.log(id);
+            let articleNavRef = Article.getArticleRefById(this.sideNav, id);
+            console.log(articleNavRef);
+            this.articleId = articleNavRef.article_id;
+            this.path = articleNavRef.path;
+            this.updateState();
         }
 
         getArticlePath(){

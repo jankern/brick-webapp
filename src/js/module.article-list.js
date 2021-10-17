@@ -55,7 +55,7 @@ export
 
         httpService.requestChaining().call(httpService.get, params, true).then(
             (succ) => {
-                article.updateElement(succ.data);
+                article.updateElement(succ.data.text);
                 isRequestOngoing = false;
                 this.setPreviousState(path, article.getArticleId());
                 this.manageEventListener().onMouseMove.add(window, animation.startPageClaimAnimation);
@@ -161,28 +161,43 @@ export
             }
 
             // Create article object. Either from type default or room based on path
-            console.log('ARTICLETYPE');
-            console.log(artType);
-
             let article;
-            if(path.indexOf('rooms') <= -1){
-                article = new ArticleDefault(articleId, path, properties)
-            } else {
-                if(!artType){
-                    article = new ArticleRoom(articleId, path, properties);
+            let articleTypeInstance = {
+                "default": (articleId, path, properties) => {
+                    return new ArticleDefault(articleId, path, properties);
+                },
+                "room": (articleId, path, properties) => {
+                    return new ArticleRoom(articleId, path, properties);
+                },
+                "roomItem": (articleId, path, properties) => {
+                    return new ArticleRoomItem(articleId, path, properties);
+                }
+            };
+
+            let instanceType = "default";
+            if(path.indexOf('rooms') > -1){
+               if(!artType){
+                    instanceType = "room";
                 }else{
-                    article = new ArticleRoomItem(articleId, path, properties);
+                    instanceType = "roomItem";
                 }
             }
 
-            // let article = path.indexOf('rooms') <= -1 ? 
-            //     new ArticleDefault(articleId, path, properties) :
-            //     new ArticleRoom(articleId, path, properties);
+            // Initiate article object
+            article = articleTypeInstance[instanceType](articleId, path, properties);
+
+            // if(path.indexOf('rooms') <= -1){
+            //     article = new ArticleDefault(articleId, path, properties)
+            // } else {
+            //     if(!artType){
+            //         article = new ArticleRoom(articleId, path, properties);
+            //     }else{
+            //         article = new ArticleRoomItem(articleId, path, properties);
+            //     }
+            // }
 
             article.createElememt();
             article.doTransition();
-            // Pushing all instances to an array
-            articles.push(article);
             isRequestOngoing = true;
 
             // If start page is called for the first time, stop here and go to a specific start page loading procedure
@@ -194,8 +209,11 @@ export
             // Fetch content from server
             let params = articleId !== "" ? { "article_id": articleId } : { "get_aid_by_nav": Util.replaceBaseUrl(baseUrl, path) };
             
-            if(path.indexOf('rooms') > -1){
+            if(path.indexOf('room') > -1){
                 params['article_type'] = "room";
+                if(path.search(/^\/rooms\/.+/) > -1){
+                    params['article_type'] = "roomitem";
+                }
             }
 
             httpService.requestChaining().call(httpService.get, params).then(
@@ -204,7 +222,7 @@ export
                     // recall case - menu had been called before the get the article id, article can be called now
                     if (succ.status_message && succ.status_message === "found_article_id") {
                         params = null;
-                        params = { "article_id": succ.data };
+                        params = { "article_id": succ.data.article_id };
                     }
 
                     // regular case - article id is avilable and can be called directly
@@ -212,15 +230,22 @@ export
 
                 },
                 (err) => {
-                    console.log(err);
+                    // console.log(err);
                     // TODO react on reject 400/404/500 etc
                 }
             ).then(
                 (succ) => {
-                    article.updateElement(succ.data);
+                    // In case of artid from request does not match object due to request redirect, 
+                    // then update id and path in object
+                    if(articleId !== succ.data.article_id){
+                        article.setArticlePropertiesAfterRedirect(succ.data.article_id);
+                    }
+                    article.updateElement(succ.data.text);
                     isRequestOngoing = false;
                     article.finishTransition(this.getPreviousState());
                     this.setPreviousState(path, articleId);
+                    // Pushing all instances to an array
+                    articles.push(article);
                 },
                 (err) => {
                     console.log(err);
@@ -228,6 +253,7 @@ export
                     article.finishTransition(this.getPreviousState());
                     this.setPreviousState(path, articleId);
                     // TODO react on reject 400/404/500 etc
+                    // TODO add article only here to articles array if still useful
                 }
             );
         }else{

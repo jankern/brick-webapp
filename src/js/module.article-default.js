@@ -26,6 +26,14 @@
         }
 
         createElememt(){
+
+            let nav = ArticleDefault.getArticleRefById(this.sideNav, '17M');
+            // console.log(nav)
+            let next = ArticleDefault.getNextRoomRefById(this.sideNav, "4");
+            //console.log(next)
+            let previous = ArticleDefault.getPreviousRoomRefById(this.sideNav, "7");
+            //console.log(previous)
+
             let childrenObj = Util.getElementChildren('main');
             let count = childrenObj.count;
 
@@ -52,40 +60,6 @@
         updateElement(content){
             this.articleElement.innerHTML = '<div class="content">'+content+'</div>';
         }
-
-        // updateState(){
-        //     let randId = util.generateRandomNumber(7);
-        //     history.pushState(
-        //         {path: this.path, articleId: this.articleId, state:randId}, 
-        //         this.title,
-        //         this.path
-        //     );
-        // }
-
-        // replaceState(){
-        //     history.replaceState(
-        //         {path: this.path, articleId: this.articleId}, 
-        //         this.title,
-        //         this.path
-        //     );
-        // }
-
-        // getArticleId(){
-        //     return this.articleId;
-        // }
-
-        // getArticlePath(){
-        //     return this.path;
-        // }
-
-        // getZIndex(){
-        //     return this.zIndex;
-        // }
-
-        // setZIndex(zIndex){
-        //     this.zIndex = zIndex;
-        //     this.articleElement.style.zIndex = this.zIndex;
-        // }
 
         doTransition(){
             progressElement.style.display = 'block';

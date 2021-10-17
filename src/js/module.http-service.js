@@ -50,21 +50,37 @@ export
             }
         }
 
-        return fetch('http://localhost:8000/server.php?'+preparedParams, {
-        //return fetch(util.getBaseUrl()+'server.php?'+preparedParams, {
+        return fetch('http://localhost:8000/server.php?'+preparedParams, {  
+        //return fetch(Util.getBaseUrl()+'server.php?'+preparedParams, {
             method: 'GET',
             mode: 'cors',
+            redirect: 'follow', // => default, manual => handle response yourself
             headers: {
                 'Content-Type': 'application/json'
             },
             //body: JSON.stringify(data),
         })
-            .then((response) => response.json())
-            //Then with the data from the response in JSON...
-            .then((data) => {
-                return resolve(data);
+            // Access response headers
+            .then(response => {
+                    // for (let header of response.headers.entries()) {
+                    //     console.log(header);
+                    // }
+                    return response;
             })
-            //Then with the error generated...
+            // Convert response to json
+            // .then((response) => response.json()
+            .then((response) => response.json().then(res => {
+                    return {status: res.status, data: res};
+                })
+            )
+
+            // Access the reponse body data
+            .then((response) => {
+                console.log(response);
+                return resolve(response.data);
+            })
+
+            // catch errors
             .catch((error) => {
                 return reject(error);
             });

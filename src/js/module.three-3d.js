@@ -234,9 +234,9 @@ class Three3d {
 
         intersects = raycaster.intersectObjects(scene.children, true);
 
-        for(let i in intersects){
-            console.log(intersects[i])
-        }
+        // for(let i in intersects){
+        //     console.log(intersects[i])
+        // }
 
         const intersectedList = intersects.find(
             (intersectedEl) => intersectedEl.object.parent.uuid === model.uuid

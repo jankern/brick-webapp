@@ -9,6 +9,58 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet"> 
   <title>cole-blaq</title>
+  <script>
+    var sideNavObj = {
+      "1":{"path": "/"},
+      "2":{"path": "/somewhere-to-a"},
+      "3":{
+            "path": "/rooms",
+            "articles": {
+              "4":{
+                "path": "/rooms/room1",
+                "articles": {
+                  "1M":{"path":"/rooms/room1/brick1"},
+                  "2M":{"path":"/rooms/room1/brick2"},
+                  "3M":{"path":"/rooms/room1/brick3"},
+                  "4M":{"path":"/rooms/room1/brick4"},
+                  "5M":{"path":"/rooms/room1/brick5"},
+                  "6M":{"path":"/rooms/room1/brick6"},
+                  "7M":{"path":"/rooms/room1/brick7"},
+                  "8M":{"path":"/rooms/room1/brick8"},
+                }
+              },
+              "5":{
+                "path": "/rooms/room2",
+                "articles": {
+                  "9M":{"path":"/rooms/room2/brick9"},
+                  "10M":{"path":"/rooms/room2/brick10"},
+                  "11M":{"path":"/rooms/room2/brick11"},
+                  "12M":{"path":"/rooms/room2/brick12"},
+                  "13M":{"path":"/rooms/room2/brick13"},
+                  "14M":{"path":"/rooms/room2/brick14"},
+                  "15M":{"path":"/rooms/room2/brick15"},
+                  "16M":{"path":"/rooms/room2/brick16"},
+                }
+              },
+              "6":{
+                "path": "/rooms/room3",
+                "articles": {
+                  "17M":{"path":"/rooms/room3/brick17"},
+                  "18M":{"path":"/rooms/room3/brick18"},
+                  "19M":{"path":"/rooms/room3/brick19"},
+                  "20M":{"path":"/rooms/room3/brick20"},
+                  "21M":{"path":"/rooms/room3/brick21"},
+                  "22M":{"path":"/rooms/room3/brick22"},
+                  "23M":{"path":"/rooms/room3/brick23"},
+                  "24M":{"path":"/rooms/room3/brick24"},
+                }
+              }
+            }
+          },
+          "7":{"path": "/somewhere-to-c"},
+          "8":{"path": "/somewhere-to-d"},
+    };
+  </script>
 </head>
 
 <body>
@@ -44,10 +96,10 @@
     <nav class="view-wrapper burger-nav">
       <ul class="nav-wrapper">
         <li class="lev-1 nav-animation">
-          <a href="./somewhere-to-a" data-article-id="2">/Somewhere to A</a>
+          <a href="./somewhere-to-a" data-article-id="2">Somewhere to A</a>
         </li>
         <li class="lev-1 nav-animation">
-          <a href="./rooms" data-article-id="3">/Rooms</a>
+          <a href="./rooms" data-article-id="3">Rooms</a>
           <ul>
             <li class="lev-2">
               <a href="./rooms/room1" data-article-id="4">Room 1</a>
@@ -56,15 +108,15 @@
               <a href="./rooms/room2" data-article-id="5">Room 2</a>
             </li>
             <li class="lev-2">
-              <a href="./rooms/room2" data-article-id="6">Room 3</a>
+              <a href="./rooms/room3" data-article-id="6">Room 3</a>
             </li>
           </ul>
         </li>
         <li class="lev-1 nav-animation">
-          <a href="./somewhere-to-c" data-article-id="7">/Somewhere to C</a>
+          <a href="./somewhere-to-c" data-article-id="7">Somewhere to C</a>
         </li>
         <li class="lev-1 nav-animation">
-          <a href="./somewhere-to-d" data-article-id="8">/Somewhere to D</a>
+          <a href="./somewhere-to-d" data-article-id="8">Somewhere to D</a>
         </li>
       </ul>
     </nav>

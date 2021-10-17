@@ -111,8 +111,8 @@ window.onload = (event) => {
     // let tstd = new TestDefault(1, '/1', {'bla': 'default'}, 'Default');
     // let tstg = new TestGallery(2, '/2', {'bla': 'gallery'}, 'Gallery');
 
-    //let testList = new TestList();
-    //testList.init();
+    // let testList = new TestList();
+    // testList.init();
 
     // console.log(tstd.anotherDefaultMethod());
     // console.log(tstd.createMethod());
