@@ -6,6 +6,7 @@
  import Util from './module.util';
  // Singleton import
  import {animation} from './module.animation';
+ import {navigation} from './module.navigation';
 
  import Article from './module.article';
 
@@ -46,58 +47,60 @@
             this.updateState();
             console.log(history);
 
+            this.nextBtn = document.createElement('a');
+            this.nextBtn.id = 'gallery-next-'+this.articleId;
+            this.nextBtn.className = 'material-icons navigate_next gallery-next';
+            this.nextBtn.href = '#';
+            this.nextBtn.innerHTML = 'navigate_next';
+
+            this.previousBtn = document.createElement('a');
+            this.previousBtn.id = 'gallery-previous-'+this.articleId;
+            this.previousBtn.className = 'material-icons navigate_before gallery-previous';
+            this.previousBtn.href = '#';
+            this.previousBtn.innerHTML = 'navigate_before';
+
+            this.articleElement.appendChild(this.nextBtn);
+            this.articleElement.appendChild(this.previousBtn);
+
             progressElement = document.querySelector('.view-wrapper.preload');
 
         }
 
         updateElement(content){
-            console.log(content);
+        
+            // generate html content for the room item list
+            let tplItems = '<div class="room-item-list">';
+            if(content.items.length > 0){
+                content.items.forEach(element => {
+                    let nav = Article.getArticleRefById(navigation, element.article_id)
+                    tplItems += '<div class="room-item"><a href="'+nav.path+'" data-article-id="'+nav.article_id+
+                        '" data-article-type="roomItem">'+'<img src="'+element.img.toString()+
+                        '" width="50" title="'+element.name+'">'+element.name+'</a></div>';
+                });
+            }
+            tplItems += '</div>';
 
-            // alle acht bilder anzeigen mit
-            // links auf den bildern zu den Brickzielen
-            // vor und zurück zum nächsten room
-            // Anzahl und links zu rooms ins grundätzlich im Menu hinterlegt
+            // add the list to the DOM
+            let contentElement = document.createElement('div');
+            contentElement.className = 'content';
+            contentElement.innerHTML = tplItems;
+            this.articleElement.appendChild(contentElement);
+            
+            // create the previous / next nav
+            let next = Article.getNextRoomRefById(navigation, content.article_id);
+            this.nextBtn.style.visibility = "hidden";
+            this.previousBtn.style.visibility = "hidden";
+            if(next){
+                this.nextBtn.href = next.path;
+                this.nextBtn.style.visibility = "visible";
+            }
+            let previous = Article.getPreviousRoomRefById(navigation, content.article_id);
+            if(previous){
+                this.previousBtn.href = previous.path;
+                this.previousBtn.style.visibility = "visible";
+            }
 
-
-            this.articleElement.innerHTML = '<div class="content">'
-                +'<a href="/rooms/room2" data-article-id="5">NEXT</a>'
-                +'<a href="/rooms/room2/brick1" data-category-id="9" data-article-type="roomItem">To Brick</a>'
-                +content+'</div>';
         }
-
-        // updateState(){
-        //     let randId = util.generateRandomNumber(7);
-        //     history.pushState(
-        //         {path: this.path, articleId: this.articleId, state:randId}, 
-        //         this.title,
-        //         this.path
-        //     );
-        // }
-
-        // replaceState(){
-        //     history.replaceState(
-        //         {path: this.path, articleId: this.articleId}, 
-        //         this.title,
-        //         this.path
-        //     );
-        // }
-
-        // getArticleId(){
-        //     return this.articleId;
-        // }
-
-        // getArticlePath(){
-        //     return this.path;
-        // }
-
-        // getZIndex(){
-        //     return this.zIndex;
-        // }
-
-        // setZIndex(zIndex){
-        //     this.zIndex = zIndex;
-        //     this.articleElement.style.zIndex = this.zIndex;
-        // }
 
         doTransition(){
             progressElement.style.display = 'block';

@@ -6,6 +6,7 @@
  import Util from './module.util';
  // Singleton import
  import {animation} from './module.animation';
+ import {navigation} from './module.navigation';
 
  import Article from './module.article';
 
@@ -26,13 +27,6 @@
         }
 
         createElememt(){
-
-            let nav = ArticleDefault.getArticleRefById(this.sideNav, '17M');
-            // console.log(nav)
-            let next = ArticleDefault.getNextRoomRefById(this.sideNav, "4");
-            //console.log(next)
-            let previous = ArticleDefault.getPreviousRoomRefById(this.sideNav, "7");
-            //console.log(previous)
 
             let childrenObj = Util.getElementChildren('main');
             let count = childrenObj.count;
@@ -58,7 +52,7 @@
         }
 
         updateElement(content){
-            this.articleElement.innerHTML = '<div class="content">'+content+'</div>';
+            this.articleElement.innerHTML = '<div class="content">'+content.text+'</div>';
         }
 
         doTransition(){

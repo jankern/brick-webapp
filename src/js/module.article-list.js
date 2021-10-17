@@ -10,6 +10,7 @@ let httpService = new HttpService();
 // singleton import
 import {animation} from './module.animation';
 import {three3d} from './module.three-3d';
+import {navigation} from './module.navigation';
 
 import {articles} from './module.articles';
 import ArticleDefault from './module.article-default';
@@ -55,7 +56,7 @@ export
 
         httpService.requestChaining().call(httpService.get, params, true).then(
             (succ) => {
-                article.updateElement(succ.data.text);
+                article.updateElement(succ.data);
                 isRequestOngoing = false;
                 this.setPreviousState(path, article.getArticleId());
                 this.manageEventListener().onMouseMove.add(window, animation.startPageClaimAnimation);
@@ -169,32 +170,18 @@ export
                 "room": (articleId, path, properties) => {
                     return new ArticleRoom(articleId, path, properties);
                 },
-                "roomItem": (articleId, path, properties) => {
+                "roomitem": (articleId, path, properties) => {
                     return new ArticleRoomItem(articleId, path, properties);
                 }
             };
 
             let instanceType = "default";
             if(path.indexOf('rooms') > -1){
-               if(!artType){
-                    instanceType = "room";
-                }else{
-                    instanceType = "roomItem";
-                }
+                instanceType = artType;
             }
 
             // Initiate article object
             article = articleTypeInstance[instanceType](articleId, path, properties);
-
-            // if(path.indexOf('rooms') <= -1){
-            //     article = new ArticleDefault(articleId, path, properties)
-            // } else {
-            //     if(!artType){
-            //         article = new ArticleRoom(articleId, path, properties);
-            //     }else{
-            //         article = new ArticleRoomItem(articleId, path, properties);
-            //     }
-            // }
 
             article.createElememt();
             article.doTransition();
@@ -209,12 +196,14 @@ export
             // Fetch content from server
             let params = articleId !== "" ? { "article_id": articleId } : { "get_aid_by_nav": Util.replaceBaseUrl(baseUrl, path) };
             
-            if(path.indexOf('room') > -1){
-                params['article_type'] = "room";
-                if(path.search(/^\/rooms\/.+/) > -1){
-                    params['article_type'] = "roomitem";
-                }
-            }
+            // if(path.indexOf('room') > -1){
+            //     params['article_type'] = "room";
+            //     if(path.search(/^\/rooms\/.+/) > -1){
+            //         params['article_type'] = "roomitem";
+            //     }
+            // }
+
+            if(artType) params['article_type'] = artType;
 
             httpService.requestChaining().call(httpService.get, params).then(
                 (succ) => {
@@ -240,7 +229,7 @@ export
                     if(articleId !== succ.data.article_id){
                         article.setArticlePropertiesAfterRedirect(succ.data.article_id);
                     }
-                    article.updateElement(succ.data.text);
+                    article.updateElement(succ.data);
                     isRequestOngoing = false;
                     article.finishTransition(this.getPreviousState());
                     this.setPreviousState(path, articleId);
@@ -278,18 +267,31 @@ export
 
         let href;
         let artId, artType;
+        let articleNav;
         let target = event.target || event.srcElement;
 
         if (target.tagName === 'A') {
 
             // TODO maybe check if <a> comes from menu or gallery. Probably needs different handling
             href = target.getAttribute('href');
-            artId = !target.getAttribute('data-article-id') ? null : target.getAttribute('data-article-id');
-            artType = !target.getAttribute('data-article-type') ? null : target.getAttribute('data-article-type');
-            if(href === "./") {
-                href = '/';
-            }
-            this.performUrlRouting(href, artId, artType);
+            href = href.replace('.', ''); 
+
+            // artId = !target.getAttribute('data-article-id') ? null : target.getAttribute('data-article-id');
+            // artType = !target.getAttribute('data-article-type') ? null : target.getAttribute('data-article-type');
+            
+            // if(!target.getAttribute('data-article-id')){
+            //     artId = ArticleDefault.getArticleRefByPath(navigation, href).article_id;
+            // }
+
+            // if(!target.getAttribute('data-article-type')){
+            //     artType = ArticleDefault.getArticleRefByPath(navigation, href).article_type;
+            // }
+
+            articleNav = ArticleDefault.getArticleRefByPath(navigation, href);
+
+            //console.log(artId+' '+artType);
+
+            this.performUrlRouting(href, articleNav.article_id, articleNav.article_type);
             // Swipe out menu
             if(!menuToggle){
                 animation.swipeOutNavMenu(menuToggle);

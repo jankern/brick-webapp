@@ -4,8 +4,9 @@
  */
 
  import Util from './module.util';
+ import {navigation} from './module.navigation';
  let articleElement, progressElement, mainElement;
- let articleNavRefById;
+ let articleNavRefById, articleNavRefByPath;
 
  export 
     default class Article {
@@ -16,7 +17,6 @@
             this.path = path;
             this.prop = prop;
             this.articleElement = {};
-            this.sideNav = window.sideNavObj;
             this.zIndex = 10;
         }
 
@@ -37,15 +37,40 @@
             );
         }
 
-        // Extract the article nav reference based on a given article id with recursive method
+        // Extract the article nav reference based on a given path with a recursive method
         // Param: sideNavObject, Article id of the nav ref to be returned
+        static getArticleRefByPath(obj, path){
+
+            for (let key in obj){
+                if(obj.hasOwnProperty(key)){
+                  if (typeof obj[key] == "object") {
+                    if(path === obj[key]['path']){
+                        let nav = {};
+                        nav['article_id'] = key;
+                        nav['path'] = obj[key].path;
+                        if(obj[key].article_type) nav['article_type'] = obj[key].article_type;
+                        return nav;
+                    }
+                    articleNavRefByPath = Article.getArticleRefByPath(obj[key], path);
+                  }
+                }
+             }
+            return articleNavRefByPath;
+        }
+
+        // Extract the article nav reference based on a given article id with a recursive method
+        // Param: sideNavObject, path of the nav ref to be returned
         static getArticleRefById(obj, id){
 
             for (let key in obj){
                 if(obj.hasOwnProperty(key)){
                   if (typeof obj[key] == "object") {
                     if(id === key){
-                        return {"article_id": key, "path":obj[key].path};
+                        let nav = {};
+                        nav['article_id'] = key;
+                        nav['path'] = obj[key].path;
+                        if(obj[key].article_type) nav['article_type'] = obj[key].article_type;
+                        return nav;
                     }
                     articleNavRefById = Article.getArticleRefById(obj[key], id);
                   }
@@ -116,7 +141,7 @@
 
         setArticlePropertiesAfterRedirect(id){
             console.log(id);
-            let articleNavRef = Article.getArticleRefById(this.sideNav, id);
+            let articleNavRef = Article.getArticleRefById(navigation, id);
             console.log(articleNavRef);
             this.articleId = articleNavRef.article_id;
             this.path = articleNavRef.path;

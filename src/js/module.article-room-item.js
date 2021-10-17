@@ -6,6 +6,7 @@
  import Util from './module.util';
  // Singleton import
  import {animation} from './module.animation';
+ import {navigation} from './module.navigation';
 
  import Article from './module.article';
  import {articles} from './module.articles';

@@ -198,6 +198,36 @@ nav.view-wrapper{
     }
 }
 
+.gallery-btn{
+    
+}
+
+.hidden{
+    visibility: hidden;
+}
+
+.visible{
+    visibility: visible;
+}
+
+.gallery-next{
+    position:absolute;
+    right:0px;
+    top:50%;
+    height:100px;
+    width:100px;
+    z-index:2;
+}
+
+.gallery-previous{
+    position:absolute;
+    left:0px;
+    top:50%;
+    height:100px;
+    width:100px;
+    z-index:2;
+}
+
 .gallery-transition{
     width:200px;
     height:200px;
