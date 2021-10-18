@@ -175,11 +175,16 @@ export
                 }
             };
 
+            console.log('++++++++++');
+
             if(artType === null || !artType){
                 artType = "default";
                 if(path.indexOf('rooms') > -1){
                     path = path.replace('./', '/'); 
+                    console.log(path)
                     let articleNav = ArticleDefault.getArticleRefByPath(navigation, path);
+                    console.log(articleNav);
+
                     artType = articleNav.article_type;
                     console.log(articleNav);
                 }

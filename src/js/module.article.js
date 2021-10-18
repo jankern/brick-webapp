@@ -45,6 +45,11 @@
         // Param: sideNavObject, Article id of the nav ref to be returned
         static getArticleRefByPath(obj, path){
 
+            // remove ending / 
+            if(path.substr(path.length-1) === '/'){
+                path = path.substr(0, path.length-1);
+            } 
+
             for (let key in obj){
                 if(obj.hasOwnProperty(key)){
                   if (typeof obj[key] == "object") {
