@@ -60,7 +60,7 @@ export
                 isRequestOngoing = false;
                 this.setPreviousState(path, article.getArticleId());
                 this.manageEventListener().onMouseMove.add(window, animation.startPageClaimAnimation);
-
+                articles.push(article);
                 // return animation transition
                 return animation.transitionChaining().run(animation.preloadStartTransitionAnimation, {});
             }, 
@@ -175,16 +175,21 @@ export
                 }
             };
 
-            let instanceType = "default";
-            if(path.indexOf('rooms') > -1){
-                instanceType = artType;
+            if(artType === null || !artType){
+                artType = "default";
+                if(path.indexOf('rooms') > -1){
+                    path = path.replace('./', '/'); 
+                    let articleNav = ArticleDefault.getArticleRefByPath(navigation, path);
+                    artType = articleNav.article_type;
+                    console.log(articleNav);
+                }
             }
 
             // Initiate article object
-            article = articleTypeInstance[instanceType](articleId, path, properties);
-
+            article = articleTypeInstance[artType](articleId, path, properties);
             article.createElememt();
             article.doTransition();
+
             isRequestOngoing = true;
 
             // If start page is called for the first time, stop here and go to a specific start page loading procedure
@@ -195,14 +200,6 @@ export
 
             // Fetch content from server
             let params = articleId !== "" ? { "article_id": articleId } : { "get_aid_by_nav": Util.replaceBaseUrl(baseUrl, path) };
-            
-            // if(path.indexOf('room') > -1){
-            //     params['article_type'] = "room";
-            //     if(path.search(/^\/rooms\/.+/) > -1){
-            //         params['article_type'] = "roomitem";
-            //     }
-            // }
-
             if(artType) params['article_type'] = artType;
 
             httpService.requestChaining().call(httpService.get, params).then(
@@ -210,8 +207,12 @@ export
 
                     // recall case - menu had been called before the get the article id, article can be called now
                     if (succ.status_message && succ.status_message === "found_article_id") {
-                        params = null;
-                        params = { "article_id": succ.data.article_id };
+                        params = {};
+                        params['article_id'] = succ.data.article_id;
+                        if(artType) params['article_type'] = artType;
+                        // update article-list, article and article DOM object with remote article id
+                        articleId = succ.data.article_id;
+                        article.setArticlePropertiesAfterRemoteIdCall(articleId);
                     }
 
                     // regular case - article id is avilable and can be called directly
@@ -226,15 +227,26 @@ export
                 (succ) => {
                     // In case of artid from request does not match object due to request redirect, 
                     // then update id and path in object
-                    if(articleId !== succ.data.article_id){
-                        article.setArticlePropertiesAfterRedirect(succ.data.article_id);
+                    let succContent = {};
+                    if(succ.status === 404){
+                        succContent['text'] == "404";
+                    }else{
+
+                        if(articleId !== succ.data.article_id){
+                            article.setArticlePropertiesAfterRedirect(succ.data.article_id);
+                        }
+
+                        succContent = succ.data;
+                        
+                        // Pushing all instances to an array
+                        articles.push(article);
                     }
-                    article.updateElement(succ.data);
+
+                    article.updateElement(succContent);
                     isRequestOngoing = false;
                     article.finishTransition(this.getPreviousState());
                     this.setPreviousState(path, articleId);
-                    // Pushing all instances to an array
-                    articles.push(article);
+
                 },
                 (err) => {
                     console.log(err);
@@ -274,7 +286,7 @@ export
 
             // TODO maybe check if <a> comes from menu or gallery. Probably needs different handling
             href = target.getAttribute('href');
-            href = href.replace('.', ''); 
+            href = href.replace('./', '/'); 
 
             // artId = !target.getAttribute('data-article-id') ? null : target.getAttribute('data-article-id');
             // artType = !target.getAttribute('data-article-type') ? null : target.getAttribute('data-article-type');

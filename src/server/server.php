@@ -66,20 +66,16 @@
 
                 $responseArr = array();
 
-                if(isset($_GET['article_type'])){
-
-                    // ROOM
-                    if($_GET['article_type'] == 'room'){
-                        $room = getRoomByArticleId($articleId);
-                        $text = $room["text"];
-                        $responseArr["items"] = $room["items"];
-                    }else{
-                    // ROOMITEM
-                        $roomItem = getRoomItemByArticleId($articleId);
-                        $text = $roomItem["text"];
-                        $responseArr["items"] = $roomItem["items"];
-                    }
-
+                // ROOM
+                if($_GET['article_type'] == 'room'){
+                    $room = getRoomByArticleId($articleId);
+                    $text = $room["text"];
+                    $responseArr["items"] = $room["items"];
+                }elseif($_GET['article_type'] == 'roomitem'){
+                // ROOMITEM
+                    $roomItem = getRoomItemByArticleId($articleId);
+                    $text = $roomItem["text"];
+                    $responseArr["items"] = $roomItem["items"];
                 }else{
                     $headline = getNavByArticleId($articleId);
                     $text = "<h1>".$headline."</h1><p>This is a text for article " .$articleId. "</p>";
@@ -444,23 +440,23 @@
             "/rooms/room1/brick7"=>["article_id"=>"7M", "name"=>"Brick 7"],
             "/rooms/room1/brick8"=>["article_id"=>"8M", "name"=>"Brick 8"],
             "/rooms/room2"=>["article_id"=>"5", "name"=>"Room 2"],
-            "/rooms/room1/brick9"=>["article_id"=>"9M", "name"=>"Brick 9"],
-            "/rooms/room1/brick10"=>["article_id"=>"10M", "name"=>"Brick 10"],
-            "/rooms/room1/brick11"=>["article_id"=>"11M", "name"=>"Brick 11"],
-            "/rooms/room1/brick12"=>["article_id"=>"12M", "name"=>"Brick 12"],
-            "/rooms/room1/brick13"=>["article_id"=>"13M", "name"=>"Brick 13"],
-            "/rooms/room1/brick14"=>["article_id"=>"14M", "name"=>"Brick 14"],
-            "/rooms/room1/brick15"=>["article_id"=>"15M", "name"=>"Brick 15"],
-            "/rooms/room1/brick16"=>["article_id"=>"16M", "name"=>"Brick 16"],
+            "/rooms/room2/brick9"=>["article_id"=>"9M", "name"=>"Brick 9"],
+            "/rooms/room2/brick10"=>["article_id"=>"10M", "name"=>"Brick 10"],
+            "/rooms/room2/brick11"=>["article_id"=>"11M", "name"=>"Brick 11"],
+            "/rooms/room2/brick12"=>["article_id"=>"12M", "name"=>"Brick 12"],
+            "/rooms/room2/brick13"=>["article_id"=>"13M", "name"=>"Brick 13"],
+            "/rooms/room2/brick14"=>["article_id"=>"14M", "name"=>"Brick 14"],
+            "/rooms/room2/brick15"=>["article_id"=>"15M", "name"=>"Brick 15"],
+            "/rooms/room2/brick16"=>["article_id"=>"16M", "name"=>"Brick 16"],
             "/rooms/room3"=>["article_id"=>"6", "name"=>"Room 3"],
-            "/rooms/room1/brick17"=>["article_id"=>"17M", "name"=>"Brick 17"],
-            "/rooms/room1/brick18"=>["article_id"=>"18M", "name"=>"Brick 18"],
-            "/rooms/room1/brick19"=>["article_id"=>"19M", "name"=>"Brick 19"],
-            "/rooms/room1/brick20"=>["article_id"=>"20M", "name"=>"Brick 20"],
-            "/rooms/room1/brick21"=>["article_id"=>"21M", "name"=>"Brick 21"],
-            "/rooms/room1/brick22"=>["article_id"=>"22M", "name"=>"Brick 22"],
-            "/rooms/room1/brick23"=>["article_id"=>"23M", "name"=>"Brick 23"],
-            "/rooms/room1/brick24"=>["article_id"=>"24M", "name"=>"Brick 24"],
+            "/rooms/room3/brick17"=>["article_id"=>"17M", "name"=>"Brick 17"],
+            "/rooms/room3/brick18"=>["article_id"=>"18M", "name"=>"Brick 18"],
+            "/rooms/room3/brick19"=>["article_id"=>"19M", "name"=>"Brick 19"],
+            "/rooms/room3/brick20"=>["article_id"=>"20M", "name"=>"Brick 20"],
+            "/rooms/room3/brick21"=>["article_id"=>"21M", "name"=>"Brick 21"],
+            "/rooms/room3/brick22"=>["article_id"=>"22M", "name"=>"Brick 22"],
+            "/rooms/room3/brick23"=>["article_id"=>"23M", "name"=>"Brick 23"],
+            "/rooms/room3/brick24"=>["article_id"=>"24M", "name"=>"Brick 24"],
             "/somewhere-to-c"=>["article_id"=>"7", "name"=>"Somewhere to C"],
             "/somewhere-to-d"=>["article_id"=>"8", "name"=>"Somewhere to D"]
         );

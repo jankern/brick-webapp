@@ -6,7 +6,7 @@
  import Util from './module.util';
  import {navigation} from './module.navigation';
  let articleElement, progressElement, mainElement;
- let articleNavRefById, articleNavRefByPath;
+ let articleNavRefById, articleNavRefByPath, nextSubArtRefById, previousSubArtRefById, nextLimit, previousObj;
 
  export 
     default class Article {
@@ -27,6 +27,8 @@
                 this.title,
                 this.path
             );
+            console.log('UDPATESTATE');
+            console.log(history);
         }
 
         replaceState(){
@@ -35,6 +37,8 @@
                 this.title,
                 this.path
             );
+            console.log('REPLACEESTATE');
+            console.log(history);
         }
 
         // Extract the article nav reference based on a given path with a recursive method
@@ -79,64 +83,84 @@
             return articleNavRefById;
         }
 
-        // Return a possible NEXT nav reference by a given article id with fixed depth level loop
-        static getNextRoomRefById(obj, id){
+        // Returns a possible NEXT nav reference by a given article id AND nav depth
+        // 3= sublevel (room), 5 = sub sub level (toomitem)
+        static getNextSubArtRefById(obj, stack, depth, id){
 
-            let nextNavRefById;
-            let nextLimit = 0;
             for (let key in obj){
                 if(obj.hasOwnProperty(key)){
-                    if(obj[key].path === '/rooms'){
-                        for (let key2 in obj[key].articles){
-                            if(obj[key].articles.hasOwnProperty(key2)){
-                                // If the id matches, get the next article id
-                                if(key2 === id){
-                                    nextLimit++;
-                                }
-                                if(key2 !== id && nextLimit === 1){
-                                    nextNavRefById = {"article_id":key2, "path":obj[key].articles[key2].path};
-                                    break;
-                                }
-                            }
+                  if (typeof obj[key] == "object") {
+                    
+                    let arr = [];
+                    if(stack !== ''){
+                        arr = stack.split('.');
+                    }
+
+                    if(arr.length === depth){
+                        //console.log(stack + ' - ' +id+ ' : '+key);
+                        if(nextLimit === 1){
+                            nextLimit = 0;
+                           // console.log({"article_id":key, "path":obj[key].path, "article_type": obj[key].article_type});
+                            let nav = {};
+                            nav['article_id'] = key;
+                            nav['path'] = obj[key].path;
+                            if(obj[key].article_type) nav['article_type'] = obj[key].article_type;
+                            return nav;
+                        }
+                        if(key === id){
+                            nextLimit = 1;
                         }
                     }
+
+                    nextSubArtRefById = Article.getNextSubArtRefById(obj[key], stack+'.'+key, depth, id);
+                  }
                 }
-             }
-            return nextNavRefById;
+            }
+            let tmp = nextSubArtRefById;
+            nextSubArtRefById = undefined;
+            return tmp;
         }
 
-        // Return a possible PREVIOUS refernce by a given article id with fixed depth level loop
-        static getPreviousRoomRefById(obj, id){
+        // Returns a possible PREVIOUS nav reference by a given article id AND nav depth
+        // 3= sublevel (room), 5 = sub sub level (toomitem)
+        static getPreviousSubArtRefById(obj, stack, depth, id){
 
-            let previousNavRefById;
-            let item;
             for (let key in obj){
                 if(obj.hasOwnProperty(key)){
-                    if(obj[key].path === '/rooms'){
-                        for (let key2 in obj[key].articles){
-                            if(obj[key].articles.hasOwnProperty(key2)){
-                                // If the id matches and there is no previous nav reference, exit
-                                // else item is the previous nav reference
-                                if(key2 === id){
-                                    if(!item){
-                                        break;
-                                    }else{
-                                        previousNavRefById = item;
-                                        break;
-                                    }
-                                }
-                                // temporary store the item
-                                item = {"article_id":key2, "path":obj[key].articles[key2].path};
-                            }
-                        }
+                  if (typeof obj[key] == "object") {
+                    
+                    let arr = [];
+                    if(stack !== ''){
+                        arr = stack.split('.');
                     }
+
+                    if(arr.length === depth){
+                        //console.log(stack + ' - ' +id+ ' : '+key);
+                        if(key === id){
+                            let tmp = previousObj;
+                            previousObj = undefined;
+                            return tmp;
+                        }
+                        // temporary store the item
+                        previousObj = {"article_id":key, "path":obj[key].path};
+                        if(obj[key].article_type) previousObj['article_type'] = obj[key].article_type;
+                    }
+
+                    previousSubArtRefById = Article.getPreviousSubArtRefById(obj[key], stack+'.'+key, depth, id);
+                  }
                 }
              }
-            return previousNavRefById;
+            return previousSubArtRefById;
         }
 
         getArticleId(){
             return this.articleId;
+        }
+
+        setArticlePropertiesAfterRemoteIdCall(id){
+            this.articleId = id;
+            this.articleElement.id = 'article-'+id;
+            this.replaceState();
         }
 
         setArticlePropertiesAfterRedirect(id){

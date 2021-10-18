@@ -15,7 +15,7 @@ module.exports = {
     // ]
     main: ["whatwg-fetch", "./src/js/index.js"]
   },
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   devServer: {
     contentBase: '../../server/cole-blaq/html/resources/dist',
     //hot: true

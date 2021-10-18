@@ -7,90 +7,11 @@ import '../scss/styles.scss';
 
 // Class and Function Imports
 import ArticleList from './module.article-list';
-import TestList from "./tst-list";
+//import TestList from "./tst-list";
 
 // Class intialisation
 let articleList = new ArticleList();
 
-// cluster -> brick -> variations
-let gallery = {
-    clusters: [
-        {
-            img: "",
-            text: "",
-            id: 1
-        },
-        {
-            img: "",
-            text: "",
-            id: 2
-        }
-    ],
-    bricks: [
-        {
-            img: "",
-            text: "",
-            id: 10,
-            clusterId: 1
-        },
-        {
-            img: "",
-            text: "",
-            id: 11,
-            clusterId: 1
-        },
-        {
-            img: "",
-            text: "",
-            id: 12,
-            clusterId: 2
-        }
-    ],
-    variants: [
-        {
-            ref: "",
-            type: "img/file",
-            text: "",
-            id: 30,
-            bricksId: 10 
-        },
-        {
-            ref: "",
-            type: "img/file",
-            text: "",
-            id: 31,
-            bricksId: 10 
-        },
-        {
-            ref: "",
-            type: "img/file",
-            text: "",
-            id: 32,
-            bricksId: 11 
-        },
-        {
-            ref: "",
-            type: "img/file",
-            text: "",
-            id: 33,
-            bricksId: 11 
-        },
-        {
-            ref: "",
-            type: "img/file",
-            text: "",
-            id: 34,
-            bricksId: 12 
-        },
-        {
-            ref: "",
-            type: "img/file",
-            text: "",
-            id: 35,
-            bricksId: 12 
-        }
-    ]
-}
 
 
 // Stand der Dinge

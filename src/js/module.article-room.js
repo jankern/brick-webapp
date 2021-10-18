@@ -74,7 +74,7 @@
                 content.items.forEach(element => {
                     let nav = Article.getArticleRefById(navigation, element.article_id)
                     tplItems += '<div class="room-item"><a href="'+nav.path+'" data-article-id="'+nav.article_id+
-                        '" data-article-type="roomItem">'+'<img src="'+element.img.toString()+
+                        '" data-article-type="roomitem">'+'<img src="'+element.img.toString()+
                         '" width="50" title="'+element.name+'">'+element.name+'</a></div>';
                 });
             }
@@ -86,15 +86,17 @@
             contentElement.innerHTML = tplItems;
             this.articleElement.appendChild(contentElement);
             
-            // create the previous / next nav
-            let next = Article.getNextRoomRefById(navigation, content.article_id);
+            // create the previous / next nav buttons and hide/show if a next room is clickable
+            let next = Article.getNextSubArtRefById(navigation, '', 3, content.article_id); // 3=room, 5=roomitems´
+            console.log('NEXT');console.log(next);
             this.nextBtn.style.visibility = "hidden";
             this.previousBtn.style.visibility = "hidden";
             if(next){
                 this.nextBtn.href = next.path;
                 this.nextBtn.style.visibility = "visible";
             }
-            let previous = Article.getPreviousRoomRefById(navigation, content.article_id);
+            let previous = Article.getPreviousSubArtRefById(navigation, '', 3, content.article_id); // 3=room, 5=roomitems´
+            console.log('PREV');console.log(previous);
             if(previous){
                 this.previousBtn.href = previous.path;
                 this.previousBtn.style.visibility = "visible";
@@ -116,7 +118,7 @@
                 animation.preloadHideAnimation(previousArticle.articleId, this);
             }
 
-            // TODO temporary solution
+            // TODO temporary solution, add some animation here!
             else{
                 progressElement.style.display = "none";
             }

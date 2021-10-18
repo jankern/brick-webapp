@@ -48,47 +48,61 @@
             this.updateState();
             console.log(history);
 
+            this.nextBtn = document.createElement('a');
+            this.nextBtn.id = 'gallery-next-'+this.articleId;
+            this.nextBtn.className = 'material-icons navigate_next gallery-next';
+            this.nextBtn.href = '#';
+            this.nextBtn.innerHTML = 'navigate_next';
+
+            this.previousBtn = document.createElement('a');
+            this.previousBtn.id = 'gallery-previous-'+this.articleId;
+            this.previousBtn.className = 'material-icons navigate_before gallery-previous';
+            this.previousBtn.href = '#';
+            this.previousBtn.innerHTML = 'navigate_before';
+
+            this.articleElement.appendChild(this.nextBtn);
+            this.articleElement.appendChild(this.previousBtn);
+
             progressElement = document.querySelector('.view-wrapper.preload');
 
         }
 
         updateElement(content){
-            this.articleElement.innerHTML = '<div class="content">'+content+'</div>';
+
+            // generate html content for the room item list
+            let tplHead = !content['name']? '' : '<h1>'+content['name']+'</h1>';
+            let tplText = !content['text']? '' : '<p>'+content['text']+'</p>';
+            let tplTextContainer = '<div class="item-info">'+tplHead+tplText+'</div>';
+            let tplItems = '<div class="item-list">';
+            if(content.items.length > 0){
+                content.items.forEach(element => {
+                    let nav = Article.getArticleRefById(navigation, element.article_id)
+                    tplItems += '<div class="item"><img src="'+element.img.toString()+
+                        '" style="width:100%" title="'+element.name+'"></div>';
+                });
+            }
+            tplItems += '</div>';
+
+            // add the list to the DOM
+            let contentElement = document.createElement('div');
+            contentElement.className = 'content';
+            contentElement.innerHTML = tplTextContainer+tplItems;
+            this.articleElement.appendChild(contentElement);
+            
+            // create the previous / next nav buttons and hide/show if a next room is clickable
+            let next = Article.getNextSubArtRefById(navigation, '', 5, content.article_id); // 3=room, 5=roomitems´
+            this.nextBtn.style.visibility = "hidden";
+            this.previousBtn.style.visibility = "hidden";
+            if(next){
+                this.nextBtn.href = next.path;
+                this.nextBtn.style.visibility = "visible";
+            }
+            let previous = Article.getPreviousSubArtRefById(navigation, '', 5, content.article_id); // 3=room, 5=roomitems´
+            if(previous){
+                this.previousBtn.href = previous.path;
+                this.previousBtn.style.visibility = "visible";
+            }
         }
-
-        // updateState(){
-        //     let randId = util.generateRandomNumber(7);
-        //     history.pushState(
-        //         {path: this.path, articleId: this.articleId, state:randId}, 
-        //         this.title,
-        //         this.path
-        //     );
-        // }
-
-        // replaceState(){
-        //     history.replaceState(
-        //         {path: this.path, articleId: this.articleId}, 
-        //         this.title,
-        //         this.path
-        //     );
-        // }
-
-        // getArticleId(){
-        //     return this.articleId;
-        // }
-
-        // getArticlePath(){
-        //     return this.path;
-        // }
-
-        // getZIndex(){
-        //     return this.zIndex;
-        // }
-
-        // setZIndex(zIndex){
-        //     this.zIndex = zIndex;
-        //     this.articleElement.style.zIndex = this.zIndex;
-        // }
 
         doTransition(){
             progressElement.style.display = 'block';
@@ -104,7 +118,7 @@
                 animation.preloadHideAnimation(previousArticle.articleId, this);
             }
 
-            // TODO temporary solution
+            // TODO temporary solution, add some animation here!
             else{
                 progressElement.style.display = "none";
             }
