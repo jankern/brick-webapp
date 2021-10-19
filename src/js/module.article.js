@@ -17,6 +17,7 @@
             this.path = path;
             this.prop = prop;
             this.articleElement = {};
+            this.redirectionId;
             this.zIndex = 10;
         }
 
@@ -27,7 +28,7 @@
                 this.title,
                 this.path
             );
-            console.log('UDPATESTATE');
+            console.log('UDPATE_STATE');
             console.log(history);
         }
 
@@ -37,10 +38,10 @@
                 this.title,
                 this.path
             );
-            console.log('REPLACEESTATE');
+            console.log('REPLACE_STATE');
             console.log(history);
         }
-
+        
         // Extract the article nav reference based on a given path with a recursive method
         // Param: sideNavObject, Article id of the nav ref to be returned
         static getArticleRefByPath(obj, path){
@@ -88,42 +89,48 @@
             return articleNavRefById;
         }
 
-        // Returns a possible NEXT nav reference by a given article id AND nav depth
-        // 3= sublevel (room), 5 = sub sub level (toomitem)
-        static getNextSubArtRefById(obj, stack, depth, id){
-
+        static getNextNavByDepthLevel(obj, stack, depth, id){
+            
             for (let key in obj){
                 if(obj.hasOwnProperty(key)){
-                  if (typeof obj[key] == "object") {
-                    
-                    let arr = [];
-                    if(stack !== ''){
-                        arr = stack.split('.');
-                    }
-
-                    if(arr.length === depth){
-                        //console.log(stack + ' - ' +id+ ' : '+key);
-                        if(nextLimit === 1){
-                            nextLimit = 0;
-                           // console.log({"article_id":key, "path":obj[key].path, "article_type": obj[key].article_type});
-                            let nav = {};
-                            nav['article_id'] = key;
-                            nav['path'] = obj[key].path;
-                            if(obj[key].article_type) nav['article_type'] = obj[key].article_type;
-                            return nav;
+                    if (typeof obj[key] == "object") {
+                        
+                        let arr = [];
+                        if(stack !== ''){
+                            arr = stack.split('.');
                         }
-                        if(key === id){
-                            nextLimit = 1;
-                        }
-                    }
 
-                    nextSubArtRefById = Article.getNextSubArtRefById(obj[key], stack+'.'+key, depth, id);
-                  }
+                        if(arr.length === depth){
+                            //console.log(stack + ' - ' +id+ ' : '+key+' # '+nextLimit);
+                            if(nextLimit === 1){
+                                nextLimit = 0;
+                                //console.log({"article_id":key, "path":obj[key].path, "article_type": obj[key].article_type});
+                                let nav = {};
+                                nav['article_id'] = key;
+                                nav['path'] = obj[key].path;
+                                if(obj[key].article_type) nav['article_type'] = obj[key].article_type;
+                                return nav;
+                            }
+                            if(key === id){
+                                nextLimit = 1;
+                                //console.log('nextLimit set to '+nextLimit);
+                            }
+                        }else
+
+                        nextSubArtRefById = Article.getNextNavByDepthLevel(obj[key], stack+'.'+key, depth, id);
+                    }
                 }
             }
             let tmp = nextSubArtRefById;
             nextSubArtRefById = undefined;
             return tmp;
+        }
+
+        // Returns a possible NEXT nav reference by a given article id AND nav depth
+        // 3= sublevel (room), 5 = sub sub level (toomitem)
+        static getNextSubArtRefById(obj, stack, depth, id){
+            nextLimit = 0;
+            return Article.getNextNavByDepthLevel(obj, stack, depth, id);
         }
 
         // Returns a possible PREVIOUS nav reference by a given article id AND nav depth
@@ -158,6 +165,14 @@
             return previousSubArtRefById;
         }
 
+        setRedirectionId(id){
+            this.redirectionId = id;
+        }
+
+        getRedirectionId(){
+            return this.redirectionId;
+        }
+
         getArticleId(){
             return this.articleId;
         }
@@ -169,11 +184,10 @@
         }
 
         setArticlePropertiesAfterRedirect(id){
-            console.log(id);
             let articleNavRef = Article.getArticleRefById(navigation, id);
-            console.log(articleNavRef);
             this.articleId = articleNavRef.article_id;
             this.path = articleNavRef.path;
+            this.articleElement.id = 'article-'+id;
             this.updateState();
         }
 

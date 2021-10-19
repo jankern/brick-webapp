@@ -76,7 +76,7 @@ export
 
             // Access the reponse body data
             .then((response) => {
-                console.log(response);
+                //console.log(response);
                 return resolve(response.data);
             })
 

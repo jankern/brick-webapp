@@ -21,7 +21,7 @@
             response(404,"found_no_article",NULL);
         }
         else if($articleId == '3'){
-            sleep(1);
+            sleep(0.5);
             // case where to forward to another article url
             // header("Content-Type:application/json; charset=UTF-8");
             // header("Access-Control-Expose-Headers:*");

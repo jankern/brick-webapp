@@ -23,7 +23,7 @@
             // this.path = path;
             // this.prop = prop;
             // this.articleElement = {};
-            this.type = 'RoomItem';
+            this.type = 'roomitem';
             this.zIndex = 10;
         }
 
@@ -32,7 +32,7 @@
             let count = childrenObj.count;
 
             if(childrenObj.count > 0){
-                count = childrenObj.count-2;
+                //count = childrenObj.count-2;
             }
 
             this.articleElement = document.createElement('div');
@@ -46,16 +46,15 @@
             mainElement = document.querySelector('main');
             mainElement.appendChild(this.articleElement);
             this.updateState();
-            console.log(history);
 
             this.nextBtn = document.createElement('a');
-            this.nextBtn.id = 'gallery-next-'+this.articleId;
+            //this.nextBtn.id = 'gallery-next-'+this.articleId;
             this.nextBtn.className = 'material-icons navigate_next gallery-next';
             this.nextBtn.href = '#';
             this.nextBtn.innerHTML = 'navigate_next';
 
             this.previousBtn = document.createElement('a');
-            this.previousBtn.id = 'gallery-previous-'+this.articleId;
+            //this.previousBtn.id = 'gallery-previous-'+this.articleId;
             this.previousBtn.className = 'material-icons navigate_before gallery-previous';
             this.previousBtn.href = '#';
             this.previousBtn.innerHTML = 'navigate_before';
@@ -90,6 +89,7 @@
             this.articleElement.appendChild(contentElement);
             
             // create the previous / next nav buttons and hide/show if a next room is clickable
+            //Article.nextLimit = 0;
             let next = Article.getNextSubArtRefById(navigation, '', 5, content.article_id); // 3=room, 5=roomitems´
             this.nextBtn.style.visibility = "hidden";
             this.previousBtn.style.visibility = "hidden";

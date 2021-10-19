@@ -93,6 +93,8 @@ export
 
     organizeArticleStack(articleId) {
 
+        console.log('ORGANIZEARTICLESTACK '+articleId);
+
         let childrenObj = Util.getElementChildren('main');
 
         let iteratorMax = childrenObj.count - 1 + 10;
@@ -124,25 +126,48 @@ export
         history.go(path);
     }
 
+    getArticleById(articleId){
+        for (let i in articles) {
+            if (articles.hasOwnProperty(i)) {
+                if (articles[i].getArticleId() === articleId) {
+                    return articles[i];
+                }
+            }
+        }
+        return;
+    }
+
     performUrlRouting(path, articleId, artType, popState = false) {
 
         let hasArticle = false;
+        let redirectionId;
 
         // If article already exists, don't recall
         for (let i in articles) {
             if (articles.hasOwnProperty(i)) {
                 if (articles[i].getArticleId() === articleId) {
                     hasArticle = true;
+                    // when a redirection target is defined, target the redirection artcile
+                    if (articles[i].getRedirectionId()){
+                        redirectionId = articles[i].getRedirectionId();
+                    }
                     // Update pushState only if pressing a link to an already
                     // existing article AND NOT coming from popState event (history <- ->)!
                     if(!popState){
-                        articles[i].updateState();
+                        // set the state to the redirection article
+                        if(redirectionId){
+                            this.getArticleById(redirectionId).updateState();
+                        }else{
+                            // target the regular existing article
+                            articles[i].updateState();
+                        }
                     }
                     break;
                 }
             }
         }
 
+        // TODO: was machen die hier? nur bei Startseite?
         this.suspendStartPageAnimation(path);
         this.resumeStartPageAnimation(path);
 
@@ -175,18 +200,13 @@ export
                 }
             };
 
-            console.log('++++++++++');
-
             if(artType === null || !artType){
                 artType = "default";
                 if(path.indexOf('rooms') > -1){
                     path = path.replace('./', '/'); 
-                    console.log(path)
                     let articleNav = ArticleDefault.getArticleRefByPath(navigation, path);
-                    console.log(articleNav);
-
                     artType = articleNav.article_type;
-                    console.log(articleNav);
+                    //console.log(articleNav);
                 }
             }
 
@@ -237,21 +257,51 @@ export
                         succContent['text'] == "404";
                     }else{
 
-                        if(articleId !== succ.data.article_id){
-                            article.setArticlePropertiesAfterRedirect(succ.data.article_id);
-                        }
+                        // Version with replacing the parent with the redirected Child - creates trouble
+                        // if(articleId !== succ.data.article_id){
+                        //     article.setArticlePropertiesAfterRedirect(succ.data.article_id);
+                        // }
 
                         succContent = succ.data;
-                        
-                        // Pushing all instances to an array
-                        articles.push(article);
-                    }
 
-                    article.updateElement(succContent);
+                        // IN case of rewrite, create the empty parent and right after the redirected child
+                        if(articleId !== succContent.article_id){
+
+                            // mark parent as redirected
+                            article.setRedirectionId(succContent.article_id);
+                            articles.push(article);
+
+                            // create a new one with same artType and new id/path
+                            let articleNavRef = ArticleDefault.getArticleRefById(navigation, succContent.article_id);
+                            path = articleNavRef.path;
+                            articleId = articleNavRef.article_id;
+
+                            // console.log(artType);
+                            // console.log(articleTypeInstance);
+                            // console.log(path);
+                            // console.log(articleId);
+
+                            let redirectedArticle = articleTypeInstance[artType](articleId, path, properties);
+                            redirectedArticle.createElememt();
+                            redirectedArticle.updateElement(succContent);
+                            articles.push(redirectedArticle);
+                            redirectedArticle.finishTransition(this.getPreviousState());
+
+                        }else{
+
+                            article.updateElement(succContent);
+                            // Pushing all instances to an array
+                            articles.push(article);
+                            article.finishTransition(this.getPreviousState());
+                        }
+                    }
+                    
                     isRequestOngoing = false;
-                    article.finishTransition(this.getPreviousState());
+                    // article.finishTransition(this.getPreviousState());
                     this.setPreviousState(path, articleId);
 
+                    console.log('ARTICLES');
+                    console.log(articles);
                 },
                 (err) => {
                     console.log(err);
@@ -263,6 +313,12 @@ export
                 }
             );
         }else{
+
+            if(redirectionId){
+                console.log(redirectionId)
+                articleId = redirectionId;
+            }
+
             this.organizeArticleStack(articleId);
             this.setPreviousState(path, articleId);
         }

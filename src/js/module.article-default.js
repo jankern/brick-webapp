@@ -22,7 +22,7 @@
             // this.path = path;
             // this.prop = prop;
             // this.articleElement = {};
-            this.type = 'Default';
+            this.type = 'default';
             this.zIndex = 10;
         }
 
@@ -32,7 +32,7 @@
             let count = childrenObj.count;
 
             if(childrenObj.count > 0){
-                count = childrenObj.count-2;
+                //count = childrenObj.count-2;
             }
 
             this.articleElement = document.createElement('div');
@@ -46,7 +46,6 @@
             mainElement = document.querySelector('main');
             mainElement.appendChild(this.articleElement);
             this.updateState();
-            console.log(history);
 
             progressElement = document.querySelector('.view-wrapper.preload');
         }
