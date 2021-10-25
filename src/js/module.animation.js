@@ -92,11 +92,24 @@ class Animation {
 
     }
 
+    preloadHideAnimation2(){
+        let preloadWrapper = document.querySelector('.view-wrapper.preload');
+        let tl = gsap.timeline({onComplete: (event) => {
+            console.log('do something after animation');
+            console.log(preloadWrapper.className)
+        }});
+        tl.to('.view-wrapper.preload', {height:0, ease: "power2.in", duration: 1});
+        tl.to('.preload-container', {opacity:0, ease: "expo.in", duration: 1}, "-=1");
+    }
+
     preloadHideAnimation(previousArticleId, currentArticle){
 
         let preloadWrapper = document.querySelector('.view-wrapper.preload');
-        let progressParent = document.querySelector('#article-'+previousArticleId);
-        progressParent.style.overflow = "hidden";
+        let progressParent;
+        if(previousArticleId !== ""){
+            progressParent = document.querySelector('#article-'+previousArticleId);
+            progressParent.style.overflow = "hidden";
+        }
 
         let tl = gsap.timeline({onComplete: (event) => {
             // hide preloader
@@ -104,11 +117,16 @@ class Animation {
             // Set current article on top of the zIndex stack
             currentArticle.setZIndex(currentArticle.getZIndex()+2);
             // parent reset to initial height, overflow after animation
-            progressParent.style.height = "100vh";
-            progressParent.style.overflow = "visible";
+            console.log(previousArticleId);
+            if(previousArticleId !== ""){
+                progressParent.style.height = "100vh";
+                progressParent.style.overflow = "visible";
+            }
         }});
         tl.to('.preload-container', {opacity:0, ease: "expo.in", duration: 0.5});
-        tl.to('#article-'+previousArticleId, {duration: 0.5, height: 0, ease: "expo.out"});
+        if(previousArticleId !== ""){
+            tl.to('#article-'+previousArticleId, {duration: 0.5, height: 0, ease: "expo.out"});
+        }
 
     }
 

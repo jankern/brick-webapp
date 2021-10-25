@@ -62,16 +62,22 @@
         }
 
         finishTransition(previousArticle){
-            if(previousArticle){
-                let previousArticleElement = document.querySelector('#article-'+previousArticle.articleId);
-                previousArticleElement.prepend(progressElement);
-                animation.preloadHideAnimation(previousArticle.articleId, this);
-            }
 
-            // TODO temporary solution
-            else{
-                progressElement.style.display = "none";
-            }
+            animation.preloadHideAnimation2();
+
+            // if(previousArticle){
+            //     let previousArticleElement = document.querySelector('#article-'+previousArticle.articleId);
+            //     console.log(previousArticleElement)
+            //     previousArticleElement.prepend(progressElement);
+            //     animation.preloadHideAnimation(previousArticle.articleId, this);
+            // }
+
+            // // TODO temporary solution, add some animation here!
+            // else{
+            //     //progressElement.style.display = "none";
+            //     this.articleElement.prepend(progressElement);
+            //     animation.preloadHideAnimation('', this);
+            // }
         }
 
 }

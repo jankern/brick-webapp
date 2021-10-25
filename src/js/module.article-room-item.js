@@ -37,7 +37,7 @@
 
             this.articleElement = document.createElement('div');
             this.articleElement.id = 'article-'+this.articleId;
-            this.articleElement.className = "view-wrapper page rooms";
+            this.articleElement.className = "view-wrapper page roomitem";
             this.articleElement.style.zIndex = this.zIndex + count;
             let bgColor = this.prop.backgroundColor ? this.prop.backgroundColor : Util.getRandomColor();
             this.articleElement.style.backgroundColor = bgColor;
@@ -112,16 +112,19 @@
         }
 
         finishTransition(previousArticle){
-            if(previousArticle){
-                let previousArticleElement = document.querySelector('#article-'+previousArticle.articleId);
-                previousArticleElement.prepend(progressElement);
-                animation.preloadHideAnimation(previousArticle.articleId, this);
-            }
 
-            // TODO temporary solution, add some animation here!
-            else{
-                progressElement.style.display = "none";
-            }
+            animation.preloadHideAnimation2();
+
+            // if(previousArticle){
+            //     let previousArticleElement = document.querySelector('#article-'+previousArticle.articleId);
+            //     previousArticleElement.prepend(progressElement);
+            //     animation.preloadHideAnimation(previousArticle.articleId, this);
+            // }
+
+            // // TODO temporary solution, add some animation here!
+            // else{
+            //     progressElement.style.display = "none";
+            // }
         }
 
 }

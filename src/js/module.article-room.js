@@ -36,7 +36,7 @@
 
             this.articleElement = document.createElement('div');
             this.articleElement.id = 'article-'+this.articleId;
-            this.articleElement.className = "view-wrapper page rooms";
+            this.articleElement.className = "view-wrapper page room";
             this.articleElement.style.zIndex = this.zIndex + count;
             let bgColor = this.prop.backgroundColor ? this.prop.backgroundColor : Util.getRandomColor();
             this.articleElement.style.backgroundColor = bgColor;
@@ -101,7 +101,7 @@
                 this.previousBtn.href = previous.path;
                 this.previousBtn.style.visibility = "visible";
             }
-            
+
             this.updateState();
 
         }
@@ -113,17 +113,29 @@
             animation.preloadDisplayAnimation();
         }
 
-        finishTransition(previousArticle){
-            if(previousArticle){
-                let previousArticleElement = document.querySelector('#article-'+previousArticle.articleId);
-                previousArticleElement.prepend(progressElement);
-                animation.preloadHideAnimation(previousArticle.articleId, this);
-            }
+        reattachTransitionElement(){
+            mainElement.appendChild(progressElement);
+            console.log('progress element attached ');
+            console.log(progressElement);
+        }
 
-            // TODO temporary solution, add some animation here!
-            else{
-                progressElement.style.display = "none";
-            }
+        finishTransition(previousArticle){
+
+            animation.preloadHideAnimation2();
+
+            // if(previousArticle){
+            //     let previousArticleElement = document.querySelector('#article-'+previousArticle.articleId);
+            //     console.log(previousArticleElement)
+            //     previousArticleElement.prepend(progressElement);
+            //     animation.preloadHideAnimation(previousArticle.articleId, this);
+            // }
+
+            // // TODO temporary solution, add some animation here!
+            // else{
+            //     //progressElement.style.display = "none";
+            //     this.articleElement.prepend(progressElement);
+            //     animation.preloadHideAnimation('', this);
+            // }
         }
 
 }

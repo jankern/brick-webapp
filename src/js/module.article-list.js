@@ -100,6 +100,9 @@ export
         let iteratorMax = childrenObj.count - 1 + 10;
         let iterator = iteratorMax - 1;
 
+        console.log(iteratorMax);
+        console.log(iterator);
+
         if(articles.length > 0){
             for(let i in articles){
                 if(articles.hasOwnProperty(i)){
@@ -134,7 +137,7 @@ export
                 }
             }
         }
-        return;
+        return false;
     }
 
     performUrlRouting(path, articleId, artType, popState = false) {
@@ -267,25 +270,32 @@ export
                         // IN case of rewrite, create the empty parent and right after the redirected child
                         if(articleId !== succContent.article_id){
 
-                            // mark parent as redirected
-                            article.setRedirectionId(succContent.article_id);
-                            articles.push(article);
+                            if(!this.getArticleById(succContent.article_id)){
+                                // mark parent as redirected
+                                article.setRedirectionId(succContent.article_id);
+                                articles.push(article);
 
-                            // create a new one with same artType and new id/path
-                            let articleNavRef = ArticleDefault.getArticleRefById(navigation, succContent.article_id);
-                            path = articleNavRef.path;
-                            articleId = articleNavRef.article_id;
+                                // create a new one with same artType and new id/path
+                                let articleNavRef = ArticleDefault.getArticleRefById(navigation, succContent.article_id);
+                                path = articleNavRef.path;
+                                articleId = articleNavRef.article_id;
 
-                            // console.log(artType);
-                            // console.log(articleTypeInstance);
-                            // console.log(path);
-                            // console.log(articleId);
+                                // console.log(artType);
+                                // console.log(articleTypeInstance);
+                                // console.log(path);
+                                // console.log(articleId);
 
-                            let redirectedArticle = articleTypeInstance[artType](articleId, path, properties);
-                            redirectedArticle.createElememt();
-                            redirectedArticle.updateElement(succContent);
-                            articles.push(redirectedArticle);
-                            redirectedArticle.finishTransition(this.getPreviousState());
+                                let redirectedArticle = articleTypeInstance[artType](articleId, path, properties);
+                                redirectedArticle.createElememt();
+                                redirectedArticle.updateElement(succContent);
+                                // Assign progress element to the redirected target article  
+                                redirectedArticle.reattachTransitionElement();
+                                articles.push(redirectedArticle);
+                                redirectedArticle.finishTransition(this.getPreviousState());
+                            }else{
+                                this.organizeArticleStack(succContent.article_id);
+                                this.setPreviousState(path, succContent.article_id);
+                            }
 
                         }else{
 
