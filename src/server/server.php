@@ -142,7 +142,7 @@
         $rooms = [
             [
                 "article_id" => "4",
-                "text" => "This the room for the first few crazy Lego bricks.",
+                "text" => "This is the room for the <b>first</b> few crazy Lego bricks.",
                 "items" => [
                     ["article_id"=>"1M", "img"=>"/img/brick1.png", "name"=>"This is the first Brick"],
                     ["article_id"=>"2M", "img"=>"/img/brick2.png", "name"=>"This is the second Brick"],
@@ -156,7 +156,7 @@
             ],
             [
                 "article_id" => "5",
-                "text" => "This the room for the second few crazy Lego bricks.",
+                "text" => "This is the room for the <b>second</b> few crazy Lego bricks.",
                 "items" => [
                     ["article_id"=>"9M", "img"=>"/img/brick9.png", "name"=>"This is the first Brick"],
                     ["article_id"=>"10M", "img"=>"/img/brick10.png", "name"=>"This is the second Brick"],
@@ -170,7 +170,7 @@
             ],
             [
                 "article_id" => "6",
-                "text" => "This the room for the third few crazy Lego bricks.",
+                "text" => "This is the room for the <b>third</b> few crazy Lego bricks.",
                 "items" => [
                     ["article_id"=>"17M", "img"=>"/img/brick17.png", "name"=>"This is the first Brick"],
                     ["article_id"=>"18M", "img"=>"/img/brick18.png", "name"=>"This is the second Brick"],
@@ -180,6 +180,20 @@
                     ["article_id"=>"22M", "img"=>"/img/brick22.png", "name"=>"This is the sixth Brick"],
                     ["article_id"=>"23M", "img"=>"/img/brick23.png", "name"=>"This is the seventh Brick"],
                     ["article_id"=>"24M", "img"=>"/img/brick24.png", "name"=>"This is the eighth Brick"]
+                ]
+            ],
+            [
+                "article_id" => "7",
+                "text" => "This is the room for the <b>fourth</b> few crazy Lego bricks.",
+                "items" => [
+                    ["article_id"=>"25M", "img"=>"/img/brick25.png", "name"=>"This is the first Brick"],
+                    ["article_id"=>"26M", "img"=>"/img/brick26.png", "name"=>"This is the second Brick"],
+                    ["article_id"=>"27M", "img"=>"/img/brick27.png", "name"=>"This is the third Brick"],
+                    ["article_id"=>"28M", "img"=>"/img/brick28.png", "name"=>"This is the fourth Brick"],
+                    ["article_id"=>"29M", "img"=>"/img/brick29.png", "name"=>"This is the fifth Brick"],
+                    ["article_id"=>"30M", "img"=>"/img/brick30.png", "name"=>"This is the sixth Brick"],
+                    ["article_id"=>"31M", "img"=>"/img/brick31.png", "name"=>"This is the seventh Brick"],
+                    ["article_id"=>"32M", "img"=>"/img/brick32.png", "name"=>"This is the eighth Brick"]
                 ]
             ]
         ];
@@ -412,6 +426,78 @@
                     ["img"=>"/img/brick24-2.png", "name"=>"Brick 24 perspective 2"],
                     ["img"=>"/img/brick24-3.png", "name"=>"Brick 24 perspective 3"]
                 ]
+            ],
+            [
+                "article_id" => "25M", // media category id
+                "text" => "Brick 25 text",
+                "items" => [
+                    ["img"=>"/img/brick25-1.png", "name"=>"Brick 25 perspective 1"],
+                    ["img"=>"/img/brick25-2.png", "name"=>"Brick 25 perspective 2"],
+                    ["img"=>"/img/brick25-3.png", "name"=>"Brick 25 perspective 3"]
+                ]
+            ],
+            [
+                "article_id" => "26M", // media category id
+                "text" => "Brick 26 text",
+                "items" => [
+                    ["img"=>"/img/brick26-1.png", "name"=>"Brick 26 perspective 1"],
+                    ["img"=>"/img/brick26-2.png", "name"=>"Brick 26 perspective 2"],
+                    ["img"=>"/img/brick26-3.png", "name"=>"Brick 26 perspective 3"]
+                ]
+            ],
+            [
+                "article_id" => "27M", // media category id
+                "text" => "Brick 27 text",
+                "items" => [
+                    ["img"=>"/img/brick27-1.png", "name"=>"Brick 27 perspective 1"],
+                    ["img"=>"/img/brick27-2.png", "name"=>"Brick 27 perspective 2"],
+                    ["img"=>"/img/brick27-3.png", "name"=>"Brick 27 perspective 3"]
+                ]
+            ],
+            [
+                "article_id" => "28M", // media category id
+                "text" => "Brick 28 text",
+                "items" => [
+                    ["img"=>"/img/brick28-1.png", "name"=>"Brick 28 perspective 1"],
+                    ["img"=>"/img/brick28-2.png", "name"=>"Brick 28 perspective 2"],
+                    ["img"=>"/img/brick28-3.png", "name"=>"Brick 28 perspective 3"]
+                ]
+            ],
+            [
+                "article_id" => "29M", // media category id
+                "text" => "Brick 29 text",
+                "items" => [
+                    ["img"=>"/img/brick29-1.png", "name"=>"Brick 29 perspective 1"],
+                    ["img"=>"/img/brick29-2.png", "name"=>"Brick 29 perspective 2"],
+                    ["img"=>"/img/brick29-3.png", "name"=>"Brick 29 perspective 3"]
+                ]
+            ],
+            [
+                "article_id" => "30M", // media category id
+                "text" => "Brick 30 text",
+                "items" => [
+                    ["img"=>"/img/brick30-1.png", "name"=>"Brick 30 perspective 1"],
+                    ["img"=>"/img/brick30-2.png", "name"=>"Brick 30 perspective 2"],
+                    ["img"=>"/img/brick30-3.png", "name"=>"Brick 30 perspective 3"]
+                ]
+            ],
+            [
+                "article_id" => "31M", // media category id
+                "text" => "Brick 31 text",
+                "items" => [
+                    ["img"=>"/img/brick31-1.png", "name"=>"Brick 31 perspective 1"],
+                    ["img"=>"/img/brick31-2.png", "name"=>"Brick 31 perspective 2"],
+                    ["img"=>"/img/brick31-3.png", "name"=>"Brick 31 perspective 3"]
+                ]
+            ],
+            [
+                "article_id" => "32M", // media category id
+                "text" => "Brick 32 text",
+                "items" => [
+                    ["img"=>"/img/brick32-1.png", "name"=>"Brick 32 perspective 1"],
+                    ["img"=>"/img/brick32-2.png", "name"=>"Brick 32 perspective 2"],
+                    ["img"=>"/img/brick32-3.png", "name"=>"Brick 32 perspective 3"]
+                ]
             ]
         ];
 
@@ -457,8 +543,17 @@
             "/rooms/room3/brick22"=>["article_id"=>"22M", "name"=>"Brick 22"],
             "/rooms/room3/brick23"=>["article_id"=>"23M", "name"=>"Brick 23"],
             "/rooms/room3/brick24"=>["article_id"=>"24M", "name"=>"Brick 24"],
-            "/somewhere-to-c"=>["article_id"=>"7", "name"=>"Somewhere to C"],
-            "/somewhere-to-d"=>["article_id"=>"8", "name"=>"Somewhere to D"]
+            "/rooms/room4"=>["article_id"=>"7", "name"=>"Room 4"],
+            "/rooms/room4/brick25"=>["article_id"=>"25M", "name"=>"Brick 25"],
+            "/rooms/room4/brick26"=>["article_id"=>"26M", "name"=>"Brick 26"],
+            "/rooms/room4/brick27"=>["article_id"=>"27M", "name"=>"Brick 27"],
+            "/rooms/room4/brick28"=>["article_id"=>"28M", "name"=>"Brick 28"],
+            "/rooms/room4/brick29"=>["article_id"=>"29M", "name"=>"Brick 29"],
+            "/rooms/room4/brick30"=>["article_id"=>"30M", "name"=>"Brick 30"],
+            "/rooms/room4/brick31"=>["article_id"=>"31M", "name"=>"Brick 31"],
+            "/rooms/room4/brick32"=>["article_id"=>"32M", "name"=>"Brick 32"],
+            "/somewhere-to-c"=>["article_id"=>"8", "name"=>"Somewhere to C"],
+            "/somewhere-to-d"=>["article_id"=>"9", "name"=>"Somewhere to D"]
         );
     }
 

@@ -28,12 +28,7 @@
 
         createElememt(){
 
-            let childrenObj = Util.getElementChildren('main');
-            let count = childrenObj.count;
-
-            if(childrenObj.count > 0){
-                //count = childrenObj.count-2;
-            }
+            let count = Util.getElementsByTagAndClass('div', 'page').length;
 
             this.articleElement = document.createElement('div');
             this.articleElement.id = 'article-'+this.articleId;
@@ -58,12 +53,12 @@
             progressElement.style.display = 'block';
             progressElement.style.height = '100vh';
             mainElement.appendChild(progressElement);
-            animation.preloadDisplayAnimation();
+            animation.defaultPreloadDisplayAnimation();
         }
 
         finishTransition(previousArticle){
 
-            animation.preloadHideAnimation2();
+            animation.defaultPreloadHideAnimation();
 
             // if(previousArticle){
             //     let previousArticleElement = document.querySelector('#article-'+previousArticle.articleId);

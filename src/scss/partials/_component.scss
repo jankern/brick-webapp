@@ -61,6 +61,7 @@ header{
 
 main{
     flex-grow: 1;
+    overflow-x: hidden;
 }
 
 canvas{
@@ -84,6 +85,23 @@ canvas{
         background: /*$black-medium;*/ $base-orange;
         z-index: 50;
         overflow: hidden;
+    }
+}
+
+.rooms-container{
+
+    display: flex;
+    flex-direction: row;
+    overflow-x: hidden;
+    position:absolute;
+    left:0px;
+
+    .view-wrapper{
+
+        &.room{
+            position:relative;
+        }
+        
     }
 }
 

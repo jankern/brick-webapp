@@ -8,6 +8,7 @@ import { gsap } from "gsap";
 import { CSSPlugin } from "gsap/CSSPlugin.js";
 // singleton import
 import {three3d} from './module.three-3d';
+import {articles} from './module.articles';
 // import { PixiPlugin } from "gsap/PixiPlugin.js";
 // import { MotionPathPlugin } from "gsap/MotionPathPlugin.js";
 
@@ -86,17 +87,16 @@ class Animation {
         gsap.to(claimItem3, {duration:0.5, position:"absolute", left: l3 + '%'});
     }
 
-    preloadDisplayAnimation(){
+    defaultPreloadDisplayAnimation(){
 
         gsap.to('.preload-container', {opacity:1, ease: "expo.in", duration: 0.5});
 
     }
 
-    preloadHideAnimation2(){
+    defaultPreloadHideAnimation(){
         let preloadWrapper = document.querySelector('.view-wrapper.preload');
         let tl = gsap.timeline({onComplete: (event) => {
-            console.log('do something after animation');
-            console.log(preloadWrapper.className)
+
         }});
         tl.to('.view-wrapper.preload', {height:0, ease: "power2.in", duration: 1});
         tl.to('.preload-container', {opacity:0, ease: "expo.in", duration: 1}, "-=1");
@@ -128,6 +128,54 @@ class Animation {
             tl.to('#article-'+previousArticleId, {duration: 0.5, height: 0, ease: "expo.out"});
         }
 
+    }
+
+    // Rooms animation
+    slideRoomAnimation(slideDirection, loading=false){
+
+        /*
+        slideContainerElement (Slider dom element)
+        screenUnit (Screen width in pixel)
+        totalCount (Amount of items)
+        totalPositionLeft (Value in pixel)
+        slideDirection (next/previous = -/+)
+        */
+
+        let slideContainerElement = document.querySelector('.rooms-container');
+
+        let screenUnit = window.innerWidth;
+
+        let totalCount = 0;
+        for(let i in articles){
+            if(articles.hasOwnProperty(i)){
+                if(articles[i].type === "room" && !articles[i].redirectionId){ 
+                    totalCount += 1; 
+                }
+            }
+        }
+
+        // In case next article gets loaded, adding this one already to the total count
+        if(loading) totalCount += 1;
+
+        let totalPosition = Util.getPositionOfElement(slideContainerElement);
+
+        // Calculate slide position and move to
+        if(totalCount > 1){
+
+            let value;
+            if(slideDirection === "next"){
+                value = totalPosition.x - screenUnit;
+            }else{
+                value = totalPosition.x + screenUnit;
+            }
+
+            let body = document.querySelector('body');
+            body.style.overflowX = 'hidden';
+            let tl = gsap.timeline({onComplete: (event) => {
+                //body.style.overflow = 'auto';
+            }});
+            tl.to(slideContainerElement, {left: value, duration:1.0, ease: "power2.in"});
+        }
     }
 
     swipeOutNavMenu(toggle){

@@ -43,6 +43,7 @@ export
         let articleId = window.location.pathname === baseUrl ? "1" : "";
         let path = window.location.pathname;
         this.performUrlRouting(path, articleId, null);
+        this.slideRoomDirection = "next";
 
         // Testcase für Seitenstart im Untermenü
         // this.performUrlRouting(window.location.pathname+'somewhere-to-b/and-to-the-b2-with-spice', '');
@@ -91,17 +92,19 @@ export
         }
     }
 
-    organizeArticleStack(articleId) {
+    organizeArticleStack_(articleId) {
 
         console.log('ORGANIZEARTICLESTACK '+articleId);
 
-        let childrenObj = Util.getElementChildren('main');
+        //let childrenObj = Util.getElementChildren('main');
+        let count = Util.getElementsByTagAndClass('div', 'page').length;
 
-        let iteratorMax = childrenObj.count - 1 + 10;
+        // let iteratorMax = childrenObj.count - 1 + 10;
+        let iteratorMax = count - 1 + 10;
         let iterator = iteratorMax - 1;
 
-        console.log(iteratorMax);
-        console.log(iterator);
+        // console.log(iteratorMax);
+        // console.log(iterator);
 
         if(articles.length > 0){
             for(let i in articles){
@@ -121,6 +124,30 @@ export
 
     }
 
+    organizeArticleStack(articleId) {
+
+        let article = this.getArticleById(articleId);
+        //let countArticleType = this.getArticlesByType(article.getArticleType());
+
+        if(articles.length > 0){
+            for(let i in articles){
+                if(articles.hasOwnProperty(i)){
+                    if(articles[i].articleId === articleId){
+                        articles[i].setZIndex(articles.length+10);
+                    }
+                    // else if(articles[i].type !== article.getArticleType()){
+                    //     //articles[i].setZIndex(articles.length+10-);
+                    // }else{
+
+                    // }
+                }
+            }
+        }
+
+        let navMenu = document.querySelector('nav.view-wrapper');
+        //navMenu.style.zIndex = iteratorMax + 10;
+    }
+
     getState(){
         return history.state;
     }
@@ -138,6 +165,18 @@ export
             }
         }
         return false;
+    }
+
+    getArticlesByType(type){
+        let articles = [];
+        for (let i in articles) {
+            if (articles.hasOwnProperty(i)) {
+                if (articles[i].getType() === type) {
+                    articles.push(articles[i]);
+                }
+            }
+        }
+        return articles;
     }
 
     performUrlRouting(path, articleId, artType, popState = false) {
@@ -174,6 +213,43 @@ export
         this.suspendStartPageAnimation(path);
         this.resumeStartPageAnimation(path);
 
+        // Get the current article type based on navigation object
+        // default, room, roomitem
+        if(artType === null || !artType){
+            artType = "default";
+            if(path.indexOf('rooms') > -1){
+                path = path.replace('./', '/'); 
+                let articleNav = ArticleDefault.getArticleRefByPath(navigation, path);
+                artType = articleNav.article_type;
+                //console.log(articleNav);
+            }
+        }
+
+        // Define the progress type by artType and url pattern of the previous page
+        // default or room / roomitem type
+        let progressType = "default";
+        if(this.getPreviousState() === undefined){
+            // page direct start
+        }else{
+            // room: /rooms/x
+            if(/\/rooms\/[^.]+/.test(this.getPreviousState().path)){
+            
+            // roomitem: /rooms/x/x
+            }else if(/\/rooms\/[^.]+\/[^.]+/.test(this.getPreviousState().path)){
+
+            }
+        }
+
+        /*
+        
+        was ist es für ein arttype? room
+        wo kommt er her? room
+        bedeutet 
+        -> room / room -> rufe slider
+        -> room / default (fall forward) 
+
+        */
+
         // If article does not exist, insert an empty article, call data from server and insert them into the view
         if (!hasArticle) {
 
@@ -203,19 +279,12 @@ export
                 }
             };
 
-            if(artType === null || !artType){
-                artType = "default";
-                if(path.indexOf('rooms') > -1){
-                    path = path.replace('./', '/'); 
-                    let articleNav = ArticleDefault.getArticleRefByPath(navigation, path);
-                    artType = articleNav.article_type;
-                    //console.log(articleNav);
-                }
-            }
-
             // Initiate article object
             article = articleTypeInstance[artType](articleId, path, properties);
             article.createElememt();
+            if(artType === "room"){
+                //animation.slideRoomAnimation(this.slideRoomDirection, true);
+            }
             article.doTransition();
 
             isRequestOngoing = true;
@@ -307,7 +376,8 @@ export
                     }
                     
                     isRequestOngoing = false;
-                    // article.finishTransition(this.getPreviousState());
+                    console.log('PREVIOUSSTAE');
+                    console.log(this.getPreviousState());
                     this.setPreviousState(path, articleId);
 
                     console.log('ARTICLES');
@@ -327,6 +397,10 @@ export
             if(redirectionId){
                 console.log(redirectionId)
                 articleId = redirectionId;
+            }
+
+            if(artType === "room"){
+                animation.slideRoomAnimation(this.slideRoomDirection);
             }
 
             this.organizeArticleStack(articleId);
@@ -359,16 +433,11 @@ export
             href = target.getAttribute('href');
             href = href.replace('./', '/'); 
 
-            // artId = !target.getAttribute('data-article-id') ? null : target.getAttribute('data-article-id');
-            // artType = !target.getAttribute('data-article-type') ? null : target.getAttribute('data-article-type');
-            
-            // if(!target.getAttribute('data-article-id')){
-            //     artId = ArticleDefault.getArticleRefByPath(navigation, href).article_id;
-            // }
-
-            // if(!target.getAttribute('data-article-type')){
-            //     artType = ArticleDefault.getArticleRefByPath(navigation, href).article_type;
-            // }
+            if(target.className.indexOf('next') > -1){
+                this.slideRoomDirection = "next";
+            }else if(target.className.indexOf('previous') > -1){
+                this.slideRoomDirection = "previous";
+            }
 
             articleNav = ArticleDefault.getArticleRefByPath(navigation, href);
 

@@ -38,11 +38,64 @@ export
         return itemCount;
     }
 
+    static getPositionOfElement(el) {
+        var xPos = 0;
+        var yPos = 0;
+       
+        while (el) {
+          if (el.tagName == "BODY") {
+            // deal with browser quirks with body/window/document and page scroll
+            var xScroll = el.scrollLeft || document.documentElement.scrollLeft;
+            var yScroll = el.scrollTop || document.documentElement.scrollTop;
+       
+            xPos += (el.offsetLeft - xScroll + el.clientLeft);
+            yPos += (el.offsetTop - yScroll + el.clientTop);
+          } else {
+            // for all other non-BODY elements
+            xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+            yPos += (el.offsetTop - el.scrollTop + el.clientTop);
+          }
+       
+          el = el.offsetParent;
+        }
+        return {
+          x: xPos,
+          y: yPos
+        };
+    }
+
     static extractPath(path) {
         // extracts last ndoe from a given path
         // /sub/path -> path
         let extractedStringPosition = path.search(/[^\/]+(?=\/$|$)/);
         return path.substr(extractedStringPosition, path.length);
+    }
+
+    static getElementsByTagAndClass(htmlTag, cssClass){
+
+        if (!htmlTag) return 0;
+
+        let filteredChildren = [];
+        let children = document.querySelectorAll(htmlTag);
+
+        if(children.length > 0){
+            for(let i = 0; i < children.length; i++){
+                if(cssClass){
+                    let regexp = new RegExp(cssClass);
+                    let hasClass = children[i].className.search(regexp);
+                    if(hasClass > 0){
+                        filteredChildren.push(children[i]);
+                    }
+                }else{
+                    filteredChildren.push(children[i]);
+                }
+            }
+        }else{
+            return 0;
+        }
+
+        return filteredChildren;
+
     }
 
     static getElementChildren(el){

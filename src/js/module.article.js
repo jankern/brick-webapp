@@ -18,6 +18,8 @@
             this.prop = prop;
             this.articleElement = {};
             this.redirectionId;
+            this.type;
+            this.orderIndex;
             this.zIndex = 10;
         }
 
@@ -193,6 +195,14 @@
 
         getArticlePath(){
             return this.path;
+        }
+
+        getArticleType(){
+            return this.type;
+        }
+
+        setOrderIndex(orderIndex){
+            this.orderIndex = orderIndex;
         }
 
         getZIndex(){
