@@ -1,12 +1,12 @@
-# Webpack4 / ES6 / SASS
+# Webpack5 / ES6 / SASS web page
 
-A Webpack 4 scaffold with ES6, babel and SASS for development and production usage. Additional optional libs like jquery and materialize-css are also inlcuded to the project.
+A Webpack 5 scaffold with ES6, babel and SASS for development and production usage of webpage projects.
 
 ## Installation
 
 ```
-$ git clone git@gitlab.com:jankern/condulence-webapp.git
-$ cd condulence-webapp
+$ git clone git@gitlab.com:jankern/brick-webapp.git
+$ cd brick-webapp
 $ npm install
 ```
 
