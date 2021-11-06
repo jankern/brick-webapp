@@ -95,11 +95,17 @@ canvas{
     overflow-x: hidden;
     position:absolute;
     left:0px;
+    background:red;
 
     .view-wrapper{
 
         &.room{
             position:relative;
+        }
+
+        &.redirect{
+            width:0px;
+            height:0px;
         }
         
     }

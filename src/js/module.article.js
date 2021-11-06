@@ -20,7 +20,7 @@
             this.redirectionId;
             this.type;
             this.orderIndex;
-            this.zIndex = 10;
+            this.zIndex = 0;
         }
 
         updateState(){
@@ -49,7 +49,7 @@
         static getArticleRefByPath(obj, path){
 
             // remove ending / 
-            if(path.substr(path.length-1) === '/'){
+            if(path.substr(path.length-1) === '/' && path.length > 1){
                 path = path.substr(0, path.length-1);
             } 
 
@@ -59,8 +59,14 @@
                     if(path === obj[key]['path']){
                         let nav = {};
                         nav['article_id'] = key;
-                        nav['path'] = obj[key].path;
-                        if(obj[key].article_type) nav['article_type'] = obj[key].article_type;
+                        // get all properties that are not objects
+                        for (let p in obj[key]){
+                            if(obj[key].hasOwnProperty(p)){
+                                if (typeof obj[key][p] != "object"){
+                                    nav[p] = obj[key][p];
+                                }
+                            }
+                        }
                         return nav;
                     }
                     articleNavRefByPath = Article.getArticleRefByPath(obj[key], path);
@@ -169,6 +175,11 @@
 
         setRedirectionId(id){
             this.redirectionId = id;
+            if(this.articleElement){
+                let classNames = this.articleElement.className
+                this.articleElement.className = classNames + ' redirect';
+            }
+
         }
 
         getRedirectionId(){

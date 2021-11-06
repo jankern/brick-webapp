@@ -24,7 +24,7 @@
             // this.prop = prop;
             // this.articleElement = {};
             this.type = 'roomitem';
-            this.zIndex = 10;
+            //this.zIndex = 10;
         }
 
         createElememt(){

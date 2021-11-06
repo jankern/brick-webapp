@@ -23,7 +23,7 @@
             // this.prop = prop;
             // this.articleElement = {};
             this.type = 'default';
-            this.zIndex = 10;
+            //this.zIndex = 10;
         }
 
         createElememt(){

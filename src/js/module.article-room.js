@@ -24,7 +24,7 @@
             // this.prop = prop;
             // this.articleElement = {};
             this.type = 'room';
-            this.zIndex = 10;
+            //this.zIndex = 10;
         }
 
         createElememt(){
@@ -172,10 +172,14 @@
                     // we know the items count 
 
                     //let totalCount = existingRoomArticles.length;
+
+                    /*
                     let screenUnit = window.innerWidth;
                     let positionX = insertPosition - screenUnit;
                     roomsContainerElement.style.left = 0+'px';
+                    */
                 }
+                
             }
 
             // Use status object to determine next article to insert current before
@@ -184,7 +188,7 @@
                 roomsContainerElement.appendChild(this.articleElement);
             }else if(status['mode'] === "insertBefore"){
                 let existingArticleElement = document.querySelector('#article-'+status['nextId']);
-                console.log(existingArticleElement)
+                //console.log(existingArticleElement)
                 roomsContainerElement.insertBefore(this.articleElement, existingArticleElement);
             }
             
@@ -204,6 +208,8 @@
 
             this.articleElement.appendChild(this.nextBtn);
             this.articleElement.appendChild(this.previousBtn);
+
+            animation.slideRoomAnimation(this.getArticleId(), true);
 
             progressElement = document.querySelector('.view-wrapper.preload');
 
@@ -262,13 +268,31 @@
         }
 
         doTransition(){
-            // progressElement.style.display = 'block';
-            // progressElement.style.height = '100vh';
-            // mainElement.appendChild(progressElement);
-            // animation.preloadDisplayAnimation();
+            console.log('+++++++++')
+            console.log(this.prop);
+
+            // Start pf the page
+            if (articles.length <= 1){
+
+                progressElement.style.display = 'block';
+                progressElement.style.height = '100vh';
+                mainElement.appendChild(progressElement);
+                animation.defaultPreloadDisplayAnimation();
+
+            }else{
+                // slide case
+                if(this.prop !== undefined){
+                    if(this.prop['slide']){
+    
+                    }
+                }
+
+            }
+
         }
 
         reattachTransitionElement(){
+
             // mainElement.appendChild(progressElement);
             // console.log('progress element attached ');
             // console.log(progressElement);
@@ -276,21 +300,15 @@
 
         finishTransition(previousArticle){
 
-            // animation.preloadHideAnimation2();
+            // slide case
+            if(this.prop !== undefined){
+                if(this.prop['slide']){
 
-            // if(previousArticle){
-            //     let previousArticleElement = document.querySelector('#article-'+previousArticle.articleId);
-            //     console.log(previousArticleElement)
-            //     previousArticleElement.prepend(progressElement);
-            //     animation.preloadHideAnimation(previousArticle.articleId, this);
-            // }
+                }
+            }
 
-            // // TODO temporary solution, add some animation here!
-            // else{
-            //     //progressElement.style.display = "none";
-            //     this.articleElement.prepend(progressElement);
-            //     animation.preloadHideAnimation('', this);
-            // }
+            animation.defaultPreloadHideAnimation();
+
         }
 
 }

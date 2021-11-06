@@ -131,15 +131,52 @@ class Animation {
     }
 
     // Rooms animation
+    slideRoomAnimation(articleIdToGoTo, loading=false){
+
+        let slideContainerElement = document.querySelector('.rooms-container');
+        let screenUnit = window.innerWidth;
+
+        const childern = slideContainerElement.childNodes;
+
+        // iterate over all child nodes
+        let index = 0;
+        let containerOffset = '0px';
+        childern.forEach(el => {
+            if(el.className.indexOf('redirect') <= -1){
+                if(el.id === "article-"+articleIdToGoTo){
+                    let offset = screenUnit*index;
+                    containerOffset = '-'+offset+'px';
+                }
+                index += 1;
+            }
+        });
+
+        //let totalCount = 0;
+        // for(let i in articles){
+        //     if(articles.hasOwnProperty(i)){
+        //         if(articles[i].type === "room" && !articles[i].redirectionId){ 
+        //             totalCount += 1; 
+        //         }
+        //     }
+        // }
+
+        console.log(containerOffset);
+        slideContainerElement.style.left = containerOffset;
+
+    }
+
+    /*
+
+    // Rooms animation
     slideRoomAnimation(slideDirection, loading=false){
 
-        /*
-        slideContainerElement (Slider dom element)
-        screenUnit (Screen width in pixel)
-        totalCount (Amount of items)
-        totalPositionLeft (Value in pixel)
-        slideDirection (next/previous = -/+)
-        */
+        
+        //slideContainerElement (Slider dom element)
+        //screenUnit (Screen width in pixel)
+        //totalCount (Amount of items)
+        //totalPositionLeft (Value in pixel)
+        //slideDirection (next/previous = -/+)
+        
 
         let slideContainerElement = document.querySelector('.rooms-container');
 
@@ -160,6 +197,7 @@ class Animation {
         let totalPosition = Util.getPositionOfElement(slideContainerElement);
 
         // Calculate slide position and move to
+
         if(totalCount > 1){
 
             let value;
@@ -176,7 +214,10 @@ class Animation {
             }});
             tl.to(slideContainerElement, {left: value, duration:1.0, ease: "power2.in"});
         }
+
     }
+
+    */
 
     swipeOutNavMenu(toggle){
 
@@ -230,7 +271,9 @@ class Animation {
                 document.querySelector('nav.view-wrapper').style.top = '0px';
                 document.querySelector('nav.view-wrapper').style.right = '0px';
                 document.querySelector('nav.view-wrapper').style.borderRadius = '0px';
-                document.body.style.overflow = 'auto';
+                //document.body.style.overflow = 'auto';
+                document.body.style.overflowX = 'hidden';
+                document.body.style.overflowY = 'auto';
 
                 for (let i in navElList) {
                     if(navElList.hasOwnProperty(i)){
@@ -264,7 +307,8 @@ class Animation {
             }
 
             let tlOff = gsap.timeline({onComplete: () => {
-                document.body.style.overflow = 'auto';
+                //document.body.style.overflow = 'auto';
+                document.body.style.overflowX = 'hidden';
             }});
 
             // TODO check css rules of gsap, maybe class content can be sued here rather then fixed values

@@ -43,11 +43,41 @@ export
         let articleId = window.location.pathname === baseUrl ? "1" : "";
         let path = window.location.pathname;
         this.performUrlRouting(path, articleId, null);
+        this.activeArticleId = 1;
         this.slideRoomDirection = "next";
 
         // Testcase für Seitenstart im Untermenü
         // this.performUrlRouting(window.location.pathname+'somewhere-to-b/and-to-the-b2-with-spice', '');
+        this.resizeSlides();
+    }
 
+    resizeSlides(){
+        window.onresize = (e) => {
+            let slideContainerElement = document.querySelector('.rooms-container');
+            if(slideContainerElement){
+
+                let screenUnit = window.innerWidth;
+                const childern = slideContainerElement.childNodes;
+
+                // iterate over all child nodes to get the new overall width
+                // and replace the container to the active screen
+                let index = 0;
+                let containerOffset = '0px'
+                childern.forEach(el => {
+                    if(el.className.indexOf('redirect') <= -1){
+                        if(el.id === "article-"+this.activeArticleId){
+                            let offset = screenUnit*index;
+                            containerOffset = '-'+offset+'px';
+                        }
+                        index += 1;
+                    }
+                });
+
+                slideContainerElement.style.width = (screenUnit*index)+'px';
+                slideContainerElement.style.left = containerOffset;
+                        
+            }
+        }
     }
 
     performStartPageLoading(path, article){
@@ -105,7 +135,7 @@ export
 
         // console.log(iteratorMax);
         // console.log(iterator);
-
+        
         if(articles.length > 0){
             for(let i in articles){
                 if(articles.hasOwnProperty(i)){
@@ -126,6 +156,9 @@ export
 
     organizeArticleStack(articleId) {
 
+        let count = Util.getElementsByTagAndClass('div', 'page').length;
+        let iterator = count - 1;
+
         let article = this.getArticleById(articleId);
         //let countArticleType = this.getArticlesByType(article.getArticleType());
 
@@ -133,8 +166,12 @@ export
             for(let i in articles){
                 if(articles.hasOwnProperty(i)){
                     if(articles[i].articleId === articleId){
-                        articles[i].setZIndex(articles.length+10);
+                        articles[i].setZIndex(articles.length-1);
+                    }else{
+                        articles[i].setZIndex(iterator-1);
+                        iterator -= 1;
                     }
+
                     // else if(articles[i].type !== article.getArticleType()){
                     //     //articles[i].setZIndex(articles.length+10-);
                     // }else{
@@ -142,6 +179,8 @@ export
                     // }
                 }
             }
+            // console.log(iterator);
+            // console.log(count)
         }
 
         let navMenu = document.querySelector('nav.view-wrapper');
@@ -261,9 +300,15 @@ export
 
             // Initialise article properties
             let properties = {};
+
             if(path === baseUrl){
-                properties.backgroundColor = "#373737";
+                properties.backgroundColor = "#373737"; 
             }
+
+            let articleNav = ArticleDefault.getArticleRefByPath(navigation, path);
+            if(articleNav['slide']){
+                properties.slide = articleNav['slide'];
+            } 
 
             // Create article object. Either from type default or room based on path
             let article;
@@ -284,6 +329,7 @@ export
             article.createElememt();
             if(artType === "room"){
                 //animation.slideRoomAnimation(this.slideRoomDirection, true);
+                //animation.slideRoomAnimation(article, true);
             }
             article.doTransition();
 
@@ -376,6 +422,7 @@ export
                     }
                     
                     isRequestOngoing = false;
+                    this.activeArticleId = articleId;
                     console.log('PREVIOUSSTAE');
                     console.log(this.getPreviousState());
                     this.setPreviousState(path, articleId);
@@ -400,9 +447,11 @@ export
             }
 
             if(artType === "room"){
-                animation.slideRoomAnimation(this.slideRoomDirection);
+                //animation.slideRoomAnimation(this.slideRoomDirection);
+                animation.slideRoomAnimation(articleId);
             }
 
+            this.activeArticleId = articleId;
             this.organizeArticleStack(articleId);
             this.setPreviousState(path, articleId);
         }
@@ -433,6 +482,7 @@ export
             href = target.getAttribute('href');
             href = href.replace('./', '/'); 
 
+            // TODO probably not needed anymore
             if(target.className.indexOf('next') > -1){
                 this.slideRoomDirection = "next";
             }else if(target.className.indexOf('previous') > -1){
