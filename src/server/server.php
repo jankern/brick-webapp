@@ -36,7 +36,7 @@
 			sleep(1);
             if($articleId == '1'){
 
-                $text = '<div class="gallery-transition"><div class="tmp-warn"><p>Gallery module will be loaded here ... once implemeneted!</p><p>Click on the logo to go back to start page</p></div></div>
+                $text = '<div class="gallery-transition"></div>
                 <div class="claim-wrapper">
                     <div class="claim-item claim-item-1">
                         <h2>enter</h2>
@@ -516,7 +516,7 @@
             "/"=>["article_id"=>"1", "name"=>"Start"],
             "/somewhere-to-a"=>["article_id"=>"2", "name"=>"Somewhere to A"],
             "/rooms"=>["article_id"=>"3", "name"=>"Rooms"],
-            "/rooms/room1"=>["article_id"=>"4", "name"=>"Room 1*"],
+            "/rooms/room1"=>["article_id"=>"4", "name"=>"Room 1"],
             "/rooms/room1/brick1"=>["article_id"=>"1M", "name"=>"Brick 1"],
             "/rooms/room1/brick2"=>["article_id"=>"2M", "name"=>"Brick 2"],
             "/rooms/room1/brick3"=>["article_id"=>"3M", "name"=>"Brick 3"],

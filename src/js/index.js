@@ -18,14 +18,18 @@ let articleList = new ArticleList();
 // devmiddleware eingebunden, test route steht
 // hot module replacement noch nicht, kein Muss -> verstehen über gesamte YT reihe 
 
-window.startGallery = () => {
-    console.log('wieder am Start');
-}
+// window.startGallery = () => {
+//     console.log('wieder am Start');
+// }
 
 window.onload = (event) => {
 
     console.log('The page has fully loaded');
     articleList.init();
+
+    window.startGallery = () => {
+        articleList.startGalleryFromStartPage();
+    }
 
     //console.log('START TEST');
 

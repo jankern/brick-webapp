@@ -48,35 +48,46 @@ export
 
         // Testcase für Seitenstart im Untermenü
         // this.performUrlRouting(window.location.pathname+'somewhere-to-b/and-to-the-b2-with-spice', '');
-        this.resizeSlides();
+        this.onResizeSlide();
+    }
+
+    startGalleryFromStartPage(){
+        console.log('in articleList to start gallery page');
+        let galleryObject = ArticleDefault.getFirstChildOfArticleType(navigation, 'room');
+        console.log(galleryObject)
+        this.performUrlRouting(galleryObject.path, galleryObject.article_id, galleryObject.article_type);
+    }
+
+    onResizeSlide(){
+        window.onresize = (e) => {
+            this.resizeSlides();
+        }
     }
 
     resizeSlides(){
-        window.onresize = (e) => {
-            let slideContainerElement = document.querySelector('.rooms-container');
-            if(slideContainerElement){
+        let slideContainerElement = document.querySelector('.rooms-container');
+        if(slideContainerElement){
 
-                let screenUnit = window.innerWidth;
-                const childern = slideContainerElement.childNodes;
+            let screenUnit = window.innerWidth;
+            const childern = slideContainerElement.childNodes;
 
-                // iterate over all child nodes to get the new overall width
-                // and replace the container to the active screen
-                let index = 0;
-                let containerOffset = '0px'
-                childern.forEach(el => {
-                    if(el.className.indexOf('redirect') <= -1){
-                        if(el.id === "article-"+this.activeArticleId){
-                            let offset = screenUnit*index;
-                            containerOffset = '-'+offset+'px';
-                        }
-                        index += 1;
+            // iterate over all child nodes to get the new overall width
+            // and replace the container to the active screen
+            let index = 0;
+            let containerOffset = '0px'
+            childern.forEach(el => {
+                if(el.className.indexOf('redirect') <= -1){
+                    if(el.id === "article-"+this.activeArticleId){
+                        let offset = screenUnit*index;
+                        containerOffset = '-'+offset+'px';
                     }
-                });
+                    index += 1;
+                }
+            });
 
-                slideContainerElement.style.width = (screenUnit*index)+'px';
-                slideContainerElement.style.left = containerOffset;
-                        
-            }
+            slideContainerElement.style.width = (screenUnit*index)+'px';
+            slideContainerElement.style.left = containerOffset;
+                    
         }
     }
 
@@ -160,31 +171,30 @@ export
         let iterator = count - 1;
 
         let article = this.getArticleById(articleId);
-        //let countArticleType = this.getArticlesByType(article.getArticleType());
+        let articleType = article.getArticleType();
 
         if(articles.length > 0){
+
             for(let i in articles){
                 if(articles.hasOwnProperty(i)){
                     if(articles[i].articleId === articleId){
                         articles[i].setZIndex(articles.length-1);
                     }else{
-                        articles[i].setZIndex(iterator-1);
-                        iterator -= 1;
+                        if(articleType === 'room'){
+                            if(articles[i].getArticleType() === "room"){
+                                articles[i].setZIndex(iterator-1);
+                                iterator -= 1;
+                            }else{
+                                articles[i].setZIndex(0);
+                            }
+                        }else{
+                            articles[i].setZIndex(iterator-1);
+                            iterator -= 1;
+                        }
                     }
-
-                    // else if(articles[i].type !== article.getArticleType()){
-                    //     //articles[i].setZIndex(articles.length+10-);
-                    // }else{
-
-                    // }
                 }
             }
-            // console.log(iterator);
-            // console.log(count)
         }
-
-        let navMenu = document.querySelector('nav.view-wrapper');
-        //navMenu.style.zIndex = iteratorMax + 10;
     }
 
     getState(){
@@ -207,15 +217,15 @@ export
     }
 
     getArticlesByType(type){
-        let articles = [];
+        let typedArticles = [];
         for (let i in articles) {
             if (articles.hasOwnProperty(i)) {
-                if (articles[i].getType() === type) {
-                    articles.push(articles[i]);
+                if (articles[i].getArticleType() === type) {
+                    typedArticles.push(articles[i]);
                 }
             }
         }
-        return articles;
+        return typedArticles;
     }
 
     performUrlRouting(path, articleId, artType, popState = false) {
@@ -301,14 +311,15 @@ export
             // Initialise article properties
             let properties = {};
 
-            if(path === baseUrl){
-                properties.backgroundColor = "#373737"; 
-            }
+            // if(path === baseUrl){
+            //     properties.backgroundColor = "#373737"; 
+            // }
 
             let articleNav = ArticleDefault.getArticleRefByPath(navigation, path);
-            if(articleNav['slide']){
-                properties.slide = articleNav['slide'];
-            } 
+            properties = articleNav;
+            // if(articleNav['slide']){
+            //     properties.slide = articleNav['slide'];
+            // } 
 
             // Create article object. Either from type default or room based on path
             let article;
@@ -385,29 +396,33 @@ export
                         // IN case of rewrite, create the empty parent and right after the redirected child
                         if(articleId !== succContent.article_id){
 
+                            // mark parent as redirected
+                            article.setRedirectionId(succContent.article_id);
+                            articles.push(article);
+                            
                             if(!this.getArticleById(succContent.article_id)){
-                                // mark parent as redirected
-                                article.setRedirectionId(succContent.article_id);
-                                articles.push(article);
 
                                 // create a new one with same artType and new id/path
                                 let articleNavRef = ArticleDefault.getArticleRefById(navigation, succContent.article_id);
                                 path = articleNavRef.path;
                                 articleId = articleNavRef.article_id;
-
-                                // console.log(artType);
-                                // console.log(articleTypeInstance);
-                                // console.log(path);
-                                // console.log(articleId);
-
+                                properties = articleNavRef;
+                                
                                 let redirectedArticle = articleTypeInstance[artType](articleId, path, properties);
                                 redirectedArticle.createElememt();
                                 redirectedArticle.updateElement(succContent);
+
                                 // Assign progress element to the redirected target article  
                                 redirectedArticle.reattachTransitionElement();
                                 articles.push(redirectedArticle);
+
                                 redirectedArticle.finishTransition(this.getPreviousState());
                             }else{
+                                // resize the slide container if a redirected article was inserted
+                                if(article.getArticleType() === 'room'){
+                                    this.resizeSlides(); 
+                                }
+                                article.finishTransition(this.getPreviousState());
                                 this.organizeArticleStack(succContent.article_id);
                                 this.setPreviousState(path, succContent.article_id);
                             }
@@ -423,14 +438,15 @@ export
                     
                     isRequestOngoing = false;
                     this.activeArticleId = articleId;
-                    console.log('PREVIOUSSTAE');
-                    console.log(this.getPreviousState());
+                    // console.log('PREVIOUSSTAE');
+                    // console.log(this.getPreviousState());
                     this.setPreviousState(path, articleId);
 
                     console.log('ARTICLES');
                     console.log(articles);
                 },
                 (err) => {
+
                     console.log(err);
                     isRequestOngoing = false;
                     article.finishTransition(this.getPreviousState());
@@ -472,9 +488,14 @@ export
         event.preventDefault();
 
         let href;
-        let artId, artType;
         let articleNav;
         let target = event.target || event.srcElement;
+
+        if (target.tagName !== 'A') {
+            if(target.closest('A')){
+                target = target.closest('A');
+            }
+        }
 
         if (target.tagName === 'A') {
 
@@ -491,9 +512,19 @@ export
 
             articleNav = ArticleDefault.getArticleRefByPath(navigation, href);
 
-            //console.log(artId+' '+artType);
-
-            this.performUrlRouting(href, articleNav.article_id, articleNav.article_type);
+            // Create a promise to wait for the transition animation until it's done
+            // Then call next article
+            if(target.dataset.articleType === 'roomitem'){
+                animation.transitionChaining().run(animation.roomItemTransitionAnimation, {}).then(
+                    (succ) => {
+                        console.log('und wieder da')
+                        this.performUrlRouting(href, articleNav.article_id, articleNav.article_type); 
+                    }
+                );
+            }else{
+                this.performUrlRouting(href, articleNav.article_id, articleNav.article_type);   
+            }
+            
             // Swipe out menu
             if(!menuToggle){
                 animation.swipeOutNavMenu(menuToggle);

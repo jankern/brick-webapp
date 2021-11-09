@@ -50,8 +50,8 @@ export
             }
         }
 
-        //return fetch('http://localhost:8000/server.php?'+preparedParams, {  
-        return fetch(Util.getBaseUrl()+'server.php?'+preparedParams, {
+        return fetch('http://localhost:8000/server.php?'+preparedParams, {  
+        //return fetch(Util.getBaseUrl()+'server.php?'+preparedParams, {
             method: 'GET',
             mode: 'cors',
             redirect: 'follow', // => default, manual => handle response yourself

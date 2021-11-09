@@ -166,18 +166,6 @@
                     // Container size / width
                     let width = (window.innerWidth * (countRoomsArticle+1)) + 'px';
                     roomsContainerElement.style.width = width;
-
-                    // Container position 
-                    // we've got the insertPosition
-                    // we know the items count 
-
-                    //let totalCount = existingRoomArticles.length;
-
-                    /*
-                    let screenUnit = window.innerWidth;
-                    let positionX = insertPosition - screenUnit;
-                    roomsContainerElement.style.left = 0+'px';
-                    */
                 }
                 
             }
@@ -194,14 +182,14 @@
             
             this.nextBtn = document.createElement('a');
             //.id = 'gallery-next-'+this.articleId;
-            this.nextBtn.className = 'material-icons navigate_next gallery-next';
+            this.nextBtn.className = 'material-icons gallery_navigate gallery-next';
             this.nextBtn.href = '#';
             this.nextBtn.innerHTML = 'navigate_next';
             //this.nextBtn.addEventListener('click', this.nextSlide, false);
 
             this.previousBtn = document.createElement('a');
             //this.previousBtn.id = 'gallery-previous-'+this.articleId;
-            this.previousBtn.className = 'material-icons navigate_before gallery-previous';
+            this.previousBtn.className = 'material-icons gallery_navigate gallery-previous';
             this.previousBtn.href = '#';
             this.previousBtn.innerHTML = 'navigate_before';
             //this.previousBtn.addEventListener('click', this.previousSlide, false);
@@ -210,6 +198,7 @@
             this.articleElement.appendChild(this.previousBtn);
 
             animation.slideRoomAnimation(this.getArticleId(), true);
+            animation.animateSlideButton()
 
             progressElement = document.querySelector('.view-wrapper.preload');
 
@@ -230,13 +219,12 @@
         updateElement(content){
         
             // generate html content for the room item list
-            let tplItems = '<div>'+content.text+'</div><div class="room-item-list">';
+            let tplItems = '<h1>'+content.name+'</h1><p>'+content.text+'</p><div class="room-item-list">';
             if(content.items.length > 0){
                 content.items.forEach(element => {
                     let nav = Article.getArticleRefById(navigation, element.article_id)
-                    tplItems += '<div class="room-item"><a href="'+nav.path+'" data-article-id="'+nav.article_id+
-                        '" data-article-type="roomitem">'+'<img src="'+element.img.toString()+
-                        '" width="50" title="'+element.name+'">'+element.name+'</a></div>';
+                    tplItems += '<a href="'+nav.path+'" data-article-id="'+nav.article_id+
+                        '" data-article-type="roomitem"><div class="room-item"><div class="item-container" style="background-image:url('+element.img.toString()+')"></div></div></a>';
                 });
             }
             tplItems += '</div>';
@@ -250,29 +238,27 @@
             // create the previous / next nav buttons and hide/show if a next room is clickable
             //Article.nextLimit = 0;
             let next = Article.getNextSubArtRefById(navigation, '', 3, content.article_id); // 3=room, 5=roomitems´
-            //console.log('NEXT');console.log(next);
-            this.nextBtn.style.visibility = "hidden";
-            this.previousBtn.style.visibility = "hidden";
             if(next){
                 this.nextBtn.href = next.path;
-                this.nextBtn.style.visibility = "visible";
+                let cl = this.nextBtn.className;
+                this.nextBtn.className = cl+' add-opacity';
             }
             let previous = Article.getPreviousSubArtRefById(navigation, '', 3, content.article_id); // 3=room, 5=roomitems´
-            //console.log('PREV');console.log(previous);
             if(previous){
                 this.previousBtn.href = previous.path;
-                this.previousBtn.style.visibility = "visible";
+                let cl = this.previousBtn.className;
+                this.previousBtn.className = cl+' add-opacity';
             }
+
+            animation.registerHoverEvent(this.articleId);
 
             this.updateState();
         }
 
         doTransition(){
-            console.log('+++++++++')
-            console.log(this.prop);
 
             // Start pf the page
-            if (articles.length <= 1){
+            if (articles.length < 1 || this.prop['slide'] === undefined){
 
                 progressElement.style.display = 'block';
                 progressElement.style.height = '100vh';
@@ -283,7 +269,9 @@
                 // slide case
                 if(this.prop !== undefined){
                     if(this.prop['slide']){
-    
+                        this.articleElement.appendChild(progressElement);
+                        animation.roomPreloadDisplayAnimation();
+
                     }
                 }
 
@@ -303,7 +291,7 @@
             // slide case
             if(this.prop !== undefined){
                 if(this.prop['slide']){
-
+                    animation.roomPreloadHideAnimation(this.getArticleId());
                 }
             }
 

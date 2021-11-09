@@ -8,6 +8,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
 import Util from "./module.util";
+import {navigation} from './module.navigation';
 
 import { gsap } from "gsap";
 import { CSSPlugin } from "gsap/CSSPlugin.js";
@@ -20,11 +21,12 @@ let particlesGeometry, particlesCnt, posArray, particlesMaterial, particleMesh;
 let onMouseDown, isMouseDown, onMouseMove, isCamMoving, 
     onWindowResizeScene, isLooping;
 let x, y, z;
+let articleObj;
 
 const gltfLoader = new GLTFLoader();
 //const gui = new dat.GUI();
 
-class Three3d {
+class Three3d{
 
     constructor() {
         console.log('THREEJS CLASS started');
@@ -309,13 +311,46 @@ class Three3d {
             let offset = -maxSize + 'px';
             // document.body.style.overflow = 'hidden';
 
-            let tl = gsap.timeline({onComplete: window.startGallery});
+            let article = {};
+            for (let key in navigation){
+                if(navigation.hasOwnProperty(key)){
+                    if (typeof navigation[key] == "object") {
+                        if('room' === navigation[key]['article_type']){
+
+                            let i = 0;
+                            for (let key2 in navigation[key]['articles']){
+                                if(navigation[key]['articles'].hasOwnProperty(key2)){
+                                    if(i < 1){
+                                        article = navigation[key]['articles'][key2];
+                                    }
+                                    i += 1;
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            // Article static call to get the background color
+            let morphingBackgroundColor = '#123456';
+            if(article.backgroundColor){
+                morphingBackgroundColor = article.backgroundColor;
+            }
+
+            let tl = gsap.timeline({onComplete: () => {
+                console.log('Animatui vorbei')
+                window.startGallery()
+                }
+            });
             tl.to(model.scale, {duration: 2, x: 5, y:6, ease: "expo.out"});
             tl.to(model.position, {duration: 1, y:-0.1, ease: "expo.out"}, '-=2');
-            tl.to('.gallery-bottom-transition', {duration:0.5, opacity: 1, height:'18vw', ease: "expo.out"}, '-=2')
+            tl.to('.gallery-bottom-transition', {
+                duration:0.5, opacity: 1, height:'18vw', ease: "expo.out"}, '-=2')
             tl.to('.gallery-transition', { 
-                marginTop: 0, marginLeft: 0, left: offset, top: offset, duration: 0.8, 
-                opacity: 1, width: size, height: size,  ease: "expo.in"}, '-=2');
+                marginTop: 0, marginLeft: 0, left: offset, top: offset, duration: 1.5, 
+                opacity: 1, width: size, height: size, backgroundColor: morphingBackgroundColor,
+                 ease: "expo.in"}, '-=2');
         }
 
     }

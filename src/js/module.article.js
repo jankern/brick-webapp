@@ -6,7 +6,7 @@
  import Util from './module.util';
  import {navigation} from './module.navigation';
  let articleElement, progressElement, mainElement;
- let articleNavRefById, articleNavRefByPath, nextSubArtRefById, previousSubArtRefById, nextLimit, previousObj;
+ let articleNavRefById, articleNavRefByPath, nextSubArtRefById, previousSubArtRefById, nextLimit, previousObj, firstChildOfArticeType;
 
  export 
     default class Article {
@@ -42,6 +42,33 @@
             );
             console.log('REPLACE_STATE');
             console.log(history);
+        }
+
+        static getFirstChildOfArticleType(obj, articleType){
+
+            for (let key in obj){
+                if(obj.hasOwnProperty(key)){
+                  if (typeof obj[key] == "object") {
+                    if(articleType === obj[key]['article_type']){
+
+                        let i = 0;
+                        for (let key2 in obj[key]['articles']){
+                            if(obj[key]['articles'].hasOwnProperty(key2)){
+                                if(i < 1){
+                                    let article = obj[key]['articles'][key2];
+                                    article.article_id = key2;
+                                    return article;
+                                }
+                                i += 1;
+                            }
+                        }
+                    }
+
+                    firstChildOfArticeType = Article.getFirstChildOfArticleType(obj[key], articleType);
+                  }
+                }
+             }
+            return firstChildOfArticeType;
         }
         
         // Extract the article nav reference based on a given path with a recursive method
@@ -86,8 +113,14 @@
                     if(id === key){
                         let nav = {};
                         nav['article_id'] = key;
-                        nav['path'] = obj[key].path;
-                        if(obj[key].article_type) nav['article_type'] = obj[key].article_type;
+                        // get all properties that are not objects
+                        for (let p in obj[key]){
+                            if(obj[key].hasOwnProperty(p)){
+                                if (typeof obj[key][p] != "object"){
+                                    nav[p] = obj[key][p];
+                                }
+                            }
+                        }
                         return nav;
                     }
                     articleNavRefById = Article.getArticleRefById(obj[key], id);

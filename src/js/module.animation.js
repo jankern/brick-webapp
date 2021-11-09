@@ -88,18 +88,67 @@ class Animation {
     }
 
     defaultPreloadDisplayAnimation(){
-
+        let preloadWrapper = document.querySelector('.view-wrapper.preload');
+        preloadWrapper.style.backgroundColor = '#ff550d';
         gsap.to('.preload-container', {opacity:1, ease: "expo.in", duration: 0.5});
 
     }
 
     defaultPreloadHideAnimation(){
-        let preloadWrapper = document.querySelector('.view-wrapper.preload');
+        //let preloadWrapper = document.querySelector('.view-wrapper.preload');
         let tl = gsap.timeline({onComplete: (event) => {
 
         }});
         tl.to('.view-wrapper.preload', {height:0, ease: "power2.in", duration: 1});
         tl.to('.preload-container', {opacity:0, ease: "expo.in", duration: 1}, "-=1");
+    }
+
+    roomPreloadDisplayAnimation(){
+
+        let preloadWrapper = document.querySelector('.view-wrapper.preload');
+        preloadWrapper.style.height = '100vh';
+        preloadWrapper.style.backgroundColor = 'transparent';
+
+        gsap.to('.preload-container', {opacity:1, ease: "expo.in", duration: 0.5});
+ 
+    }
+
+    roomPreloadHideAnimation(articleId){
+        let preloadWrapper = document.querySelector('.view-wrapper.preload');
+        let articleElement = document.querySelector('#article-'+articleId+' .content');
+        articleElement.style.opacity = '0';
+
+        let tl = gsap.timeline({onComplete: (event) => {
+            preloadWrapper.style.height = '0px';
+            this.swipeInRoomItemsForRoomScreen(articleId);
+        }});
+        //tl.to('.view-wrapper.preload', {opacity:1, ease: "power2.in", duration: 1});
+        tl.to('.preload-container', {opacity:0, ease: "expo.in", duration: 0.5});//, "-=1");
+        tl.to(articleElement, {opacity:1, ease: "expo.in", duration: 0.5});
+    }
+
+    swipeInRoomItemsForRoomScreen(articleId){
+        //articleElement.style.right = '200px';
+        document.body.style.overflow = 'hidden';
+        let tl = gsap.timeline({onComplete: (event) => {
+            document.body.style.overflowY = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        }});
+
+        tl.to('#article-'+articleId+' .room-item div', {
+            marginLeft: 0,
+            width: '100%',
+            height: '100%',
+            opacity: 1,
+            stagger:{ease: "power1.out", repeat: 0, each:0.1, duration: 2, /*grid:[4,8]*/}
+        });
+
+        tl.to('#article-'+articleId+' .room-item div', {
+            backgroundPosition: "50% 0",
+            stagger:{ease: "power1.out", repeat: 0, each:0.1, duration: 0.4,}
+        }, '-=1');
+
+
     }
 
     preloadHideAnimation(previousArticleId, currentArticle){
@@ -151,73 +200,8 @@ class Animation {
             }
         });
 
-        //let totalCount = 0;
-        // for(let i in articles){
-        //     if(articles.hasOwnProperty(i)){
-        //         if(articles[i].type === "room" && !articles[i].redirectionId){ 
-        //             totalCount += 1; 
-        //         }
-        //     }
-        // }
-
-        console.log(containerOffset);
-        slideContainerElement.style.left = containerOffset;
-
+        gsap.to(slideContainerElement, {left:containerOffset, ease: "expo.inOut", duration: 1});
     }
-
-    /*
-
-    // Rooms animation
-    slideRoomAnimation(slideDirection, loading=false){
-
-        
-        //slideContainerElement (Slider dom element)
-        //screenUnit (Screen width in pixel)
-        //totalCount (Amount of items)
-        //totalPositionLeft (Value in pixel)
-        //slideDirection (next/previous = -/+)
-        
-
-        let slideContainerElement = document.querySelector('.rooms-container');
-
-        let screenUnit = window.innerWidth;
-
-        let totalCount = 0;
-        for(let i in articles){
-            if(articles.hasOwnProperty(i)){
-                if(articles[i].type === "room" && !articles[i].redirectionId){ 
-                    totalCount += 1; 
-                }
-            }
-        }
-
-        // In case next article gets loaded, adding this one already to the total count
-        if(loading) totalCount += 1;
-
-        let totalPosition = Util.getPositionOfElement(slideContainerElement);
-
-        // Calculate slide position and move to
-
-        if(totalCount > 1){
-
-            let value;
-            if(slideDirection === "next"){
-                value = totalPosition.x - screenUnit;
-            }else{
-                value = totalPosition.x + screenUnit;
-            }
-
-            let body = document.querySelector('body');
-            body.style.overflowX = 'hidden';
-            let tl = gsap.timeline({onComplete: (event) => {
-                //body.style.overflow = 'auto';
-            }});
-            tl.to(slideContainerElement, {left: value, duration:1.0, ease: "power2.in"});
-        }
-
-    }
-
-    */
 
     swipeOutNavMenu(toggle){
 
@@ -317,6 +301,110 @@ class Animation {
         }
         
         
+    }
+
+    animateSlideButton(){
+        let tl = gsap.timeline().delay(6).repeat(-1).repeatDelay(4);
+        tl.to('.gallery-next', {right: -10, duration:0.2, ease: 'power2.in'});
+        tl.to('.gallery-next', {right: 10, duration:0.2, ease: 'power2.out'});
+        tl.to('.gallery-next', {right: -0, duration:0.3, ease: 'expo.out'});
+        tl.to('.gallery-previous', {left: -10, duration:0.2, ease: 'power2.in'});
+        tl.to('.gallery-previous', {left: 10, duration:0.2, ease: 'power2.out'});
+        tl.to('.gallery-previous', {left: -0, duration:0.3, ease: 'expo.out'});
+    }
+
+    registerHoverEvent(articleId){
+
+        let roomItemListEl = document.querySelector('.room-item-list');
+        let rectRoomItemList = roomItemListEl.getBoundingClientRect();
+        //let roomItemListHeight = roomItemListEl.style.height;
+
+        document.querySelector('#article-'+articleId+' .content').addEventListener(
+            "mouseenter", (e) => {
+
+                const items = document.querySelectorAll('#article-'+articleId+' .room-item');
+
+                let coordinates = [];
+                for (let i = 0; i < items.length; i++) {
+                    let rectItem = items[i].getBoundingClientRect();
+
+                    let topOffset = rectItem.top - rectRoomItemList.top;
+                    let leftOffset = rectItem.left - rectRoomItemList.left;
+                    
+                    //console.log(rectRoomItemList.left)
+                    //console.log(rectItem.left)
+                    //console.log(roomItemListHeight);
+                    // console.log(topOffset)
+                    // console.log(leftOffset)
+
+                    // console.log(rect.left);
+                    // console.log(rect.top);
+                    //console.log(items[i].style.left)
+                    // console.log('++++++++++++++++++++++')
+                    // items[i].style.position = 'absolute';
+                    // items[i].style.top = topOffset+'px';
+                    // items[i].style.left = leftOffset+'px';
+                    coordinates.push({"leftOffset":leftOffset, "topOffset": topOffset})
+                }
+
+                for (let i = 0; i < items.length; i++) {
+                //     items[i].style.position = 'absolute';
+                //     items[i].style.top = coordinates[i].topOffset+'px';
+                //     items[i].style.left = coordinates[i].leftOffset+'px';
+                }
+
+                // console.log(e);
+                //e.target.style.position = 'absolute';
+            }
+        );
+
+        document.querySelector('#article-'+articleId+' .content').addEventListener(
+            "mouseleave", (e) => {
+                const items = document.querySelectorAll('#article-'+articleId+' .room-item');
+
+                for (let i = 0; i < items.length; i++) {
+                    // items[i].style.position = 'relative';
+                    // items[i].style.top = '0px';
+                    // items[i].style.left = '0px';
+                }
+            }
+        );
+
+        const items = document.querySelectorAll('#article-'+articleId+' .room-item');
+        let width;
+        
+        for (let i = 0; i < items.length; i++) {
+
+            items[i].addEventListener("mouseenter", (e) => {
+                // width = e.target.style;
+                // console.log(width)
+                //let tl = gsap.timeline();
+                //tl.to(e.target, { ease: "power1.out", duration: 1.5 });
+                //gsap.to(e.target, {width: 200, height: 200,  top: -20, left: -20, repeat: 0, ease: "expo.in", duration: 0.5 });
+            });
+
+            items[i].addEventListener("mouseleave", (e) => {
+                //let tl = gsap.timeline();
+                //tl.to(e.target, { ease: "power1.out", duration: 1.5 });
+                //gsap.to(e.target, {width: 150, height: 150,  top: 0, left: 0, ease: "expo.out", duration: 0.5 });
+            });
+
+        }
+
+        // document.querySelector('#article-'+articleId+' .room-item').addEventListener(
+        //     "mouseleave", (e) => {
+        //         console.log('Drin');
+        //     }
+        // );
+    }
+
+    roomItemTransitionAnimation(resolve, reject){
+
+        setTimeout((t) => {
+            console.log('Animation durchgeführt')
+            return resolve();
+        }, 4000);
+
     }
 
     transitionChaining(){
