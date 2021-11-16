@@ -6,7 +6,9 @@
  import Util from './module.util';
  import {navigation} from './module.navigation';
  let articleElement, progressElement, mainElement;
- let articleNavRefById, articleNavRefByPath, nextSubArtRefById, previousSubArtRefById, nextLimit, previousObj, firstChildOfArticeType;
+ let articleNavRefById, articleNavRefByPath, nextSubArtRefById, 
+    previousSubArtRefById, nextLimit, previousObj, 
+    firstChildOfArticeType, articleParentNavRefById, articleParentPreviousNavRef;
 
  export 
     default class Article {
@@ -21,6 +23,7 @@
             this.type;
             this.orderIndex;
             this.zIndex = 0;
+            this.display = "flex";
         }
 
         updateState(){
@@ -129,6 +132,52 @@
              }
             return articleNavRefById;
         }
+
+        // Params: Navigation obj, empty string for 'stack', article id
+        // Returns: the parent object properties or undefined if no parent exists
+        static getArticleParentRefById(obj, stack, id){
+
+            for (let key in obj){
+                if(obj.hasOwnProperty(key)){
+                    if (typeof obj[key] == "object") {
+
+                        let nextStack = stack+'.'+key;
+                        
+                        let arr = [];
+                        if(stack !== ''){
+                            arr = stack.split('.');
+                        }
+
+                        if(arr[arr.length-1] !== 'articles'){
+                            articleParentPreviousNavRef = {};
+                            for (let p in obj){
+                                if(obj.hasOwnProperty(p)){
+                                    if (typeof obj[p] != "object"){
+                                        articleParentPreviousNavRef[p] = obj[p];
+                                    }
+                                }
+                            }
+                            if(arr[arr.length-1]){
+                                articleParentPreviousNavRef.article_id = arr[arr.length-1];
+                            }
+                            
+                        }
+                        
+                        if(id === key){
+                            let nav;
+                            if (Object.keys(articleParentPreviousNavRef).length !== 0 && articleParentPreviousNavRef.constructor === Object){
+                                nav = articleParentPreviousNavRef;
+                            } 
+                            articleParentPreviousNavRef = {};
+                            return nav;
+                        }
+                        articleParentNavRefById = Article.getArticleParentRefById(obj[key], nextStack, id);
+                    }
+                }
+             }
+            return articleParentNavRefById;
+        }
+
 
         static getNextNavByDepthLevel(obj, stack, depth, id){
             
@@ -256,6 +305,16 @@
         setZIndex(zIndex){
             this.zIndex = zIndex;
             this.articleElement.style.zIndex = this.zIndex;
+        }
+
+        setDisplay(display){
+            this.display = display;
+            this.articleElement.style.display = this.display;
+        }
+
+        setBackgroundColor(color){
+            this.backgroundColor = color;
+            this.backgroundColor.style.backgroundColor = this.backgroundColor;
         }
 
 }

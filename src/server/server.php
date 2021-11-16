@@ -1,15 +1,7 @@
 <?php
 
-    // if($_SERVER["REQUEST_METHOD"] == "GET"){
-
-    //     sleep(3);
-    //     echo json_encode('Joö');
-
-    // }
-
-    // echo '<pre>';
-    // print_r($_GET);
-    // echo '</pre>'
+    require 'content.php';
+    global $articlesDefault, $articleRooms, $articleRoomItems, $articleNavigation;
 
     header("Content-Type:application/json; charset=UTF-8");
 
@@ -23,8 +15,6 @@
         else if($articleId == '3'){
             sleep(0.5);
             // case where to forward to another article url
-            // header("Content-Type:application/json; charset=UTF-8");
-            // header("Access-Control-Expose-Headers:*");
             header("Access-Control-Expose-Headers: Location");
             header("HTTP/1.1 301 Moved Permanently");
             //header("Location: /rooms/room1");
@@ -66,15 +56,34 @@
 
                 $responseArr = array();
 
+                $text = "";
+                $name = "";
+
                 // ROOM
                 if($_GET['article_type'] == 'room'){
                     $room = getRoomByArticleId($articleId);
-                    $text = $room["text"];
+                    if($room["text"]){
+                        $text = $room["text"];
+                    }
+                    if($room["name"]){
+                        $name = $room["name"];
+                    }
                     $responseArr["items"] = $room["items"];
                 }elseif($_GET['article_type'] == 'roomitem'){
                 // ROOMITEM
                     $roomItem = getRoomItemByArticleId($articleId);
-                    $text = $roomItem["text"];
+                    if($room["text"]){
+                        $text = $roomItem["text"];
+                    }
+                    if($room["name"]){
+                        $name = $roomItem["name"];
+                    }
+                    if($roomItem["img"]){
+                        $responseArr["img"] = $roomItem["img"];
+                    }
+                    if($roomItem["specs"]){
+                        $responseArr["specs"] = $roomItem["specs"];
+                    }
                     $responseArr["items"] = $roomItem["items"];
                 }else{
                     $headline = getNavByArticleId($articleId);
@@ -92,7 +101,7 @@
                     response(404, "found_no_article", $responseArr);
                 }
 
-                $responseArr["name"] = $articleProperties["name"];
+                $responseArr["name"] = $name;
                 $responseArr["article_id"] = $articleProperties["article_id"];
                 $responseArr["text"] = $text;
 
@@ -139,66 +148,7 @@
 
     function getRoomByArticleId($article_id){
 
-        $rooms = [
-            [
-                "article_id" => "4",
-                "text" => "This is the room for the <b>first</b> few crazy Lego bricks.",
-                "items" => [
-                    ["article_id"=>"1M", "img"=>"/img/brick1.png", "name"=>"This is the first Brick"],
-                    ["article_id"=>"2M", "img"=>"/img/brick2.png", "name"=>"This is the second Brick"],
-                    ["article_id"=>"3M", "img"=>"/img/brick3.png", "name"=>"This is the third Brick"],
-                    ["article_id"=>"4M", "img"=>"/img/brick4.png", "name"=>"This is the fourth Brick"],
-                    ["article_id"=>"5M", "img"=>"/img/brick5.png", "name"=>"This is the fifth Brick"],
-                    ["article_id"=>"6M", "img"=>"/img/brick6.png", "name"=>"This is the sixth Brick"],
-                    ["article_id"=>"7M", "img"=>"/img/brick7.png", "name"=>"This is the seventh Brick"],
-                    ["article_id"=>"8M", "img"=>"/img/brick8.png", "name"=>"This is the eighth Brick"]
-                ]
-            ],
-            [
-                "article_id" => "5",
-                "text" => "This is the room for the <b>second</b> few crazy Lego bricks.",
-                "items" => [
-                    ["article_id"=>"9M", "img"=>"/img/brick9.png", "name"=>"This is the first Brick"],
-                    ["article_id"=>"10M", "img"=>"/img/brick10.png", "name"=>"This is the second Brick"],
-                    ["article_id"=>"11M", "img"=>"/img/brick11.png", "name"=>"This is the third Brick"],
-                    ["article_id"=>"12M", "img"=>"/img/brick12.png", "name"=>"This is the fourth Brick"],
-                    ["article_id"=>"13M", "img"=>"/img/brick13.png", "name"=>"This is the fifth Brick"],
-                    ["article_id"=>"14M", "img"=>"/img/brick14.png", "name"=>"This is the sixth Brick"],
-                    ["article_id"=>"15M", "img"=>"/img/brick15.png", "name"=>"This is the seventh Brick"],
-                    ["article_id"=>"16M", "img"=>"/img/brick16.png", "name"=>"This is the eighth Brick"]
-                ]
-            ],
-            [
-                "article_id" => "6",
-                "text" => "This is the room for the <b>third</b> few crazy Lego bricks.",
-                "items" => [
-                    ["article_id"=>"17M", "img"=>"/img/brick17.png", "name"=>"This is the first Brick"],
-                    ["article_id"=>"18M", "img"=>"/img/brick18.png", "name"=>"This is the second Brick"],
-                    ["article_id"=>"19M", "img"=>"/img/brick19.png", "name"=>"This is the third Brick"],
-                    ["article_id"=>"20M", "img"=>"/img/brick20.png", "name"=>"This is the fourth Brick"],
-                    ["article_id"=>"21M", "img"=>"/img/brick21.png", "name"=>"This is the fifth Brick"],
-                    ["article_id"=>"22M", "img"=>"/img/brick22.png", "name"=>"This is the sixth Brick"],
-                    ["article_id"=>"23M", "img"=>"/img/brick23.png", "name"=>"This is the seventh Brick"],
-                    ["article_id"=>"24M", "img"=>"/img/brick24.png", "name"=>"This is the eighth Brick"]
-                ]
-            ],
-            [
-                "article_id" => "7",
-                "text" => "This is the room for the <b>fourth</b> few crazy Lego bricks.",
-                "items" => [
-                    ["article_id"=>"25M", "img"=>"/img/brick25.png", "name"=>"This is the first Brick"],
-                    ["article_id"=>"26M", "img"=>"/img/brick26.png", "name"=>"This is the second Brick"],
-                    ["article_id"=>"27M", "img"=>"/img/brick27.png", "name"=>"This is the third Brick"],
-                    ["article_id"=>"28M", "img"=>"/img/brick28.png", "name"=>"This is the fourth Brick"],
-                    ["article_id"=>"29M", "img"=>"/img/brick29.png", "name"=>"This is the fifth Brick"],
-                    ["article_id"=>"30M", "img"=>"/img/brick30.png", "name"=>"This is the sixth Brick"],
-                    ["article_id"=>"31M", "img"=>"/img/brick31.png", "name"=>"This is the seventh Brick"],
-                    ["article_id"=>"32M", "img"=>"/img/brick32.png", "name"=>"This is the eighth Brick"]
-                ]
-            ]
-        ];
-
-        foreach($rooms as $item){
+        foreach($GLOBALS['articleRooms'] as $item){
             //print_r($item);
             if($item['article_id'] == $article_id){
                 return $item;
@@ -210,298 +160,7 @@
 
     function getRoomItemByArticleId($article_id){
 
-        $roomItems = [
-            [
-                "article_id" => "1M", // media category id
-                "text" => "Brick 1 text",
-                "items" => [
-                    ["img"=>"/img/brick1-1.png", "name"=>"Brick 1 perspective 1"],
-                    ["img"=>"/img/brick1-2.png", "name"=>"Brick 1 perspective 2"],
-                    ["img"=>"/img/brick1-3.png", "name"=>"Brick 1 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "2M", // media category id
-                "text" => "Brick 2 text",
-                "items" => [
-                    ["img"=>"/img/brick2-1.png", "name"=>"Brick 2 perspective 1"],
-                    ["img"=>"/img/brick2-2.png", "name"=>"Brick 2 perspective 2"],
-                    ["img"=>"/img/brick2-3.png", "name"=>"Brick 2 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "3M", // media category id
-                "text" => "Brick 3 text",
-                "items" => [
-                    ["img"=>"/img/brick3-1.png", "name"=>"Brick 3 perspective 1"],
-                    ["img"=>"/img/brick3-2.png", "name"=>"Brick 3 perspective 2"],
-                    ["img"=>"/img/brick3-3.png", "name"=>"Brick 3 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "4M", // media category id
-                "text" => "Brick 4 text",
-                "items" => [
-                    ["img"=>"/img/brick4-1.png", "name"=>"Brick 4 perspective 1"],
-                    ["img"=>"/img/brick4-2.png", "name"=>"Brick 4 perspective 2"],
-                    ["img"=>"/img/brick4-3.png", "name"=>"Brick 4 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "5M", // media category id
-                "text" => "Brick 5 text",
-                "items" => [
-                    ["img"=>"/img/brick5-1.png", "name"=>"Brick 5 perspective 1"],
-                    ["img"=>"/img/brick5-2.png", "name"=>"Brick 5 perspective 2"],
-                    ["img"=>"/img/brick5-3.png", "name"=>"Brick 5 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "6M", // media category id
-                "text" => "Brick 6 text",
-                "items" => [
-                    ["img"=>"/img/brick6-1.png", "name"=>"Brick 6 perspective 1"],
-                    ["img"=>"/img/brick6-2.png", "name"=>"Brick 6 perspective 2"],
-                    ["img"=>"/img/brick6-3.png", "name"=>"Brick 6 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "7M", // media category id
-                "text" => "Brick 7 text",
-                "items" => [
-                    ["img"=>"/img/brick7-1.png", "name"=>"Brick 7 perspective 1"],
-                    ["img"=>"/img/brick7-2.png", "name"=>"Brick 7 perspective 2"],
-                    ["img"=>"/img/brick7-3.png", "name"=>"Brick 7 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "8M", // media category id
-                "text" => "Brick 8 text",
-                "items" => [
-                    ["img"=>"/img/brick8-1.png", "name"=>"Brick 8 perspective 1"],
-                    ["img"=>"/img/brick8-2.png", "name"=>"Brick 8 perspective 2"],
-                    ["img"=>"/img/brick8-3.png", "name"=>"Brick 8 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "9M", // media category id
-                "text" => "Brick 9 text",
-                "items" => [
-                    ["img"=>"/img/brick9-1.png", "name"=>"Brick 9 perspective 1"],
-                    ["img"=>"/img/brick9-2.png", "name"=>"Brick 9 perspective 2"],
-                    ["img"=>"/img/brick9-3.png", "name"=>"Brick 9 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "10M", // media category id
-                "text" => "Brick 10 text",
-                "items" => [
-                    ["img"=>"/img/brick10-1.png", "name"=>"Brick 10 perspective 1"],
-                    ["img"=>"/img/brick10-2.png", "name"=>"Brick 10 perspective 2"],
-                    ["img"=>"/img/brick10-3.png", "name"=>"Brick 10 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "11M", // media category id
-                "text" => "Brick 11 text",
-                "items" => [
-                    ["img"=>"/img/brick11-1.png", "name"=>"Brick 11 perspective 1"],
-                    ["img"=>"/img/brick11-2.png", "name"=>"Brick 11 perspective 2"],
-                    ["img"=>"/img/brick11-3.png", "name"=>"Brick 11 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "12M", // media category id
-                "text" => "Brick 12 text",
-                "items" => [
-                    ["img"=>"/img/brick12-1.png", "name"=>"Brick 12 perspective 1"],
-                    ["img"=>"/img/brick12-2.png", "name"=>"Brick 12 perspective 2"],
-                    ["img"=>"/img/brick12-3.png", "name"=>"Brick 12 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "13M", // media category id
-                "text" => "Brick 13 text",
-                "items" => [
-                    ["img"=>"/img/brick13-1.png", "name"=>"Brick 13 perspective 1"],
-                    ["img"=>"/img/brick13-2.png", "name"=>"Brick 13 perspective 2"],
-                    ["img"=>"/img/brick13-3.png", "name"=>"Brick 13 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "14M", // media category id
-                "text" => "Brick 14 text",
-                "items" => [
-                    ["img"=>"/img/brick14-1.png", "name"=>"Brick 14 perspective 1"],
-                    ["img"=>"/img/brick14-2.png", "name"=>"Brick 14 perspective 2"],
-                    ["img"=>"/img/brick14-3.png", "name"=>"Brick 14 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "15M", // media category id
-                "text" => "Brick 15 text",
-                "items" => [
-                    ["img"=>"/img/brick15-1.png", "name"=>"Brick 15 perspective 1"],
-                    ["img"=>"/img/brick15-2.png", "name"=>"Brick 15 perspective 2"],
-                    ["img"=>"/img/brick15-3.png", "name"=>"Brick 15 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "16M", // media category id
-                "text" => "Brick 16 text",
-                "items" => [
-                    ["img"=>"/img/brick16-1.png", "name"=>"Brick 16 perspective 1"],
-                    ["img"=>"/img/brick16-2.png", "name"=>"Brick 16 perspective 2"],
-                    ["img"=>"/img/brick16-3.png", "name"=>"Brick 16 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "17M", // media category id
-                "text" => "Brick 17 text",
-                "items" => [
-                    ["img"=>"/img/brick17-1.png", "name"=>"Brick 17 perspective 1"],
-                    ["img"=>"/img/brick17-2.png", "name"=>"Brick 17 perspective 2"],
-                    ["img"=>"/img/brick17-3.png", "name"=>"Brick 17 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "18M", // media category id
-                "text" => "Brick 18 text",
-                "items" => [
-                    ["img"=>"/img/brick18-1.png", "name"=>"Brick 18 perspective 1"],
-                    ["img"=>"/img/brick18-2.png", "name"=>"Brick 18 perspective 2"],
-                    ["img"=>"/img/brick18-3.png", "name"=>"Brick 18 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "19M", // media category id
-                "text" => "Brick 19 text",
-                "items" => [
-                    ["img"=>"/img/brick19-1.png", "name"=>"Brick 19 perspective 1"],
-                    ["img"=>"/img/brick19-2.png", "name"=>"Brick 19 perspective 2"],
-                    ["img"=>"/img/brick19-3.png", "name"=>"Brick 19 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "20M", // media category id
-                "text" => "Brick 20 text",
-                "items" => [
-                    ["img"=>"/img/brick20-1.png", "name"=>"Brick 20 perspective 1"],
-                    ["img"=>"/img/brick20-2.png", "name"=>"Brick 20 perspective 2"],
-                    ["img"=>"/img/brick20-3.png", "name"=>"Brick 20 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "21M", // media category id
-                "text" => "Brick 21 text",
-                "items" => [
-                    ["img"=>"/img/brick21-1.png", "name"=>"Brick 21 perspective 1"],
-                    ["img"=>"/img/brick21-2.png", "name"=>"Brick 21 perspective 2"],
-                    ["img"=>"/img/brick21-3.png", "name"=>"Brick 21 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "22M", // media category id
-                "text" => "Brick 22 text",
-                "items" => [
-                    ["img"=>"/img/brick22-1.png", "name"=>"Brick 22 perspective 1"],
-                    ["img"=>"/img/brick22-2.png", "name"=>"Brick 22 perspective 2"],
-                    ["img"=>"/img/brick22-3.png", "name"=>"Brick 22 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "23M", // media category id
-                "text" => "Brick 23 text",
-                "items" => [
-                    ["img"=>"/img/brick23-1.png", "name"=>"Brick 23 perspective 1"],
-                    ["img"=>"/img/brick23-2.png", "name"=>"Brick 23 perspective 2"],
-                    ["img"=>"/img/brick23-3.png", "name"=>"Brick 23 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "24M", // media category id
-                "text" => "Brick 24 text",
-                "items" => [
-                    ["img"=>"/img/brick24-1.png", "name"=>"Brick 24 perspective 1"],
-                    ["img"=>"/img/brick24-2.png", "name"=>"Brick 24 perspective 2"],
-                    ["img"=>"/img/brick24-3.png", "name"=>"Brick 24 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "25M", // media category id
-                "text" => "Brick 25 text",
-                "items" => [
-                    ["img"=>"/img/brick25-1.png", "name"=>"Brick 25 perspective 1"],
-                    ["img"=>"/img/brick25-2.png", "name"=>"Brick 25 perspective 2"],
-                    ["img"=>"/img/brick25-3.png", "name"=>"Brick 25 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "26M", // media category id
-                "text" => "Brick 26 text",
-                "items" => [
-                    ["img"=>"/img/brick26-1.png", "name"=>"Brick 26 perspective 1"],
-                    ["img"=>"/img/brick26-2.png", "name"=>"Brick 26 perspective 2"],
-                    ["img"=>"/img/brick26-3.png", "name"=>"Brick 26 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "27M", // media category id
-                "text" => "Brick 27 text",
-                "items" => [
-                    ["img"=>"/img/brick27-1.png", "name"=>"Brick 27 perspective 1"],
-                    ["img"=>"/img/brick27-2.png", "name"=>"Brick 27 perspective 2"],
-                    ["img"=>"/img/brick27-3.png", "name"=>"Brick 27 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "28M", // media category id
-                "text" => "Brick 28 text",
-                "items" => [
-                    ["img"=>"/img/brick28-1.png", "name"=>"Brick 28 perspective 1"],
-                    ["img"=>"/img/brick28-2.png", "name"=>"Brick 28 perspective 2"],
-                    ["img"=>"/img/brick28-3.png", "name"=>"Brick 28 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "29M", // media category id
-                "text" => "Brick 29 text",
-                "items" => [
-                    ["img"=>"/img/brick29-1.png", "name"=>"Brick 29 perspective 1"],
-                    ["img"=>"/img/brick29-2.png", "name"=>"Brick 29 perspective 2"],
-                    ["img"=>"/img/brick29-3.png", "name"=>"Brick 29 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "30M", // media category id
-                "text" => "Brick 30 text",
-                "items" => [
-                    ["img"=>"/img/brick30-1.png", "name"=>"Brick 30 perspective 1"],
-                    ["img"=>"/img/brick30-2.png", "name"=>"Brick 30 perspective 2"],
-                    ["img"=>"/img/brick30-3.png", "name"=>"Brick 30 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "31M", // media category id
-                "text" => "Brick 31 text",
-                "items" => [
-                    ["img"=>"/img/brick31-1.png", "name"=>"Brick 31 perspective 1"],
-                    ["img"=>"/img/brick31-2.png", "name"=>"Brick 31 perspective 2"],
-                    ["img"=>"/img/brick31-3.png", "name"=>"Brick 31 perspective 3"]
-                ]
-            ],
-            [
-                "article_id" => "32M", // media category id
-                "text" => "Brick 32 text",
-                "items" => [
-                    ["img"=>"/img/brick32-1.png", "name"=>"Brick 32 perspective 1"],
-                    ["img"=>"/img/brick32-2.png", "name"=>"Brick 32 perspective 2"],
-                    ["img"=>"/img/brick32-3.png", "name"=>"Brick 32 perspective 3"]
-                ]
-            ]
-        ];
-
-        foreach($roomItems as $item){
+        foreach($GLOBALS['articleRoomItems'] as $item){
             //print_r($item);
             if($item['article_id'] == $article_id){
                 return $item;
@@ -512,49 +171,7 @@
     }
 
     function getNav(){
-        return array(
-            "/"=>["article_id"=>"1", "name"=>"Start"],
-            "/somewhere-to-a"=>["article_id"=>"2", "name"=>"Somewhere to A"],
-            "/rooms"=>["article_id"=>"3", "name"=>"Rooms"],
-            "/rooms/room1"=>["article_id"=>"4", "name"=>"Room 1"],
-            "/rooms/room1/brick1"=>["article_id"=>"1M", "name"=>"Brick 1"],
-            "/rooms/room1/brick2"=>["article_id"=>"2M", "name"=>"Brick 2"],
-            "/rooms/room1/brick3"=>["article_id"=>"3M", "name"=>"Brick 3"],
-            "/rooms/room1/brick4"=>["article_id"=>"4M", "name"=>"Brick 4"],
-            "/rooms/room1/brick5"=>["article_id"=>"5M", "name"=>"Brick 5"],
-            "/rooms/room1/brick6"=>["article_id"=>"6M", "name"=>"Brick 6"],
-            "/rooms/room1/brick7"=>["article_id"=>"7M", "name"=>"Brick 7"],
-            "/rooms/room1/brick8"=>["article_id"=>"8M", "name"=>"Brick 8"],
-            "/rooms/room2"=>["article_id"=>"5", "name"=>"Room 2"],
-            "/rooms/room2/brick9"=>["article_id"=>"9M", "name"=>"Brick 9"],
-            "/rooms/room2/brick10"=>["article_id"=>"10M", "name"=>"Brick 10"],
-            "/rooms/room2/brick11"=>["article_id"=>"11M", "name"=>"Brick 11"],
-            "/rooms/room2/brick12"=>["article_id"=>"12M", "name"=>"Brick 12"],
-            "/rooms/room2/brick13"=>["article_id"=>"13M", "name"=>"Brick 13"],
-            "/rooms/room2/brick14"=>["article_id"=>"14M", "name"=>"Brick 14"],
-            "/rooms/room2/brick15"=>["article_id"=>"15M", "name"=>"Brick 15"],
-            "/rooms/room2/brick16"=>["article_id"=>"16M", "name"=>"Brick 16"],
-            "/rooms/room3"=>["article_id"=>"6", "name"=>"Room 3"],
-            "/rooms/room3/brick17"=>["article_id"=>"17M", "name"=>"Brick 17"],
-            "/rooms/room3/brick18"=>["article_id"=>"18M", "name"=>"Brick 18"],
-            "/rooms/room3/brick19"=>["article_id"=>"19M", "name"=>"Brick 19"],
-            "/rooms/room3/brick20"=>["article_id"=>"20M", "name"=>"Brick 20"],
-            "/rooms/room3/brick21"=>["article_id"=>"21M", "name"=>"Brick 21"],
-            "/rooms/room3/brick22"=>["article_id"=>"22M", "name"=>"Brick 22"],
-            "/rooms/room3/brick23"=>["article_id"=>"23M", "name"=>"Brick 23"],
-            "/rooms/room3/brick24"=>["article_id"=>"24M", "name"=>"Brick 24"],
-            "/rooms/room4"=>["article_id"=>"7", "name"=>"Room 4"],
-            "/rooms/room4/brick25"=>["article_id"=>"25M", "name"=>"Brick 25"],
-            "/rooms/room4/brick26"=>["article_id"=>"26M", "name"=>"Brick 26"],
-            "/rooms/room4/brick27"=>["article_id"=>"27M", "name"=>"Brick 27"],
-            "/rooms/room4/brick28"=>["article_id"=>"28M", "name"=>"Brick 28"],
-            "/rooms/room4/brick29"=>["article_id"=>"29M", "name"=>"Brick 29"],
-            "/rooms/room4/brick30"=>["article_id"=>"30M", "name"=>"Brick 30"],
-            "/rooms/room4/brick31"=>["article_id"=>"31M", "name"=>"Brick 31"],
-            "/rooms/room4/brick32"=>["article_id"=>"32M", "name"=>"Brick 32"],
-            "/somewhere-to-c"=>["article_id"=>"8", "name"=>"Somewhere to C"],
-            "/somewhere-to-d"=>["article_id"=>"9", "name"=>"Somewhere to D"]
-        );
+        return $GLOBALS['articleNavigation'];
     }
 
 	function getArticleIdByNav($path){

@@ -224,7 +224,7 @@
                 content.items.forEach(element => {
                     let nav = Article.getArticleRefById(navigation, element.article_id)
                     tplItems += '<a href="'+nav.path+'" data-article-id="'+nav.article_id+
-                        '" data-article-type="roomitem"><div class="room-item"><div class="item-container" style="background-image:url('+element.img.toString()+')"></div></div></a>';
+                        '" data-article-type="roomitem"><div class="room-item" id="room-item-'+nav.article_id+'"><div class="item-container" style="background-image:url(\''+element.img.toString()+'\')"></div></div></a>';
                 });
             }
             tplItems += '</div>';
@@ -249,8 +249,6 @@
                 let cl = this.previousBtn.className;
                 this.previousBtn.className = cl+' add-opacity';
             }
-
-            animation.registerHoverEvent(this.articleId);
 
             this.updateState();
         }

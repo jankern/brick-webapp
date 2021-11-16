@@ -6,6 +6,7 @@
 import Util from "./module.util";
 import { gsap } from "gsap";
 import { CSSPlugin } from "gsap/CSSPlugin.js";
+import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 // singleton import
 import {three3d} from './module.three-3d';
 import {articles} from './module.articles';
@@ -17,7 +18,7 @@ let menuIconPosition, closeMenu;
 class Animation {
 
     constructor() {
-        gsap.registerPlugin(CSSPlugin/*, PixiPlugin, MotionPathPlugin*/);
+        gsap.registerPlugin(CSSPlugin, ScrollTrigger/*, PixiPlugin, MotionPathPlugin*/);
     }
 
     preloadSpinning(){
@@ -89,6 +90,10 @@ class Animation {
 
     defaultPreloadDisplayAnimation(){
         let preloadWrapper = document.querySelector('.view-wrapper.preload');
+        let preloadSpinners = document.querySelectorAll('.preload .preload-item');
+        preloadSpinners.forEach((el) => {
+            el.style.backgroundColor = 'white';
+        });
         preloadWrapper.style.backgroundColor = '#ff550d';
         gsap.to('.preload-container', {opacity:1, ease: "expo.in", duration: 0.5});
 
@@ -96,6 +101,7 @@ class Animation {
 
     defaultPreloadHideAnimation(){
         //let preloadWrapper = document.querySelector('.view-wrapper.preload');
+
         let tl = gsap.timeline({onComplete: (event) => {
 
         }});
@@ -106,11 +112,28 @@ class Animation {
     roomPreloadDisplayAnimation(){
 
         let preloadWrapper = document.querySelector('.view-wrapper.preload');
+        let preloadSpinners = document.querySelectorAll('.preload .preload-item');
+        preloadSpinners.forEach((el) => {
+            el.style.backgroundColor = 'white';
+        });
         preloadWrapper.style.height = '100vh';
         preloadWrapper.style.backgroundColor = 'transparent';
 
         gsap.to('.preload-container', {opacity:1, ease: "expo.in", duration: 0.5});
- 
+    }
+
+    roomItemPreloadDisplayAnimation(){
+
+        let preloadWrapper = document.querySelector('.view-wrapper.preload');
+        let preloadSpinners = document.querySelectorAll('.preload .preload-item');
+        preloadSpinners.forEach((el) => {
+            el.style.backgroundColor = 'black';
+        });
+        preloadWrapper.style.height = '100vh';
+        preloadWrapper.style.zIndex = '9999';
+        preloadWrapper.style.backgroundColor = 'transparent';
+
+        gsap.to('.preload-container', {opacity:1, ease: "expo.in", duration: 0.5});
     }
 
     roomPreloadHideAnimation(articleId){
@@ -128,11 +151,11 @@ class Animation {
     }
 
     swipeInRoomItemsForRoomScreen(articleId){
-        //articleElement.style.right = '200px';
-        document.body.style.overflow = 'hidden';
+
+        // document.body.style.overflow = 'hidden';
         let tl = gsap.timeline({onComplete: (event) => {
-            document.body.style.overflowY = 'hidden';
-            document.body.style.overflowX = 'hidden';
+            // document.body.style.overflowY = 'hidden';
+            // document.body.style.overflowX = 'hidden';
         }});
 
         tl.to('#article-'+articleId+' .room-item div', {
@@ -157,7 +180,7 @@ class Animation {
         let progressParent;
         if(previousArticleId !== ""){
             progressParent = document.querySelector('#article-'+previousArticleId);
-            progressParent.style.overflow = "hidden";
+            //progressParent.style.overflow = "hidden";
         }
 
         let tl = gsap.timeline({onComplete: (event) => {
@@ -169,7 +192,7 @@ class Animation {
             console.log(previousArticleId);
             if(previousArticleId !== ""){
                 progressParent.style.height = "100vh";
-                progressParent.style.overflow = "visible";
+                // progressParent.style.overflow = "visible";
             }
         }});
         tl.to('.preload-container', {opacity:0, ease: "expo.in", duration: 0.5});
@@ -240,7 +263,7 @@ class Animation {
         let maxSize = Util.getViewPortMaxAxis();
         let size = maxSize*2.5 + 'px';
         let offset = -maxSize + 'px';
-        document.body.style.overflow = 'hidden';
+        // document.body.style.overflow = 'hidden';
 
         let navElList = document.querySelectorAll('.nav-animation');
 
@@ -255,9 +278,8 @@ class Animation {
                 document.querySelector('nav.view-wrapper').style.top = '0px';
                 document.querySelector('nav.view-wrapper').style.right = '0px';
                 document.querySelector('nav.view-wrapper').style.borderRadius = '0px';
-                //document.body.style.overflow = 'auto';
-                document.body.style.overflowX = 'hidden';
-                document.body.style.overflowY = 'auto';
+                // document.body.style.overflowX = 'hidden';
+                // document.body.style.overflowY = 'auto';
 
                 for (let i in navElList) {
                     if(navElList.hasOwnProperty(i)){
@@ -271,7 +293,7 @@ class Animation {
                 gsap.to('.nav-animation', {duration: 0.3, opacity: 1}, '-=1');
             }});
 
-            tlOn.to('nav.view-wrapper', {top: offset, right: offset, width: size, height: size, ease: "power2.in", duration: .8}, '-=0');
+            tlOn.to('nav.view-wrapper', {top: offset, right: offset, width: size, height: size, ease: "c.in", duration: .8}, '-=0');
             this.toggleNavMenu(toggle);
 
         }else{
@@ -291,8 +313,7 @@ class Animation {
             }
 
             let tlOff = gsap.timeline({onComplete: () => {
-                //document.body.style.overflow = 'auto';
-                document.body.style.overflowX = 'hidden';
+                // document.body.style.overflowX = 'hidden';
             }});
 
             // TODO check css rules of gsap, maybe class content can be sued here rather then fixed values
@@ -313,98 +334,107 @@ class Animation {
         tl.to('.gallery-previous', {left: -0, duration:0.3, ease: 'expo.out'});
     }
 
-    registerHoverEvent(articleId){
+    scrollBackgroundElementsForRoomItemsList(articleId){
 
-        let roomItemListEl = document.querySelector('.room-item-list');
-        let rectRoomItemList = roomItemListEl.getBoundingClientRect();
-        //let roomItemListHeight = roomItemListEl.style.height;
+        console.log('***************')
+        console.log(articleId);
 
-        document.querySelector('#article-'+articleId+' .content').addEventListener(
-            "mouseenter", (e) => {
+        let tl = gsap.timeline({ onComplete: () => {
 
-                const items = document.querySelectorAll('#article-'+articleId+' .room-item');
+        }});
 
-                let coordinates = [];
-                for (let i = 0; i < items.length; i++) {
-                    let rectItem = items[i].getBoundingClientRect();
+        tl.to("#article-"+articleId+" .scrollable-element-1", {
+            scrollTrigger: {
+                scrub: true
+            },
+            y: -200,
+            scale: 1.0
+        });
 
-                    let topOffset = rectItem.top - rectRoomItemList.top;
-                    let leftOffset = rectItem.left - rectRoomItemList.left;
-                    
-                    //console.log(rectRoomItemList.left)
-                    //console.log(rectItem.left)
-                    //console.log(roomItemListHeight);
-                    // console.log(topOffset)
-                    // console.log(leftOffset)
+        tl.to("#article-"+articleId+" .scrollable-element-2", {
+            scrollTrigger: {
+                scrub: true
+            },
+            y: -1200,
+            scale: 1.0,
+            ease: 'expo.in',
+        }, '+=0.5');
 
-                    // console.log(rect.left);
-                    // console.log(rect.top);
-                    //console.log(items[i].style.left)
-                    // console.log('++++++++++++++++++++++')
-                    // items[i].style.position = 'absolute';
-                    // items[i].style.top = topOffset+'px';
-                    // items[i].style.left = leftOffset+'px';
-                    coordinates.push({"leftOffset":leftOffset, "topOffset": topOffset})
-                }
+        tl.to("#article-"+articleId+" .scrollable-element-3", {
+            scrollTrigger: {
+                scrub: true
+            },
+            y: -1500,
+            scale: 1.0,
+            ease: 'expo.in',
+        }, '-=0.5');
 
-                for (let i = 0; i < items.length; i++) {
-                //     items[i].style.position = 'absolute';
-                //     items[i].style.top = coordinates[i].topOffset+'px';
-                //     items[i].style.left = coordinates[i].leftOffset+'px';
-                }
-
-                // console.log(e);
-                //e.target.style.position = 'absolute';
-            }
-        );
-
-        document.querySelector('#article-'+articleId+' .content').addEventListener(
-            "mouseleave", (e) => {
-                const items = document.querySelectorAll('#article-'+articleId+' .room-item');
-
-                for (let i = 0; i < items.length; i++) {
-                    // items[i].style.position = 'relative';
-                    // items[i].style.top = '0px';
-                    // items[i].style.left = '0px';
-                }
-            }
-        );
-
-        const items = document.querySelectorAll('#article-'+articleId+' .room-item');
-        let width;
-        
-        for (let i = 0; i < items.length; i++) {
-
-            items[i].addEventListener("mouseenter", (e) => {
-                // width = e.target.style;
-                // console.log(width)
-                //let tl = gsap.timeline();
-                //tl.to(e.target, { ease: "power1.out", duration: 1.5 });
-                //gsap.to(e.target, {width: 200, height: 200,  top: -20, left: -20, repeat: 0, ease: "expo.in", duration: 0.5 });
-            });
-
-            items[i].addEventListener("mouseleave", (e) => {
-                //let tl = gsap.timeline();
-                //tl.to(e.target, { ease: "power1.out", duration: 1.5 });
-                //gsap.to(e.target, {width: 150, height: 150,  top: 0, left: 0, ease: "expo.out", duration: 0.5 });
-            });
-
-        }
-
-        // document.querySelector('#article-'+articleId+' .room-item').addEventListener(
-        //     "mouseleave", (e) => {
-        //         console.log('Drin');
-        //     }
-        // );
+        tl.to("#article-"+articleId+" .scrollable-element-4", {
+            scrollTrigger: {
+                scrub: true
+                // start: "15% top",
+                // end: "60% 100%",
+                // scrub: 4,
+            },
+            y: -400,
+            // height: '15%',
+            scaleY: 1.0
+        });
     }
 
-    roomItemTransitionAnimation(resolve, reject){
+    blendInItemTitle(articleId){
+        let tl = gsap.timeline();
+        tl.to('#article-'+articleId+' .item-slice.title .tpl-header', {duration:1, opacity:2, x:-140, ease:'expo.inOut'});
+        tl.to('#article-'+articleId+' .item-slice.title .tpl-text', {duration:1, opacity:2, x:-140, ease:'expo.inOut'}, '-=0.5');
+    }
 
-        setTimeout((t) => {
-            console.log('Animation durchgeführt')
-            return resolve();
-        }, 4000);
+    roomItemTransitionAnimation(resolve, reject, properties){
 
+        let el = document.querySelector('#room-item-'+properties.article_id+' .item-container');
+        let rectEl = el.getBoundingClientRect();
+
+        let roomItemHeight = el.offsetHeight;
+        let roomItemWidth = el.offsetWidth; 
+
+        let roomItemTransition = document.querySelector('.room-item-transition');
+        if (!roomItemTransition){
+            roomItemTransition = document.createElement('div');
+            roomItemTransition.className = "room-item-transition";
+            roomItemTransition.style.top = rectEl.top+'px';
+            roomItemTransition.style.left = rectEl.left+'px';
+            roomItemTransition.style.height = (roomItemHeight)+'px';
+            roomItemTransition.style.width = (roomItemWidth)+'px';
+            roomItemTransition.style.backgroundImage = el.style.backgroundImage; 
+            document.querySelector('main').appendChild(roomItemTransition);
+        }else{
+            roomItemTransition.style.display = 'block';
+            roomItemTransition.style.borderRadius = '50%';
+            roomItemTransition.style.top = rectEl.top+'px';
+            roomItemTransition.style.left = rectEl.left+'px';
+            roomItemTransition.style.height = (roomItemHeight)+'px';
+            roomItemTransition.style.width = (roomItemWidth)+'px';
+            roomItemTransition.style.backgroundImage = el.style.backgroundImage;
+        }
+
+        let tl = gsap.timeline({onComplete: () => {
+            setTimeout((t) => {
+                return resolve();
+            }, 0);
+        }});
+
+        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+        const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+
+        const left = (vw/2) - (vh/2);
+
+        tl.to(roomItemTransition, { 
+            left: left, top: 0, duration: 0.5,
+            height: vh, width: vh, ease: "expo.in"
+        });
+
+        tl.to(roomItemTransition, { 
+            left: 0, width: vw, duration: 0.2, borderRadius: 0, ease: "expo.out"
+        }, '-=0.1');
     }
 
     transitionChaining(){

@@ -24,10 +24,19 @@
             // this.prop = prop;
             // this.articleElement = {};
             this.type = 'roomitem';
+            this.parentArticle;
             //this.zIndex = 10;
         }
 
         createElememt(){
+
+            // get parent propteries
+            console.log(navigation);
+            console.log(this.articleId);
+            console.log(this.prop.article_id)
+            this.parentArticle = Article.getArticleParentRefById(navigation, '', this.prop.article_id);
+            console.log(this.parentArticle);
+            this.backgroundColor = this.parentArticle.backgroundColor;
             
             let count = Util.getElementsByTagAndClass('div', 'page').length;
 
@@ -35,7 +44,7 @@
             this.articleElement.id = 'article-'+this.articleId;
             this.articleElement.className = "view-wrapper page roomitem";
             this.articleElement.style.zIndex = this.zIndex + count;
-            let bgColor = this.prop.backgroundColor ? this.prop.backgroundColor : Util.getRandomColor();
+            let bgColor = this.backgroundColor ? this.backgroundColor : Util.getRandomColor();
             this.articleElement.style.backgroundColor = bgColor;
             this.zIndex = this.zIndex + count;
             
@@ -44,72 +53,131 @@
             this.updateState();
 
             this.nextBtn = document.createElement('a');
-            //this.nextBtn.id = 'gallery-next-'+this.articleId;
-            this.nextBtn.className = 'material-icons navigate_next gallery-next';
+            this.nextBtn.className = 'material-icons gallery_navigate gallery-next';
             this.nextBtn.href = '#';
             this.nextBtn.innerHTML = 'navigate_next';
+            //this.nextBtn.addEventListener('click', this.nextSlide, false);
 
             this.previousBtn = document.createElement('a');
             //this.previousBtn.id = 'gallery-previous-'+this.articleId;
-            this.previousBtn.className = 'material-icons navigate_before gallery-previous';
+            this.previousBtn.className = 'material-icons gallery_navigate gallery-previous';
             this.previousBtn.href = '#';
             this.previousBtn.innerHTML = 'navigate_before';
+            //this.previousBtn.addEventListener('click', this.previousSlide, false);
 
             this.articleElement.appendChild(this.nextBtn);
             this.articleElement.appendChild(this.previousBtn);
 
             progressElement = document.querySelector('.view-wrapper.preload');
 
+
+
         }
 
         updateElement(content){
 
             // generate html content for the room item list
-            let tplHead = !content['name']? '' : '<h1>'+content['name']+'</h1>';
-            let tplText = !content['text']? '' : '<p>'+content['text']+'</p>';
-            let tplTextContainer = '<div class="item-info">'+tplHead+tplText+'</div>';
-            let tplItems = '<div class="item-list">';
+            let tplHead = !content['name']? '' : '<h1 style="background-color:'+this.backgroundColor+'">'+content['name']+'</h1>';
+            let tplText = !content['text']? '' : '<p style="background-color:'+this.backgroundColor+'">'+content['text']+'</p>';
+            let tplSpecs = !content['specs']? '' : '<p style="background-color:'+this.backgroundColor+'">'+content['specs']+'</p>';
+            let tplHeadImage = !content['img']? '' : content['img'];
+
+            let tplItems = "";
             if(content.items.length > 0){
+                let i = 0;
                 content.items.forEach(element => {
-                    let nav = Article.getArticleRefById(navigation, element.article_id)
-                    tplItems += '<div class="item"><img src="'+element.img.toString()+
-                        '" style="width:100%" title="'+element.name+'"></div>';
+                    //let nav = Article.getArticleRefById(navigation, element.article_id)
+                    if(i < 1){
+                        tplItems += '<div class="item-slice title"><div class="col col-3-3" '+
+                        'style="background-image:url(\''+tplHeadImage.toString()+'\')"><div class="tpl tpl-header">'+tplHead+'</div><div class="tpl tpl-text">'+tplText+'</div></div></div>';
+                    }else if(i == 1){
+                        tplItems += '<div class="item-slice"><div class="col col-3-2"><img src="'+element.img.toString()+
+                            '" title="'+element.name+'"></div>'+
+                            '<div class="col col-3-1 text"><div class="tpl tpl-text">'+tplSpecs+'</div><div class="tpl tpl-text"><p style="background-color:'+this.backgroundColor+'">'+element.name+'</p></div></div></div>';
+                    }else{
+                        tplItems += '<div class="item-slice"><div class="col col-3-2"><img src="'+element.img.toString()+
+                            '" title="'+element.name+'"></div>'+
+                            '<div class="col col-3-1 text"><div class="tpl tpl-text"><p style="background-color:'+this.backgroundColor+'">'+element.name+'</p></div></div></div>';
+                    }
+                    i += 1;
                 });
             }
-            tplItems += '</div>';
+
+            let scrollableElement1 = document.createElement('div');
+            scrollableElement1.className = 'scrollable-element-1';
+            scrollableElement1.style.top = (window.innerHeight - 100) +'px';
+            scrollableElement1.style.backgroundColor = this.parentArticle.backgroundColor;
+            this.articleElement.appendChild(scrollableElement1);
+
+            let scrollableElement2 = document.createElement('div');
+            scrollableElement2.className = 'scrollable-element-2';
+            scrollableElement2.style.backgroundColor = this.parentArticle.backgroundColor;
+            this.articleElement.appendChild(scrollableElement2);
+
+            let scrollableElement3 = document.createElement('div');
+            scrollableElement3.className = 'scrollable-element-3';
+            scrollableElement3.style.backgroundColor = this.parentArticle.backgroundColor;
+            this.articleElement.appendChild(scrollableElement3);
+
+            let scrollableElement4 = document.createElement('div');
+            scrollableElement4.className = 'scrollable-element-4';
+            scrollableElement4.style.backgroundColor = 'white';
+            this.articleElement.appendChild(scrollableElement4);
 
             // add the list to the DOM
             let contentElement = document.createElement('div');
             contentElement.className = 'content';
-            contentElement.innerHTML = tplTextContainer+tplItems;
+            //contentElement.innerHTML = tplTextContainer+tplItems;
+            contentElement.innerHTML = tplItems;
             this.articleElement.appendChild(contentElement);
+
+            animation.blendInItemTitle(this.articleId);
+            animation.scrollBackgroundElementsForRoomItemsList(this.articleId);
             
             // create the previous / next nav buttons and hide/show if a next room is clickable
             //Article.nextLimit = 0;
             let next = Article.getNextSubArtRefById(navigation, '', 5, content.article_id); // 3=room, 5=roomitems´
-            this.nextBtn.style.visibility = "hidden";
-            this.previousBtn.style.visibility = "hidden";
             if(next){
                 this.nextBtn.href = next.path;
-                this.nextBtn.style.visibility = "visible";
+                let cl = this.nextBtn.className;
+                this.nextBtn.className = cl+' add-opacity';
             }
             let previous = Article.getPreviousSubArtRefById(navigation, '', 5, content.article_id); // 3=room, 5=roomitems´
             if(previous){
                 this.previousBtn.href = previous.path;
-                this.previousBtn.style.visibility = "visible";
+                let cl = this.previousBtn.className;
+                this.previousBtn.className = cl+' add-opacity';
             }
         }
 
         doTransition(){
-            progressElement.style.display = 'block';
-            progressElement.style.height = '100vh';
-            mainElement.appendChild(progressElement);
-            animation.defaultPreloadDisplayAnimation();
+
+            console.log(this.prop.previousArticleType);
+
+            if(this.prop.previousArticleType === 'room'){
+                document.body.appendChild(progressElement);
+                animation.roomItemPreloadDisplayAnimation();
+
+            }else{
+                progressElement.style.display = 'block';
+                progressElement.style.height = '100vh';
+                mainElement.appendChild(progressElement);
+                animation.defaultPreloadDisplayAnimation();
+            }
+            
+            
         }
 
         finishTransition(previousArticle){
 
+            if(this.prop.previousArticleType === 'room'){
+                let roomItemTransition = document.querySelector('.room-item-transition');
+                roomItemTransition.style.display = 'none';
+            }
+
             animation.defaultPreloadHideAnimation();
+
+            
 
             // if(previousArticle){
             //     let previousArticleElement = document.querySelector('#article-'+previousArticle.articleId);

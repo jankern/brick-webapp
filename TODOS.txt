@@ -1,0 +1,29 @@
+Startseite
+- Stein raus, durch Grafik ersetzen
+- Font drin lassen, Claim dazu
+- evtl particle view nach Mauszeiger (8 oder 3 irgendwie einbinden) 8 Noppen im hintergrund leicht einblenden und ausblenden, dann drei
+
+Room
+- zwei Zeilen für Claim
+- Pfeil nach oben zur Raumübersicht
+
+RoomItem / Brick
+- loader -> left->right / right->left, zurücksetzen bei anderen
+- startbild Pfeil nach unten, sroll to bottom of startbild
+
+Generell
+- brick direct access geht nicht [OK]
+- lange pages verstecken (url stack) [OK]
+- dritter Punkt in Brick (Animation)
+- next/previous brick/room label vom nächsten Stein/Raum bei hover
+- Mobile responsive design (bilder nicht üebr Logo, Anordnung der Bricks im raum view)
+- Logo einfärben nach Raumfarbe (Logos liefert Cheffe) logo_782349.png
+- loader auf Brick page [OK]
+- progress screen braucht position fixed [OK]
+
+Workshops
+- Kachelpage, keywordsfilter
+- Detailpage (template, headerbild, text, Kontakt)
+
+Block
+- Detailpage, untereinander, neuster zuerst, keywordfilter

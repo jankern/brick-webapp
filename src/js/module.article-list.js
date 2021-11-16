@@ -23,7 +23,7 @@ export
     default class ArticleList {
 
     constructor() {
-
+        this.articleProperties;
     }
 
     init() {
@@ -42,6 +42,13 @@ export
         // Routing manager
         let articleId = window.location.pathname === baseUrl ? "1" : "";
         let path = window.location.pathname;
+
+        // test route
+        // path = "/rooms/room1/brick1";
+        // articleId = "1M";
+        //path = "/rooms/room1";
+        //articleId = "4";
+
         this.performUrlRouting(path, articleId, null);
         this.activeArticleId = 1;
         this.slideRoomDirection = "next";
@@ -179,17 +186,21 @@ export
                 if(articles.hasOwnProperty(i)){
                     if(articles[i].articleId === articleId){
                         articles[i].setZIndex(articles.length-1);
+                        articles[i].setDisplay('flex');
                     }else{
                         if(articleType === 'room'){
                             if(articles[i].getArticleType() === "room"){
                                 articles[i].setZIndex(iterator-1);
+                                articles[i].setDisplay('flex');
                                 iterator -= 1;
                             }else{
                                 articles[i].setZIndex(0);
+                                articles[i].setDisplay('none');
                             }
                         }else{
                             articles[i].setZIndex(iterator-1);
                             iterator -= 1;
+                            articles[i].setDisplay('none');
                         }
                     }
                 }
@@ -289,15 +300,7 @@ export
             }
         }
 
-        /*
-        
-        was ist es für ein arttype? room
-        wo kommt er her? room
-        bedeutet 
-        -> room / room -> rufe slider
-        -> room / default (fall forward) 
-
-        */
+        document.querySelector('header .logo').style.opacity = '1';
 
         // If article does not exist, insert an empty article, call data from server and insert them into the view
         if (!hasArticle) {
@@ -309,17 +312,23 @@ export
             }
 
             // Initialise article properties
-            let properties = {};
+            // let properties = {};
+            let properties = this.getArticleProperties(path);
+            let previousArticleType = this.getPreviousArticleType(this.activeArticleId);
 
-            // if(path === baseUrl){
-            //     properties.backgroundColor = "#373737"; 
+            // let articleNav = ArticleDefault.getArticleRefByPath(navigation, path);
+            // properties = articleNav;
+
+            // TODO properties to this
+            // TODO for
+            // TODO not needed anymore once its store to this.properties
+            // let previousArticle = this.getArticleById(this.activeArticleId);
+            // let previousArticleType = "";
+            // if(previousArticle){
+            //     previousArticleType = previousArticle.getArticleType();
             // }
 
-            let articleNav = ArticleDefault.getArticleRefByPath(navigation, path);
-            properties = articleNav;
-            // if(articleNav['slide']){
-            //     properties.slide = articleNav['slide'];
-            // } 
+            properties['previousArticleType'] = previousArticleType;
 
             // Create article object. Either from type default or room based on path
             let article;
@@ -338,10 +347,6 @@ export
             // Initiate article object
             article = articleTypeInstance[artType](articleId, path, properties);
             article.createElememt();
-            if(artType === "room"){
-                //animation.slideRoomAnimation(this.slideRoomDirection, true);
-                //animation.slideRoomAnimation(article, true);
-            }
             article.doTransition();
 
             isRequestOngoing = true;
@@ -435,11 +440,15 @@ export
                             article.finishTransition(this.getPreviousState());
                         }
                     }
+
+                    // TODO call and TEST organizeArticleStack to hide inactive articles
+
                     
                     isRequestOngoing = false;
                     this.activeArticleId = articleId;
                     // console.log('PREVIOUSSTAE');
                     // console.log(this.getPreviousState());
+                    this.organizeArticleStack(articleId);
                     this.setPreviousState(path, articleId);
 
                     console.log('ARTICLES');
@@ -458,13 +467,16 @@ export
         }else{
 
             if(redirectionId){
-                console.log(redirectionId)
                 articleId = redirectionId;
             }
 
             if(artType === "room"){
-                //animation.slideRoomAnimation(this.slideRoomDirection);
                 animation.slideRoomAnimation(articleId);
+            }
+
+            if(artType === "roomitem"){
+                let roomItemTransition = document.querySelector('.room-item-transition');
+                roomItemTransition.style.display = 'none';
             }
 
             this.activeArticleId = articleId;
@@ -482,6 +494,30 @@ export
         return previousState;
     }
 
+    getArticleProperties(path){
+        let articleProperties = {};
+        let articleNav = ArticleDefault.getArticleRefByPath(navigation, path);
+
+        for(let i in articleNav){
+            if(articleNav.hasOwnProperty(i)){
+                articleProperties[i] = articleNav[i];
+            }
+        }
+        return articleProperties;
+    }
+
+    getPreviousArticleType(activeArticleId){
+        let previousArticle = this.getArticleById(activeArticleId);
+        let previousArticleType = previousArticle ? previousArticle.getArticleType() : "";
+
+        // this.articleProperties['previousArticleType'] = "";
+        // if(previousArticle){
+        //     this.articleProperties['previousArticleType'] = previousArticle.getArticleType();
+        // }
+
+        return previousArticleType;
+    }
+    previousArticleTypepreviousArticleType
     // <a> interceptor to get the link event and prevent page laoding
     interceptLinkEvent(event) {
 
@@ -510,12 +546,28 @@ export
                 this.slideRoomDirection = "previous";
             }
 
-            articleNav = ArticleDefault.getArticleRefByPath(navigation, href);
+            // TODO properties to this
+            // this.articleProperties = {};
+            let articleNav = ArticleDefault.getArticleRefByPath(navigation, href);
+
+            // for(let i in articleNav){
+            //     if(articleNav.hasOwnProperty(i)){
+            //         this.articleProperties[i] = articleNav[i];
+            //     }
+            // }
+
+            // let previousArticle = this.getArticleById(this.activeArticleId);
+            // this.articleProperties['previousArticleType'] = "";
+            // if(previousArticle){
+            //     this.articleProperties['previousArticleType'] = previousArticle.getArticleType();
+            // }
+
+            let previousArticleType = this.getPreviousArticleType(this.activeArticleId);
 
             // Create a promise to wait for the transition animation until it's done
             // Then call next article
-            if(target.dataset.articleType === 'roomitem'){
-                animation.transitionChaining().run(animation.roomItemTransitionAnimation, {}).then(
+            if(target.dataset.articleType === 'roomitem' && previousArticleType === 'room'){
+                animation.transitionChaining().run(animation.roomItemTransitionAnimation, {"article_id": articleNav.article_id}).then(
                     (succ) => {
                         console.log('und wieder da')
                         this.performUrlRouting(href, articleNav.article_id, articleNav.article_type); 
