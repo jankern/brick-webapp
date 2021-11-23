@@ -30,10 +30,13 @@
 
         createElememt(){
 
+            document.querySelector('body').className = 'body-room-item';
+
             // get parent propteries
             console.log(navigation);
             console.log(this.articleId);
             console.log(this.prop.article_id)
+
             this.parentArticle = Article.getArticleParentRefById(navigation, '', this.prop.article_id);
             console.log(this.parentArticle);
             this.backgroundColor = this.parentArticle.backgroundColor;
@@ -52,25 +55,29 @@
             mainElement.appendChild(this.articleElement);
             this.updateState();
 
-            this.nextBtn = document.createElement('a');
-            this.nextBtn.className = 'material-icons gallery_navigate gallery-next';
-            this.nextBtn.href = '#';
-            this.nextBtn.innerHTML = 'navigate_next';
-            //this.nextBtn.addEventListener('click', this.nextSlide, false);
+            this.nextBtn = document.createElement('div');
+            this.nextBtn.className = 'gallery_navigate gallery-next';
+            this.nextBtn.innerHTML = '<a href="#" class="material-icons next" style="color:'+this.parentArticle.backgroundColor+'" data-link-type="article">navigate_next</a>'+
+                '<div class="tool-tip-title" style="background-color:'+this.parentArticle.backgroundColor+'"></div>';
 
-            this.previousBtn = document.createElement('a');
-            //this.previousBtn.id = 'gallery-previous-'+this.articleId;
-            this.previousBtn.className = 'material-icons gallery_navigate gallery-previous';
-            this.previousBtn.href = '#';
-            this.previousBtn.innerHTML = 'navigate_before';
-            //this.previousBtn.addEventListener('click', this.previousSlide, false);
+            this.previousBtn = document.createElement('div');
+            this.previousBtn.className = 'gallery_navigate gallery-previous';
+            this.previousBtn.innerHTML = '<a href="#" class="material-icons previous" style="color:'+this.parentArticle.backgroundColor+'" data-link-type="article">navigate_before</a>'+
+            '<div class="tool-tip-title" style="background-color:'+this.parentArticle.backgroundColor+'"></div>';
+
+            // TODO language based replacement for link name
+            this.parentBtn = document.createElement('div');
+            this.parentBtn.className = 'gallery_navigate gallery-parent';
+            this.parentBtn.innerHTML = '<a href="'+this.parentArticle.path+'" class="material-icons parent" style="color:'+
+                this.parentArticle.backgroundColor+'" data-article-id="'+this.parentArticle.article_id+'" data-link-type="article">arrow_drop_up</a>'+
+                '<div class="tool-tip-title" style="background-color:'+this.parentArticle.backgroundColor+'">Go up to room \''+this.parentArticle.name+'\'</div>';
+
 
             this.articleElement.appendChild(this.nextBtn);
             this.articleElement.appendChild(this.previousBtn);
+            this.articleElement.appendChild(this.parentBtn);
 
             progressElement = document.querySelector('.view-wrapper.preload');
-
-
 
         }
 
@@ -135,34 +142,73 @@
             animation.scrollBackgroundElementsForRoomItemsList(this.articleId);
             
             // create the previous / next nav buttons and hide/show if a next room is clickable
-            //Article.nextLimit = 0;
-            let next = Article.getNextSubArtRefById(navigation, '', 5, content.article_id); // 3=room, 5=roomitems´
+            // Article.nextLimit = 0;
+            // TODO language based replacement for link name
+            let next = Article.getNextSubArtRefById(navigation, '', 5, content.article_id); // depth level 3=room, 5=roomitems
             if(next){
-                this.nextBtn.href = next.path;
+                let a = this.nextBtn.firstChild;
+                if(a.nodeName === 'A'){
+                    a.href = next.path;
+                }
+                let d = this.nextBtn.lastElementChild;
+                if(d.nodeName === 'DIV'){
+                    d.innerHTML = "Go to brick '"+next.name+"'";
+                }
                 let cl = this.nextBtn.className;
                 this.nextBtn.className = cl+' add-opacity';
             }
             let previous = Article.getPreviousSubArtRefById(navigation, '', 5, content.article_id); // 3=room, 5=roomitems´
             if(previous){
-                this.previousBtn.href = previous.path;
+                let a = this.previousBtn.firstChild;
+                if(a.nodeName === 'A'){
+                    a.href = previous.path;
+                }
+                let d = this.previousBtn.lastElementChild;
+                if(d.nodeName === 'DIV'){
+                    d.innerHTML = "Go to brick '"+previous.name+"'";
+                }
                 let cl = this.previousBtn.className;
                 this.previousBtn.className = cl+' add-opacity';
             }
+
+            let clp = this.parentBtn.className;
+            this.parentBtn.className = clp+' add-opacity';
+
+            animation.animateSlideButton(this.getArticleId());
         }
 
         doTransition(){
 
-            console.log(this.prop.previousArticleType);
+            console.log(this.prop);
 
             if(this.prop.previousArticleType === 'room'){
+
                 document.body.appendChild(progressElement);
                 animation.roomItemPreloadDisplayAnimation();
 
             }else{
+
                 progressElement.style.display = 'block';
                 progressElement.style.height = '100vh';
+
+                let direction;
+
+                if(this.prop.current_slider_direction){
+
+                    progressElement.style.width = '0px';
+
+                    if(this.prop.current_slider_direction === 'next'){     
+                        progressElement.style.right = '0px';
+                        progressElement.style.left = 'unset';
+                    }else if(this.prop.current_slider_direction === 'previous'){
+                        progressElement.style.left = '0px';
+                        progressElement.style.right = 'unset';
+                    }
+                    direction = this.prop.current_slider_direction;
+                }
+
                 mainElement.appendChild(progressElement);
-                animation.defaultPreloadDisplayAnimation();
+                animation.defaultPreloadDisplayAnimation(direction);
             }
             
             
@@ -175,20 +221,21 @@
                 roomItemTransition.style.display = 'none';
             }
 
-            animation.defaultPreloadHideAnimation();
+            let direction;
 
-            
+            if(this.prop.current_slider_direction){
+                if(this.prop.current_slider_direction === 'next'){     
+                    progressElement.style.right = 'unset';
+                    progressElement.style.left = '0px';
+                }else if(this.prop.current_slider_direction === 'previous'){
+                    progressElement.style.left = 'unset';
+                    progressElement.style.right = '0px';
+                }
+                direction = this.prop.current_slider_direction;
+            }
 
-            // if(previousArticle){
-            //     let previousArticleElement = document.querySelector('#article-'+previousArticle.articleId);
-            //     previousArticleElement.prepend(progressElement);
-            //     animation.preloadHideAnimation(previousArticle.articleId, this);
-            // }
+            animation.defaultPreloadHideAnimation(direction);
 
-            // // TODO temporary solution, add some animation here!
-            // else{
-            //     progressElement.style.display = "none";
-            // }
         }
 
 }

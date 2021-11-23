@@ -44,14 +44,14 @@ export
         let path = window.location.pathname;
 
         // test route
-        // path = "/rooms/room1/brick1";
-        // articleId = "1M";
-        //path = "/rooms/room1";
-        //articleId = "4";
+        path = "/rooms/fuchsia/brick1";
+        articleId = "1M";
+        // path = "/rooms/fuchsia";
+        // articleId = "4";
 
         this.performUrlRouting(path, articleId, null);
         this.activeArticleId = 1;
-        this.slideRoomDirection = "next";
+        this.currentSlideDirection = "next";
 
         // Testcase für Seitenstart im Untermenü
         // this.performUrlRouting(window.location.pathname+'somewhere-to-b/and-to-the-b2-with-spice', '');
@@ -329,6 +329,7 @@ export
             // }
 
             properties['previousArticleType'] = previousArticleType;
+            properties['current_slider_direction'] = this.currentSlideDirection;
 
             // Create article object. Either from type default or room based on path
             let article;
@@ -476,7 +477,9 @@ export
 
             if(artType === "roomitem"){
                 let roomItemTransition = document.querySelector('.room-item-transition');
-                roomItemTransition.style.display = 'none';
+                if(roomItemTransition){
+                    roomItemTransition.style.display = 'none';
+                }
             }
 
             this.activeArticleId = articleId;
@@ -510,18 +513,11 @@ export
         let previousArticle = this.getArticleById(activeArticleId);
         let previousArticleType = previousArticle ? previousArticle.getArticleType() : "";
 
-        // this.articleProperties['previousArticleType'] = "";
-        // if(previousArticle){
-        //     this.articleProperties['previousArticleType'] = previousArticle.getArticleType();
-        // }
-
         return previousArticleType;
     }
-    previousArticleTypepreviousArticleType
+    
     // <a> interceptor to get the link event and prevent page laoding
     interceptLinkEvent(event) {
-
-        event.preventDefault();
 
         let href;
         let articleNav;
@@ -533,34 +529,27 @@ export
             }
         }
 
+        if(target.getAttribute('data-link-type') !== "article"){
+            return;
+        }
+
+        event.preventDefault();
+
         if (target.tagName === 'A') {
 
             // TODO maybe check if <a> comes from menu or gallery. Probably needs different handling
             href = target.getAttribute('href');
             href = href.replace('./', '/'); 
 
-            // TODO probably not needed anymore
             if(target.className.indexOf('next') > -1){
-                this.slideRoomDirection = "next";
+                this.currentSlideDirection = "next";
             }else if(target.className.indexOf('previous') > -1){
-                this.slideRoomDirection = "previous";
+                this.currentSlideDirection = "previous";
+            }else if(target.className.indexOf('parent') > -1){
+                this.currentSlideDirection = "parent";
             }
 
-            // TODO properties to this
-            // this.articleProperties = {};
             let articleNav = ArticleDefault.getArticleRefByPath(navigation, href);
-
-            // for(let i in articleNav){
-            //     if(articleNav.hasOwnProperty(i)){
-            //         this.articleProperties[i] = articleNav[i];
-            //     }
-            // }
-
-            // let previousArticle = this.getArticleById(this.activeArticleId);
-            // this.articleProperties['previousArticleType'] = "";
-            // if(previousArticle){
-            //     this.articleProperties['previousArticleType'] = previousArticle.getArticleType();
-            // }
 
             let previousArticleType = this.getPreviousArticleType(this.activeArticleId);
 
@@ -569,7 +558,6 @@ export
             if(target.dataset.articleType === 'roomitem' && previousArticleType === 'room'){
                 animation.transitionChaining().run(animation.roomItemTransitionAnimation, {"article_id": articleNav.article_id}).then(
                     (succ) => {
-                        console.log('und wieder da')
                         this.performUrlRouting(href, articleNav.article_id, articleNav.article_type); 
                     }
                 );

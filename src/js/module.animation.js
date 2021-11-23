@@ -88,24 +88,37 @@ class Animation {
         gsap.to(claimItem3, {duration:0.5, position:"absolute", left: l3 + '%'});
     }
 
-    defaultPreloadDisplayAnimation(){
+    defaultPreloadDisplayAnimation(direction=""){
+
         let preloadWrapper = document.querySelector('.view-wrapper.preload');
         let preloadSpinners = document.querySelectorAll('.preload .preload-item');
+
         preloadSpinners.forEach((el) => {
             el.style.backgroundColor = 'white';
         });
+
         preloadWrapper.style.backgroundColor = '#ff550d';
+
+        if(direction === 'next' || direction === 'previous'){
+            gsap.to(preloadWrapper, {width: '100vw', opacity:1, ease: "expo.in", duration: 0.5});
+        }
+            
         gsap.to('.preload-container', {opacity:1, ease: "expo.in", duration: 0.5});
 
     }
 
-    defaultPreloadHideAnimation(){
-        //let preloadWrapper = document.querySelector('.view-wrapper.preload');
+    defaultPreloadHideAnimation(direction=""){
 
-        let tl = gsap.timeline({onComplete: (event) => {
+        let tl = gsap.timeline({onComplete: (event) => {}});
 
-        }});
-        tl.to('.view-wrapper.preload', {height:0, ease: "power2.in", duration: 1});
+        if(direction === 'next'){
+            tl.to('.view-wrapper.preload', {width: 0, left: 0, ease: "power2.in", duration: 1});
+        }else if(direction === 'previous'){
+            tl.to('.view-wrapper.preload', {width: 0, right: 0, ease: "power2.in", duration: 1});
+        }else{
+            tl.to('.view-wrapper.preload', {height:0, ease: "power2.in", duration: 1});
+        }
+
         tl.to('.preload-container', {opacity:0, ease: "expo.in", duration: 1}, "-=1");
     }
 
@@ -117,6 +130,7 @@ class Animation {
             el.style.backgroundColor = 'white';
         });
         preloadWrapper.style.height = '100vh';
+        preloadWrapper.style.width = '100vw';
         preloadWrapper.style.backgroundColor = 'transparent';
 
         gsap.to('.preload-container', {opacity:1, ease: "expo.in", duration: 0.5});
@@ -316,28 +330,31 @@ class Animation {
                 // document.body.style.overflowX = 'hidden';
             }});
 
-            // TODO check css rules of gsap, maybe class content can be sued here rather then fixed values
-            tlOff.to('nav.view-wrapper', {top: '60px', right: '60px', width: '60px', height: '60px', ease: "power2.out", duration: .8});
+            // TODO get computed style
+            tlOff.to('nav.view-wrapper', {top: '20px', right: '20px', width: '60px', height: '60px', ease: "power2.out", duration: .8});
             this.toggleNavMenu(toggle);
         }
         
         
     }
 
-    animateSlideButton(){
+    animateSlideButton(articleId){
         let tl = gsap.timeline().delay(6).repeat(-1).repeatDelay(4);
-        tl.to('.gallery-next', {right: -10, duration:0.2, ease: 'power2.in'});
-        tl.to('.gallery-next', {right: 10, duration:0.2, ease: 'power2.out'});
-        tl.to('.gallery-next', {right: -0, duration:0.3, ease: 'expo.out'});
-        tl.to('.gallery-previous', {left: -10, duration:0.2, ease: 'power2.in'});
-        tl.to('.gallery-previous', {left: 10, duration:0.2, ease: 'power2.out'});
-        tl.to('.gallery-previous', {left: -0, duration:0.3, ease: 'expo.out'});
+        tl.to('#article-'+articleId+' .gallery-next', {right: -10, duration:0.2, ease: 'power2.in'});
+        tl.to('#article-'+articleId+' .gallery-next', {right: 10, duration:0.2, ease: 'power2.out'});
+        tl.to('#article-'+articleId+' .gallery-next', {right: -0, duration:0.3, ease: 'expo.out'});
+        tl.to('#article-'+articleId+' .gallery-previous', {left: -10, duration:0.2, ease: 'power2.in'});
+        tl.to('#article-'+articleId+' .gallery-previous', {left: 10, duration:0.2, ease: 'power2.out'});
+        tl.to('#article-'+articleId+' .gallery-previous', {left: -0, duration:0.3, ease: 'expo.out'});
+        
+        if(document.querySelector('#article-'+articleId+' .gallery-parent')){
+            tl.to('#article-'+articleId+' .gallery-parent', {top: -10, duration:0.2, ease: 'power2.in'});
+            tl.to('#article-'+articleId+' .gallery-parent', {top: 10, duration:0.2, ease: 'power2.out'});
+            tl.to('#article-'+articleId+' .gallery-parent', {top: 0, duration:0.3, ease: 'expo.out'});
+        }
     }
 
     scrollBackgroundElementsForRoomItemsList(articleId){
-
-        console.log('***************')
-        console.log(articleId);
 
         let tl = gsap.timeline({ onComplete: () => {
 
@@ -384,8 +401,8 @@ class Animation {
 
     blendInItemTitle(articleId){
         let tl = gsap.timeline();
-        tl.to('#article-'+articleId+' .item-slice.title .tpl-header', {duration:1, opacity:2, x:-140, ease:'expo.inOut'});
-        tl.to('#article-'+articleId+' .item-slice.title .tpl-text', {duration:1, opacity:2, x:-140, ease:'expo.inOut'}, '-=0.5');
+        tl.to('#article-'+articleId+' .item-slice.title .tpl-header', {duration:1, opacity:2, x:-90, ease:'expo.inOut'});
+        tl.to('#article-'+articleId+' .item-slice.title .tpl-text', {duration:1, opacity:2, x:-90, ease:'expo.inOut'}, '-=0.5');
     }
 
     roomItemTransitionAnimation(resolve, reject, properties){

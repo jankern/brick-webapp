@@ -4,7 +4,7 @@
 <?php
 
   require 'content.php';
-  global $articles, $articlesTraanslation;
+  global $articles, $articlesTranslation;
   $lang = 'en';
 
   $articlesHirarchy = array();
@@ -69,40 +69,21 @@
 
   $navigation = generateArticleHirarchy($GLOBALS['articles'], $articlesHirarchy, $hirarchyReferences);
 
-  echo '<pre>';
-  print_r($navigation);
-  echo '</pre>';
-
-  // $list = ['hallo' => ['das' => ['sind' => 'Werte']]];
-  // $newList = array();
-  // $rememberKeys = array();
-
-  // function test($list, $newList, $rememberKeys){
-
-  //   foreach($list as $k => $l){
-  //     if($k == 'das'){
-  //       array_push($rememberKeys, $k);
-  //     }
-  //     array_push($newList, $k);
-
-  //     return test($l, $newList, $rememberKeys);
-  //   }
-
-  //   return $newList;
-  // }
-
 ?>
 
 <head>
   <meta charset="utf-8">
-  <link rel="shortcut icon" type="image/x-icon" href="./static/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="./156f7056c58e7a0989a6.ico">
   <base href="/">
+  <meta name="author" content="redeploy.de">
+  <meta name="description" content="A web page about the artist Cole Blaq">
+  <meta name="keywords" content="Lego, brick art, brick art workshops">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet"> 
   <title>Cole-Blaq - Enter the brick</title>
   <script>
-
     <?php
 
       $tplSideNavObj = '{';
@@ -110,20 +91,23 @@
       foreach($navigation as $navigationItem){
 
         $tplSideNavObj .= '"'.$navigationItem['article_id'].'":{';
+        $tplSideNavObj .= '"name":"'.$articlesTranslation[$navigationItem['article_id']][$lang]['name'].'",';
         foreach($navigationItem as $key => $item){
           if($key == 'articles'){
 
             $tplSideNavObj .= '"'.$key.'":{';
             foreach($item as $key1 => $item1){
               $tplSideNavObj .= '"'.$item1['article_id'].'":{';
+              $tplSideNavObj .= '"name":"'.$articlesTranslation[$item1['article_id']][$lang]['name'].'",';
               foreach($item1 as $key2 => $item2){
                 if($key2 == 'articles'){
 
                   $tplSideNavObj .= '"'.$key.'":{';
                   foreach($item2 as $key3 => $item3){
                     $tplSideNavObj .= '"'.$item3['article_id'].'":{';
+                    $tplSideNavObj .= '"name":"'.$articlesTranslation[$item3['article_id']][$lang]['name'].'",';
                     foreach($item3 as $key4 => $item4){
-                      if($key4 != 'items' && $key4 != 'articles' && $key4 != 'article_id'){
+                      if($key4 != 'items' && $key4 != 'articles' && $key4 != 'article_id' && $key4 != 'img'){
                         $tplSideNavObj .= '"'.$key4.'":"'.$item4.'", ';
                       }
                     }
@@ -131,7 +115,7 @@
                   }
                   $tplSideNavObj .= '},';
 
-                }elseif($key2 != 'items' && $key2 != 'article_id'){
+                }elseif($key2 != 'items' && $key2 != 'articles' && $key2 != 'article_id' && $key2 != 'img'){
                   $tplSideNavObj .= '"'.$key2.'":"'.$item2.'", ';
                 }
               }
@@ -139,7 +123,7 @@
             }
             $tplSideNavObj .= '},';
 
-          }elseif($key != 'items' && $key != 'article_id'){
+          }elseif($key4 != 'items' && $key != 'articles' && $key != 'article_id' && $key != 'img'){
             $tplSideNavObj .= '"'.$key.'":"'.$item.'", ';
           }
         }
@@ -147,19 +131,19 @@
       }
 
       $tplSideNavObj .= '};';
-
       echo 'var sideNavObj = '.$tplSideNavObj;
 
     ?>
-    
   </script>
+  <script defer="defer" src="/js/main.bundle.js"></script>
+  <link href="/css/main.bundle.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="body-start">
 
   <header>
     <div class="header-item">
-      <a href="./" data-article-id="1" class="logo">&nbsp;
+      <a href="./" data-article-id="1" data-link-type="article" class="logo">&nbsp;
       </a>
     </div>
     <div class="header-item">
@@ -196,7 +180,7 @@
               if((!isset($navigationItem['online']) || $navigationItem['online'] == true ) && $navigationItem['article_id'] != '1'){ 
 
                 $tpl_nav .= '<li class="lev-1 nav-animation">';
-                $tpl_nav .= '<a href="'.$navigationItem['path'].'" data-article-id="'.$navigationItem['article_id'].'">'.
+                $tpl_nav .= '<a href="'.$navigationItem['path'].'" data-article-id="'.$navigationItem['article_id'].'" data-link-type="article">'.
                     $articlesTranslation[$navigationItem['article_id']][$lang]['name'].'</a>';
 
                 if(isset($navigationItem['articles'])){
@@ -213,14 +197,14 @@
 
                       if($i <= 0){
                         $tpl_ul_open = '<ul>';
-                      }elseif($i == sizeof($navigationItemArticle['articles'])-1){
+                      }elseif($i == sizeof($navigationItem['articles'])-1){
                         $tpl_ul_close = '</ul>';
                       }
 
                       $tpl_subnav .= $tpl_ul_open.'<li class="lev-2">';
-                      $tpl_subnav .= '<a href="'.$navigationItemArticle['path'].'" data-article-id="'.$navigationItemArticle['article_id'].'">'.
+                      $tpl_subnav .= '<a href="'.$navigationItemArticle['path'].'" data-article-id="'.$navigationItemArticle['article_id'].'" data-link-type="article">'.
                           $articlesTranslation[$navigationItemArticle['article_id']][$lang]['name'].'</a>';
-                      $tpl_subnav .= '</li">'.$tpl_ul_close;
+                      $tpl_subnav .= '</li>'.$tpl_ul_close;
                 
                       $i += 1;
 

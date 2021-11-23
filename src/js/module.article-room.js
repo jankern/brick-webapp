@@ -29,6 +29,7 @@
 
         createElememt(){
 
+            document.querySelector('body').className = 'article';
             let count = Util.getElementsByTagAndClass('div', 'page').length;
 
             // Create the room element
@@ -179,40 +180,24 @@
                 //console.log(existingArticleElement)
                 roomsContainerElement.insertBefore(this.articleElement, existingArticleElement);
             }
-            
-            this.nextBtn = document.createElement('a');
-            //.id = 'gallery-next-'+this.articleId;
-            this.nextBtn.className = 'material-icons gallery_navigate gallery-next';
-            this.nextBtn.href = '#';
-            this.nextBtn.innerHTML = 'navigate_next';
-            //this.nextBtn.addEventListener('click', this.nextSlide, false);
 
-            this.previousBtn = document.createElement('a');
-            //this.previousBtn.id = 'gallery-previous-'+this.articleId;
-            this.previousBtn.className = 'material-icons gallery_navigate gallery-previous';
-            this.previousBtn.href = '#';
-            this.previousBtn.innerHTML = 'navigate_before';
-            //this.previousBtn.addEventListener('click', this.previousSlide, false);
+            this.nextBtn = document.createElement('div');
+            this.nextBtn.className = 'gallery_navigate gallery-next';
+            this.nextBtn.innerHTML = '<a href="#" class="material-icons next" data-link-type="article">navigate_next</a>'+
+                '<div class="tool-tip-title"></div>';
+
+            this.previousBtn = document.createElement('div');
+            this.previousBtn.className = 'gallery_navigate gallery-previous';
+            this.previousBtn.innerHTML = '<a href="#" class="material-icons previous" data-link-type="article">navigate_before</a>'+
+            '<div class="tool-tip-title"></div>';
 
             this.articleElement.appendChild(this.nextBtn);
             this.articleElement.appendChild(this.previousBtn);
 
             animation.slideRoomAnimation(this.getArticleId(), true);
-            animation.animateSlideButton()
+            animation.animateSlideButton(this.getArticleId());
 
             progressElement = document.querySelector('.view-wrapper.preload');
-
-        }
-
-        // Next click
-        nextSlide(event){
-            console.log('SLIDELEFT')
-            // animation.slideRoomAnimation('next');
-        }
-
-        // Previous click
-        previousSlide(event){
-            console.log('SLIDERIGHT')
 
         }
 
@@ -224,7 +209,7 @@
                 content.items.forEach(element => {
                     let nav = Article.getArticleRefById(navigation, element.article_id)
                     tplItems += '<a href="'+nav.path+'" data-article-id="'+nav.article_id+
-                        '" data-article-type="roomitem"><div class="room-item" id="room-item-'+nav.article_id+'"><div class="item-container" style="background-image:url(\''+element.img.toString()+'\')"></div></div></a>';
+                        '" data-article-type="roomitem" data-link-type="article"><div class="room-item" id="room-item-'+nav.article_id+'"><div class="item-container" style="background-image:url(\''+element.img.toString()+'\')"></div></div></a>';
                 });
             }
             tplItems += '</div>';
@@ -236,16 +221,34 @@
             this.articleElement.appendChild(contentElement);
             
             // create the previous / next nav buttons and hide/show if a next room is clickable
-            //Article.nextLimit = 0;
-            let next = Article.getNextSubArtRefById(navigation, '', 3, content.article_id); // 3=room, 5=roomitems´
+            // Article.nextLimit = 0;
+            // TODO language based replacement for link name
+            let next = Article.getNextSubArtRefById(navigation, '', 3, content.article_id); // depth level 3=room, 5=roomitems
             if(next){
-                this.nextBtn.href = next.path;
+                let a = this.nextBtn.firstChild;
+                if(a.nodeName === 'A'){
+                    a.href = next.path;
+                }
+                let d = this.nextBtn.lastElementChild;
+                if(d.nodeName === 'DIV'){
+                    d.innerHTML = "Go to brick '"+next.name+"'";
+                }
                 let cl = this.nextBtn.className;
                 this.nextBtn.className = cl+' add-opacity';
             }
             let previous = Article.getPreviousSubArtRefById(navigation, '', 3, content.article_id); // 3=room, 5=roomitems´
+            console.log('PREVIOUS ROOM');
+            console.log(content.article_id);
+            console.log(previous);
             if(previous){
-                this.previousBtn.href = previous.path;
+                let a = this.previousBtn.firstChild;
+                if(a.nodeName === 'A'){
+                    a.href = previous.path;
+                }
+                let d = this.previousBtn.lastElementChild;
+                if(d.nodeName === 'DIV'){
+                    d.innerHTML = "Go to brick '"+previous.name+"'";
+                }
                 let cl = this.previousBtn.className;
                 this.previousBtn.className = cl+' add-opacity';
             }

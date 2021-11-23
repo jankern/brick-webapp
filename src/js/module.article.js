@@ -193,12 +193,17 @@
                         if(arr.length === depth){
                             //console.log(stack + ' - ' +id+ ' : '+key+' # '+nextLimit);
                             if(nextLimit === 1){
+
                                 nextLimit = 0;
-                                //console.log({"article_id":key, "path":obj[key].path, "article_type": obj[key].article_type});
                                 let nav = {};
                                 nav['article_id'] = key;
-                                nav['path'] = obj[key].path;
-                                if(obj[key].article_type) nav['article_type'] = obj[key].article_type;
+                                for (let p in obj[key]){
+                                    if(obj[key].hasOwnProperty(p)){
+                                        if (typeof obj[key][p] != "object"){
+                                            nav[p] = obj[key][p];
+                                        }
+                                    }
+                                }
                                 return nav;
                             }
                             if(key === id){
@@ -223,9 +228,7 @@
             return Article.getNextNavByDepthLevel(obj, stack, depth, id);
         }
 
-        // Returns a possible PREVIOUS nav reference by a given article id AND nav depth
-        // 3= sublevel (room), 5 = sub sub level (toomitem)
-        static getPreviousSubArtRefById(obj, stack, depth, id){
+        static getPreviousNavByDepthLevel(obj, stack, depth, id){
 
             for (let key in obj){
                 if(obj.hasOwnProperty(key)){
@@ -237,22 +240,40 @@
                     }
 
                     if(arr.length === depth){
-                        //console.log(stack + ' - ' +id+ ' : '+key);
+
+                        // console.log(stack + ' - ' +id+ ' : '+key);
                         if(key === id){
                             let tmp = previousObj;
                             previousObj = undefined;
                             return tmp;
                         }
+                        
                         // temporary store the item
-                        previousObj = {"article_id":key, "path":obj[key].path};
-                        if(obj[key].article_type) previousObj['article_type'] = obj[key].article_type;
+                        previousObj = {};
+                        previousObj['article_id'] = key;
+                        for (let p in obj[key]){
+                            if(obj[key].hasOwnProperty(p)){
+                                if (typeof obj[key][p] != "object"){
+                                    previousObj[p] = obj[key][p];
+                                }
+                            }
+                        }
                     }
 
-                    previousSubArtRefById = Article.getPreviousSubArtRefById(obj[key], stack+'.'+key, depth, id);
+                    previousSubArtRefById = Article.getPreviousNavByDepthLevel(obj[key], stack+'.'+key, depth, id);
                   }
                 }
              }
             return previousSubArtRefById;
+        }
+
+        // Returns a possible PREVIOUS nav reference by a given article id AND nav depth
+        // 3= sublevel (room), 5 = sub sub level (toomitem)
+        static getPreviousSubArtRefById(obj, stack, depth, id){
+
+            previousObj = undefined;
+            return Article.getPreviousNavByDepthLevel(obj, stack, depth, id);
+
         }
 
         setRedirectionId(id){

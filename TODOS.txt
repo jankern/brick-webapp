@@ -1,25 +1,28 @@
 Startseite
-- Stein raus, durch Grafik ersetzen
+- Stein raus, durch Grafik ersetzen (durchrandom der verschidenen brick motive)
 - Font drin lassen, Claim dazu
 - evtl particle view nach Mauszeiger (8 oder 3 irgendwie einbinden) 8 Noppen im hintergrund leicht einblenden und ausblenden, dann drei
 
 Room
-- zwei Zeilen für Claim
-- Pfeil nach oben zur Raumübersicht
+- zwei Zeilen für Claim [OK]
 
 RoomItem / Brick
-- loader -> left->right / right->left, zurücksetzen bei anderen
+- loader -> left->right / right->left, zurücksetzen bei anderen [OK]
 - startbild Pfeil nach unten, sroll to bottom of startbild
+- alle drei Bilder anzeigen + Startbild
+- Pfeil nach oben zur Raumübersicht [OK]
+- dritter Punkt in Brick (Animation)
 
 Generell
 - brick direct access geht nicht [OK]
 - lange pages verstecken (url stack) [OK]
-- dritter Punkt in Brick (Animation)
-- next/previous brick/room label vom nächsten Stein/Raum bei hover
+- next/previous brick/room label vom nächsten Stein/Raum bei hover [OK]
 - Mobile responsive design (bilder nicht üebr Logo, Anordnung der Bricks im raum view)
 - Logo einfärben nach Raumfarbe (Logos liefert Cheffe) logo_782349.png
 - loader auf Brick page [OK]
 - progress screen braucht position fixed [OK]
+
+-----------------------------
 
 Workshops
 - Kachelpage, keywordsfilter
